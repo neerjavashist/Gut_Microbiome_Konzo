@@ -383,6 +383,43 @@ KonzoData.F.tr.status.f <- prune_taxa(f_0.0001, KonzoData.F.tr.status)
 #write.csv(t(KonzoData.F.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Family_Avg_RelAbund.csv")
                                
 #Bacteria Genus
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
+
+#OTU
+Konzo_otu_g <- read.csv("./KinshasaControl_Konzo3_Bacteria_Genus_ReadCounts.csv")
+Konzo_genus <- read.csv("./KinshasaControl_Konzo3_Bacteria_genus.csv")
+Konzo_Otu_G <-as.matrix(unname(Konzo_otu_g[1:nrow(Konzo_otu_g),5:(ncol(Konzo_otu_g))]))
+rownames(Konzo_Otu_G)<-as.character( Konzo_otu_g[,1])
+nam <-names(Konzo_otu_g)
+colnames(Konzo_Otu_G)<-c(as.character(nam[5:length(nam)]))
+OTU_G = otu_table(Konzo_Otu_G, taxa_are_rows = TRUE)
+
+#TAX
+Konzo_Genus<-as.matrix(unname(Konzo_genus[,2]))
+rownames(Konzo_Genus)<-as.character(unname(Konzo_Genus[,1]))
+colnames(Konzo_Genus)<-"genus"
+TAX_G = tax_table(Konzo_Genus)
+
+#PhyloseqObject
+KonzoData_G <-phyloseq(OTU_G, TAX_G, META)
+
+#set all Na's to 0
+KonzoData_G@otu_table[is.na(KonzoData_G@otu_table)] <- 0
+
+#Might not be necessary to taxglom since only genus in input file
+KonzoData.G <- tax_glom(KonzoData_G, taxrank = "genus") 
+KonzoData.G@sam_data$Status <- factor(KonzoData.G@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+KonzoData.G@sam_data$Region <- factor(KonzoData.G@sam_data$Region, levels = c("Kinshasa", "Masimanimba", "Kahemba"))
+
+#Read Count to Relative Abundance
+KonzoData.G.tr <- transform_sample_counts(KonzoData.G, function(x) x / sum(x))
+KonzoData.G.tr.log10 <- transform_sample_counts(KonzoData.G.tr, function(x) log10(x)) 
+
+
+KonzoData.G.tr.status <- merge_samples(KonzoData.G.tr, KonzoData.G.tr@sam_data$Status, fun = mean)
+KonzoData.G.tr.status <- transform_sample_counts(KonzoData.G.tr.status, function(x) x / 30)
+                                                                       
+#Filter                           
 Kinshasa.G <- prune_samples(KonzoData.G@sam_data$Status == "Kinshasa", KonzoData.G)
 Kinshasa.G.tr <- transform_sample_counts(Kinshasa.G, function(x) x / sum(x))
 Masimanimba.G <- prune_samples(KonzoData.G@sam_data$Status == "Masimanimba", KonzoData.G)
@@ -412,9 +449,60 @@ filterList <- union(filterList3,filterList4) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 
 
 write.csv(filterList, file = "Kinshasa_Konzo3_Genus_f_0.0001.csv")
-                                                 
+
+x <- read.csv("Kinshasa_Konzo3_Genus_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+
+KonzoData.G.f <- prune_taxa(f_0.0001, KonzoData.G)
+KonzoData.G.tr.f <- prune_taxa(f_0.0001, KonzoData.G.tr)
+
+KonzoData.G.tr.status.f <- prune_taxa(f_0.0001, KonzoData.G.tr.status)
+
+write.csv((KonzoData.G@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Genus_ReadCounts.csv")
+write.csv((KonzoData.G.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Genus_RelAbund.csv")
+write.csv(t(KonzoData.G.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Genus_Avg_RelAbund.csv")
+                           
                            
 #Bacteria Species
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Species")
+
+#OTU
+Konzo_otu_s <- read.csv("./KinshasaControl_Konzo3_Bacteria_Species.ReadCounts.csv")
+Konzo_species <- read.csv("./Kinshasa_Konzo3_species.csv")
+Konzo_Otu_S <-as.matrix(unname(Konzo_otu_s[1:nrow(Konzo_otu_s),5:(ncol(Konzo_otu_s))]))
+
+#Konzo_Otu_T_S <- t(Konzo_Otu_S)
+
+rownames(Konzo_Otu_S)<-as.character( Konzo_otu_s[,1])
+nam <-names(Konzo_otu_s)
+colnames(Konzo_Otu_S)<-c(as.character(nam[5:length(nam)]))
+OTU_S = otu_table(Konzo_Otu_S, taxa_are_rows = TRUE)
+
+#TAX
+Konzo_Species<-as.matrix(unname(Konzo_species[,2]))
+rownames(Konzo_Species)<-as.character(unname(Konzo_Species[,1]))
+colnames(Konzo_Species)<-"species"
+TAX_S = tax_table(Konzo_Species)
+
+#PhyloseqObject
+KonzoData_S <-phyloseq(OTU_S, TAX_S, META)
+#Set NAs to 0
+KonzoData_S@otu_table[is.na(KonzoData_S@otu_table)] <- 0
+
+#Probs can skip next step since the input file only contains species data so not require to grab/glom species taxa only
+KonzoData.S <- tax_glom(KonzoData_S, taxrank = "species")
+
+KonzoData.S@sam_data$Status <- factor(KonzoData.S@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+
+#Read Counts to Relative Abundance
+KonzoData.S.tr <- transform_sample_counts(KonzoData.S, function(x) x / sum(x))
+#Log base 10 Transform the rel abund values                                          
+KonzoData.S.tr.log10 <- transform_sample_counts(KonzoData.S.tr, function(x) log10(x)) 
+                                                
+KonzoData.S.tr.status <- merge_samples(KonzoData.S.tr, KonzoData.S.tr@sam_data$Status)
+KonzoData.S.tr.status <- transform_sample_counts(KonzoData.S.tr.status, function(x) x / 30)
+                                         
+#Filter                           
 Kinshasa.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa", KonzoData.S)
 Kinshasa.S.tr <- transform_sample_counts(Kinshasa.S, function(x) x / sum(x))
 Masimanimba.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba", KonzoData.S)
@@ -443,7 +531,19 @@ filterList4 <- union(filterList1, filterList2) #Kin, Mas, ULPZ, KLPZ
 filterList <- union(filterList3,filterList4) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 
 write.csv(filterList, file = "Kinshasa_Konzo3_Species_f_0.0001.csv")
-               
+
+x <- read.csv("Kinshasa_Konzo3_Species_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+
+KonzoData.S.f <- prune_taxa(f_0.0001, KonzoData.S)
+KonzoData.S.tr.f <- prune_taxa(f_0.0001, KonzoData.S.tr)
+
+KonzoData.S.tr.status.f <- prune_taxa(f_0.0001, KonzoData.S.tr.status)
+                                                                                                       
+write.csv((KonzoData.S.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Species_RelAbund.csv")
+write.csv((KonzoData.S@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Species_ReadCounts.csv")
+write.csv(t(KonzoData.S.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Species_Avg_RelAbund.csv")
+                           
 ### Estimate Richness
 #Read Count from KonzoData.S (Bacteria Species data)                           
 otuD.S <- as.data.frame(t(otu_table(KonzoData.S)))
