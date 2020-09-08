@@ -413,8 +413,8 @@ KonzoData.G@sam_data$Region <- factor(KonzoData.G@sam_data$Region, levels = c("K
 
 #Read Count to Relative Abundance
 KonzoData.G.tr <- transform_sample_counts(KonzoData.G, function(x) x / sum(x))
+#Log Base 10 transform rel abund                                          
 KonzoData.G.tr.log10 <- transform_sample_counts(KonzoData.G.tr, function(x) log10(x)) 
-
 
 KonzoData.G.tr.status <- merge_samples(KonzoData.G.tr, KonzoData.G.tr@sam_data$Status, fun = mean)
 KonzoData.G.tr.status <- transform_sample_counts(KonzoData.G.tr.status, function(x) x / 30)
