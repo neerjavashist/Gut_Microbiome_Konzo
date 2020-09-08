@@ -1,7 +1,7 @@
 # Gut_Microbiome_Konzo
 The Gut Microbiome in Konzo
 
-The code outlined here assesses the bacterial profile of the gut microbiome of individuals from the Democratic Republic of Congo.\
+The code outlined here assesses the bacterial profile of the gut microbiome of individuals from the Democratic Republic of Congo.
 
 1. Run BMtagger.sh to remove human reads using hg38. 
 2. Run skewer.sh on the fastq files to remove Illumina sequencing adapters. 
