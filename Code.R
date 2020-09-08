@@ -85,9 +85,9 @@ META<-sample_data(Konzo_meta)
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Phylum")
 
 #OTU
-Konzo_otu_p <- read.csv("./KinshasaControl_Konzo3_Bacteria_Phylum.ReadCounts.csv")
+Konzo_otu_p <- read.csv("./KinshasaControl_Konzo3_Bacteria_Phylum.ReadCounts.csv") #refer to this file in the repository for reference (has additional columns that are removed in the code because they are unnecessary)
 #Konzo_phylum contains the names of all the taxa in the ReadCounts file in one column with an empty first entry. The taxa names are duplicated into the second column and the second column has a column name although this will be removed in the code. 
-Konzo_phylum <- read.csv("./Kinshasa_Konzo3_phylum.csv")
+Konzo_phylum <- read.csv("./Kinshasa_Konzo3_phylum.csv") #refer to this file in the repository for reference
 Konzo_Otu_P <-as.matrix(unname(Konzo_otu_p[1:nrow(Konzo_otu_p),5:(ncol(Konzo_otu_p))]))
 rownames(Konzo_Otu_P)<-as.character( Konzo_otu_p[,1])
 nam <-names(Konzo_otu_p)
