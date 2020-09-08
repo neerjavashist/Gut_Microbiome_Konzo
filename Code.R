@@ -228,12 +228,44 @@ KonzoData.C.tr.f <- prune_taxa(f_0.0001, KonzoData.C.tr)
 
 KonzoData.C.tr.status.f <- prune_taxa(f_0.0001, KonzoData.C.tr.status)
 
-#write.csv((KonzoData.C@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Class_ReadCounts.csv")
-#write.csv((KonzoData.C.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Class_RelAbund.csv")
-#write.csv(t(KonzoData.C.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Class_Avg_RelAbund.csv")
+write.csv((KonzoData.C@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Class_ReadCounts.csv")
+write.csv((KonzoData.C.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Class_RelAbund.csv")
+write.csv(t(KonzoData.C.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Class_Avg_RelAbund.csv")
                                                                                  
                            
 #Bacteria Order
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Order")
+
+#OTU
+Konzo_otu_o <- read.csv("./KinshasaControl_Konzo3_Bacteria_Order_ReadCounts.csv")
+Konzo_order <- read.csv("./KinshasaControl_Konzo3_Bacteria_order.csv")
+Konzo_Otu_O <-as.matrix(unname(Konzo_otu_o[1:nrow(Konzo_otu_o),5:(ncol(Konzo_otu_o))]))
+rownames(Konzo_Otu_O)<-as.character( Konzo_otu_o[,1])
+nam <-names(Konzo_otu_o)
+colnames(Konzo_Otu_O)<-c(as.character(nam[5:length(nam)]))
+OTU_O = otu_table(Konzo_Otu_O, taxa_are_rows = TRUE)
+
+#TAX
+Konzo_Order<-as.matrix(unname(Konzo_order[,2]))
+rownames(Konzo_Order)<-as.character(unname(Konzo_Order[,1]))
+colnames(Konzo_Order)<-"order"
+TAX_O = tax_table(Konzo_Order)
+
+#PhyloseqObject
+KonzoData_O <-phyloseq(OTU_O, TAX_O, META)
+#set all Na's to 0
+KonzoData_O@otu_table[is.na(KonzoData_O@otu_table)] <- 0
+KonzoData.O <- tax_glom(KonzoData_O, taxrank = "order")
+KonzoData.O@sam_data$Status <- factor(KonzoData.O@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+
+#Reads Counts to Relative Abundance
+KonzoData.O.tr <- transform_sample_counts(KonzoData.O, function(x) x / sum(x))
+
+KonzoData.O.tr.status <- merge_samples(KonzoData.O.tr, KonzoData.O.tr@sam_data$Status, fun = mean)
+KonzoData.O.tr.status <- transform_sample_counts(KonzoData.O.tr.status, function(x) x / 30)
+                           
+#Filter
+                                                 
 Kinshasa.O <- prune_samples(KonzoData.O@sam_data$Status == "Kinshasa", KonzoData.O)
 Kinshasa.O.tr <- transform_sample_counts(Kinshasa.O, function(x) x / sum(x))
 Masimanimba.O <- prune_samples(KonzoData.O@sam_data$Status == "Masimanimba", KonzoData.O)
@@ -261,10 +293,55 @@ filterList4 <- union(filterList1, filterList2) #Kin, Mas, ULPZ, KLPZ
 filterList <- union(filterList3,filterList4) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 
 write.csv(filterList, file = "Kinshasa_Konzo3_Order_f_0.0001.csv")
-                                                                 
+
+x <- read.csv("Kinshasa_Konzo3_Order_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+ 
+KonzoData.O.f <- prune_taxa(f_0.0001, KonzoData.O)
+KonzoData.O.tr.f <- prune_taxa(f_0.0001, KonzoData.O.tr)
+                                                 
+KonzoData.O.tr.status.f <- prune_taxa(f_0.0001, KonzoData.O.tr.status)
+
+write.csv((KonzoData.O@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Order_ReadCounts.csv")
+write.csv((KonzoData.O.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Order_RelAbund.csv")
+write.csv(t(KonzoData.O.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Order_Avg_RelAbund.csv")
+                           
+                           
 #Bacteria Family
 #FAMILY
-                           
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Family")
+
+#OTU
+Konzo_otu_f <- read.csv("./KinshasaControl_Konzo3_Bacteria_Family_ReadCounts.csv")
+Konzo_family <- read.csv("./KinshasaControl_Konzo3_Bacteria_family.csv")
+Konzo_Otu_F <-as.matrix(unname(Konzo_otu_f[1:nrow(Konzo_otu_f),5:(ncol(Konzo_otu_f))]))
+rownames(Konzo_Otu_F)<-as.character( Konzo_otu_f[,1])
+nam <-names(Konzo_otu_f)
+colnames(Konzo_Otu_F)<-c(as.character(nam[5:length(nam)]))
+OTU_F = otu_table(Konzo_Otu_F, taxa_are_rows = TRUE)
+
+#TAX
+Konzo_Family<-as.matrix(unname(Konzo_family[,2]))
+rownames(Konzo_Family)<-as.character(unname(Konzo_Family[,1]))
+colnames(Konzo_Family)<-"family"
+TAX_F = tax_table(Konzo_Family)
+
+#PhyloseqObject
+KonzoData_F <-phyloseq(OTU_F, TAX_F, META)
+#set all Na's to 0
+KonzoData_F@otu_table[is.na(KonzoData_F@otu_table)] <- 0
+KonzoData.F <- tax_glom(KonzoData_F, taxrank = "family")
+KonzoData.F@sam_data$Status <- factor(KonzoData.F@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+
+#Read Counts to Relative Abundance
+KonzoData.F.tr <- transform_sample_counts(KonzoData.F, function(x) x / sum(x))
+
+KonzoData.F.tr.status <- merge_samples(KonzoData.F.tr, KonzoData.F.tr@sam_data$Status)
+KonzoData.F.tr.status <- transform_sample_counts(KonzoData.F.tr.status, function(x) x / 30)                                          
+write.csv(t(KonzoData.F.tr.status@otu_table), file = "./KonzoDataFamily_AvgRelAbund_ByStatus.csv")
+ 
+#Filter
+                                                                                                                        
 Kinshasa.F <- prune_samples(KonzoData.F@sam_data$Status == "Kinshasa", KonzoData.F)
 Kinshasa.F.tr <- transform_sample_counts(Kinshasa.F, function(x) x / sum(x))
 Masimanimba.F <- prune_samples(KonzoData.F@sam_data$Status == "Masimanimba", KonzoData.F)
@@ -293,7 +370,18 @@ filterList <- union(filterList3,filterList4) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 
 write.csv(filterList, file = "Kinshasa_Konzo3_Family_f_0.0001.csv")
                                  
-                           
+x <- read.csv("Kinshasa_Konzo3_Family_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+
+KonzoData.F.f <- prune_taxa(f_0.0001, KonzoData.F)
+KonzoData.F.tr.f <- prune_taxa(f_0.0001, KonzoData.F.tr)
+
+KonzoData.F.tr.status.f <- prune_taxa(f_0.0001, KonzoData.F.tr.status)
+
+#write.csv((KonzoData.F@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Family_ReadCounts.csv")
+#write.csv((KonzoData.F.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Family_RelAbund.csv")
+#write.csv(t(KonzoData.F.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Family_Avg_RelAbund.csv")
+                               
 #Bacteria Genus
 Kinshasa.G <- prune_samples(KonzoData.G@sam_data$Status == "Kinshasa", KonzoData.G)
 Kinshasa.G.tr <- transform_sample_counts(Kinshasa.G, function(x) x / sum(x))
