@@ -234,10 +234,128 @@ KonzoData.C.tr.status.f <- prune_taxa(f_0.0001, KonzoData.C.tr.status)
                                                                                  
                            
 #Bacteria Order
-#Bacteria Family
-#Bacteria Genus
-#Bacteria Species
+Kinshasa.O <- prune_samples(KonzoData.O@sam_data$Status == "Kinshasa", KonzoData.O)
+Kinshasa.O.tr <- transform_sample_counts(Kinshasa.O, function(x) x / sum(x))
+Masimanimba.O <- prune_samples(KonzoData.O@sam_data$Status == "Masimanimba", KonzoData.O)
+Masimanimba.O.tr <- transform_sample_counts(Masimanimba.O, function(x) x / sum(x))                                        
+ULPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.O)
+ULPZ.O.tr <- transform_sample_counts(ULPZ.O, function(x) x / sum(x))
+KLPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.O)
+KLPZ.O.tr <- transform_sample_counts(KLPZ.O, function(x) x / sum(x))
+UHPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.O)
+UHPZ.O.tr <- transform_sample_counts(UHPZ.O, function(x) x / sum(x))
+KHPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.O)
+KHPZ.O.tr <- transform_sample_counts(KHPZ.O, function(x) x / sum(x))
+                                     
+Kinshasa.O.tr.f <- filter_taxa(Kinshasa.O.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+Masimanimba.O.tr.f <- filter_taxa(Masimanimba.O.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+ULPZ.O.tr.f <- filter_taxa(ULPZ.O.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+KLPZ.O.tr.f <- filter_taxa(KLPZ.O.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+UHPZ.O.tr.f <- filter_taxa(UHPZ.O.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+KHPZ.O.tr.f <- filter_taxa(KHPZ.O.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
 
+filterList1 <- union(Kinshasa.O.tr.f@tax_table,Masimanimba.O.tr.f@tax_table) #Kin, Mas
+filterList2 <- union(ULPZ.O.tr.f@tax_table, KLPZ.O.tr.f@tax_table) #ULPZ, KLPZ
+filterList3 <- union(UHPZ.O.tr.f@tax_table,KHPZ.O.tr.f@tax_table)
+filterList4 <- union(filterList1, filterList2) #Kin, Mas, ULPZ, KLPZ
+filterList <- union(filterList3,filterList4) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
+
+write.csv(filterList, file = "Kinshasa_Konzo3_Order_f_0.0001.csv")
+                                                                 
+#Bacteria Family
+#FAMILY
+                           
+Kinshasa.F <- prune_samples(KonzoData.F@sam_data$Status == "Kinshasa", KonzoData.F)
+Kinshasa.F.tr <- transform_sample_counts(Kinshasa.F, function(x) x / sum(x))
+Masimanimba.F <- prune_samples(KonzoData.F@sam_data$Status == "Masimanimba", KonzoData.F)
+Masimanimba.F.tr <- transform_sample_counts(Masimanimba.F, function(x) x / sum(x))                                        
+ULPZ.F <- prune_samples(KonzoData.F@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.F)
+ULPZ.F.tr <- transform_sample_counts(ULPZ.F, function(x) x / sum(x))
+KLPZ.F <- prune_samples(KonzoData.F@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.F)
+KLPZ.F.tr <- transform_sample_counts(KLPZ.F, function(x) x / sum(x))
+UHPZ.F <- prune_samples(KonzoData.F@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.F)
+UHPZ.F.tr <- transform_sample_counts(UHPZ.F, function(x) x / sum(x))
+KHPZ.F <- prune_samples(KonzoData.F@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.F)
+KHPZ.F.tr <- transform_sample_counts(KHPZ.F, function(x) x / sum(x))
+                          
+Kinshasa.F.tr.f <- filter_taxa(Kinshasa.F.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+Masimanimba.F.tr.f <- filter_taxa(Masimanimba.F.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+ULPZ.F.tr.f <- filter_taxa(ULPZ.F.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+KLPZ.F.tr.f <- filter_taxa(KLPZ.F.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+UHPZ.F.tr.f <- filter_taxa(UHPZ.F.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+KHPZ.F.tr.f <- filter_taxa(KHPZ.F.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+
+filterList1 <- union(Kinshasa.F.tr.f@tax_table,Masimanimba.F.tr.f@tax_table) #Kin, Mas
+filterList2 <- union(ULPZ.F.tr.f@tax_table, KLPZ.F.tr.f@tax_table) #ULPZ, KLPZ
+filterList3 <- union(UHPZ.F.tr.f@tax_table,KHPZ.F.tr.f@tax_table)
+filterList4 <- union(filterList1, filterList2) #Kin, Mas, ULPZ, KLPZ
+filterList <- union(filterList3,filterList4) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
+
+write.csv(filterList, file = "Kinshasa_Konzo3_Family_f_0.0001.csv")
+                                 
+                           
+#Bacteria Genus
+Kinshasa.G <- prune_samples(KonzoData.G@sam_data$Status == "Kinshasa", KonzoData.G)
+Kinshasa.G.tr <- transform_sample_counts(Kinshasa.G, function(x) x / sum(x))
+Masimanimba.G <- prune_samples(KonzoData.G@sam_data$Status == "Masimanimba", KonzoData.G)
+Masimanimba.G.tr <- transform_sample_counts(Masimanimba.G, function(x) x / sum(x))                                        
+ULPZ.G <- prune_samples(KonzoData.G@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.G)
+ULPZ.G.tr <- transform_sample_counts(ULPZ.G, function(x) x / sum(x))
+KLPZ.G <- prune_samples(KonzoData.G@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.G)
+KLPZ.G.tr <- transform_sample_counts(KLPZ.G, function(x) x / sum(x))
+UHPZ.G <- prune_samples(KonzoData.G@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.G)
+UHPZ.G.tr <- transform_sample_counts(UHPZ.G, function(x) x / sum(x))
+KHPZ.G <- prune_samples(KonzoData.G@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.G)
+KHPZ.G.tr <- transform_sample_counts(KHPZ.G, function(x) x / sum(x))                           
+                           
+                          
+Kinshasa.G.tr.f <- filter_taxa(Kinshasa.G.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+Masimanimba.G.tr.f <- filter_taxa(Masimanimba.G.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+ULPZ.G.tr.f <- filter_taxa(ULPZ.G.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+KLPZ.G.tr.f <- filter_taxa(KLPZ.G.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+UHPZ.G.tr.f <- filter_taxa(UHPZ.G.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+KHPZ.G.tr.f <- filter_taxa(KHPZ.G.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+
+filterList1 <- union(Kinshasa.G.tr.f@tax_table,Masimanimba.G.tr.f@tax_table) #Kin, Mas
+filterList2 <- union(ULPZ.G.tr.f@tax_table, KLPZ.G.tr.f@tax_table) #ULPZ, KLPZ
+filterList3 <- union(UHPZ.G.tr.f@tax_table,KHPZ.G.tr.f@tax_table)
+filterList4 <- union(filterList1, filterList2) #Kin, Mas, ULPZ, KLPZ
+filterList <- union(filterList3,filterList4) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
+
+
+write.csv(filterList, file = "Kinshasa_Konzo3_Genus_f_0.0001.csv")
+                                                 
+                           
+#Bacteria Species
+Kinshasa.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa", KonzoData.S)
+Kinshasa.S.tr <- transform_sample_counts(Kinshasa.S, function(x) x / sum(x))
+Masimanimba.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba", KonzoData.S)
+Masimanimba.S.tr <- transform_sample_counts(Masimanimba.S, function(x) x / sum(x))                                        
+ULPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.S)
+ULPZ.S.tr <- transform_sample_counts(ULPZ.S, function(x) x / sum(x))
+KLPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.S)
+KLPZ.S.tr <- transform_sample_counts(KLPZ.S, function(x) x / sum(x))
+UHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.S)
+UHPZ.S.tr <- transform_sample_counts(UHPZ.S, function(x) x / sum(x))
+KHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.S)
+KHPZ.S.tr <- transform_sample_counts(KHPZ.S, function(x) x / sum(x))
+
+                                         
+Kinshasa.S.tr.f <- filter_taxa(Kinshasa.S.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+Masimanimba.S.tr.f <- filter_taxa(Masimanimba.S.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+ULPZ.S.tr.f <- filter_taxa(ULPZ.S.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+KLPZ.S.tr.f <- filter_taxa(KLPZ.S.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+UHPZ.S.tr.f <- filter_taxa(UHPZ.S.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+KHPZ.S.tr.f <- filter_taxa(KHPZ.S.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+
+filterList1 <- union(Kinshasa.S.tr.f@tax_table,Masimanimba.S.tr.f@tax_table) #Kin, Mas
+filterList2 <- union(ULPZ.S.tr.f@tax_table, KLPZ.S.tr.f@tax_table) #ULPZ, KLPZ
+filterList3 <- union(UHPZ.S.tr.f@tax_table,KHPZ.S.tr.f@tax_table)
+filterList4 <- union(filterList1, filterList2) #Kin, Mas, ULPZ, KLPZ
+filterList <- union(filterList3,filterList4) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
+
+write.csv(filterList, file = "Kinshasa_Konzo3_Species_f_0.0001.csv")
+               
 ### Estimate Richness
 #Read Count from KonzoData.S (Bacteria Species data)                           
 otuD.S <- as.data.frame(t(otu_table(KonzoData.S)))
