@@ -659,7 +659,7 @@ KinMas.S <-  prune_samples(KonzoData.S@sam_data$Status == "Kinshasa" | KonzoData
 KinMas.S.tr <-  transform_sample_counts(KinMas.S, function(x) x / sum(x))
 
 #MWW 
-                                               
+#Make a data frame with the rel abund values for the samples being compared, and add Status (Group) as a column for testing                                               
 S <- KinMas.S.tr
                                                
 S.tr_META <- as.data.frame(S@sam_data)
@@ -673,13 +673,14 @@ for (i in 1:nrow(S.tr.DF))
     
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Genus", "Kinshasa vs. Masi-manimba p-value")
-
+#Does individual wilcox tests with the BH correction for each taxa by Status
 for (i in 1:ncol(S.tr.DF))
 {
   wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(S.tr.DF[i])
   WT[i,2] = as.numeric(wt$p.value)
 }
+#Save the output                                        
 write.csv(WT, file = "KinMas_Bacteria_Species_ByStatus_WilcoxTest.csv")
 WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
