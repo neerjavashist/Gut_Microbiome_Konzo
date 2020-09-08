@@ -553,14 +553,33 @@ diversity.S$Status <- as.factor(diversity.S$Status)
 diversity.S$Status <- factor(diversity.S$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
 
 #STATISTICS for Estimate Richness
-#One-way ANOVA to see if there is a statitically significant difference in the measure of alpha diversity
+#One-way ANOVA to see if there is a statitically significant difference in the measure of alpha diversity and output saved in txt file
 observed.aov <- aov(Observed ~ Status, data = diversity.S)
 chao1.aov <- aov(Chao1 ~ Status, data = diversity.S)
 shannon.aov <- aov(Shannon ~ Status, data = diversity.S)
 ACE.aov <- aov(ACE ~ Status, data = diversity.S)
 simpson.aov <- aov(Simpson ~ Status, data = diversity.S)
 fisher.aov <- aov(Fisher ~ Status, data = diversity.S)
-   
+
+
+write("Observed ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(observed.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
+
+write("Chao1 ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(chao1.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
+
+write("Shannon ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(shannon.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
+
+write("ACE ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(ACE.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
+
+write("Simpson ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(simpson.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
+
+write("Fisher ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(fisher.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
+                           
 ###Figure 2:                           
 observed <- ggplot(diversity.S, aes(factor(Status), Observed)) + geom_boxplot(aes(fill = factor(Status)),fatten = 1, outlier.shape = NA) + labs(x = element_blank(), y = "OTU") + theme(axis.text.x = element_blank()) + theme_classic()
 observed <- observed + geom_jitter(position=position_jitter(0.2), size = 0.3)
@@ -579,7 +598,10 @@ shan4 <- shan3 + guides(fill=guide_legend(ncol=6))
 shan4 <- shan4 + scale_fill_manual(values = konzo_color, labels = SSSL)
 
 #To get Top taxa
-
+#Phylum
+                           
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Phylum")
+                           
 Kinshasa.P <- prune_samples(KonzoData.P@sam_data$Status == "Kinshasa", KonzoData.P)
 Kinshasa.P.tr <- transform_sample_counts(Kinshasa.P, function(x) x / sum(x))
 Masimanimba.P <- prune_samples(KonzoData.P@sam_data$Status == "Masimanimba", KonzoData.P)
@@ -609,7 +631,9 @@ top_P <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
                                      
 write.csv(top_P, file = "Kinshasa_Konzo3_Phylum_Top4.csv")
 
-#Class                                     
+#Class 
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
+                                     
 Kinshasa.C <- prune_samples(KonzoData.C@sam_data$Status == "Kinshasa", KonzoData.C)
 Kinshasa.C.tr <- transform_sample_counts(Kinshasa.C, function(x) x / sum(x))
 Masimanimba.C <- prune_samples(KonzoData.C@sam_data$Status == "Masimanimba", KonzoData.C)
@@ -640,6 +664,8 @@ top_C <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 write.csv(top_C, file = "Kinshasa_Konzo3_Class_Top5.csv")                                     
                                      
 #ORDER
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Order")
+                                     
 Kinshasa.O <- prune_samples(KonzoData.O@sam_data$Status == "Kinshasa", KonzoData.O)
 Kinshasa.O.tr <- transform_sample_counts(Kinshasa.O, function(x) x / sum(x))
 Masimanimba.O <- prune_samples(KonzoData.O@sam_data$Status == "Masimanimba", KonzoData.O)
@@ -669,6 +695,7 @@ top_O <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 write.csv(top_O, file = "Kinshasa_Konzo3_Order_Top5.csv")
                                      
 #FAMILY
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Family")
                            
 Kinshasa.F <- prune_samples(KonzoData.F@sam_data$Status == "Kinshasa", KonzoData.F)
 Kinshasa.F.tr <- transform_sample_counts(Kinshasa.F, function(x) x / sum(x))
@@ -699,6 +726,8 @@ top_F <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 write.csv(top_F, file = "Kinshasa_Konzo3_Family_Top5.csv")
                                      
 #GENUS
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
+                                     
 Kinshasa.G <- prune_samples(KonzoData.G@sam_data$Status == "Kinshasa", KonzoData.G)
 Kinshasa.G.tr <- transform_sample_counts(Kinshasa.G, function(x) x / sum(x))
 Masimanimba.G <- prune_samples(KonzoData.G@sam_data$Status == "Masimanimba", KonzoData.G)
@@ -725,9 +754,11 @@ top56 <- union(names(top5), names(top6))
 top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
 top_G <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 
-#write.csv(top_G, file = "Kinshasa_Konzo3_Genus_Top7.csv")
+write.csv(top_G, file = "Kinshasa_Konzo3_Genus_Top7.csv")
                                      
 #SPECIES
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Species")
+                                     
 Kinshasa.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa", KonzoData.S)
 Kinshasa.S.tr <- transform_sample_counts(Kinshasa.S, function(x) x / sum(x))
 Masimanimba.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba", KonzoData.S)
@@ -758,6 +789,8 @@ write.csv(top_S, file = "Kinshasa_Konzo3_Species_Top20.csv")
                            
 #Stacked Bar plots                           
 #Phylum
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Phylum")
+                                     
 top_P <- read.csv("Kinshasa_Konzo3_Phylum_Top4.csv", row.names = 1, colClasses = "character")
 top_P <- unlist(top_P)
 
@@ -782,6 +815,8 @@ top_phylum_plot <- top_phylum_plot + geom_bar(stat = "identity") + coord_flip() 
 top_phylum_plot
 
 #Family
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Family")
+                                     
 top_F <- read.csv("Kinshasa_Konzo3_Family_Top5.csv", row.names = 1, colClasses = "character")
 top_F <- unlist(top_F)
 
@@ -806,18 +841,67 @@ top_family_plot <- top_family_plot + geom_bar(stat = "identity") + coord_flip()
 top_family_plot
 
 #Genus
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
+                                     
 top_G <- read.csv("Kinshasa_Konzo3_Genus_Top7.csv", row.names = 1, colClasses = "character")
 top_G <- unlist(top_G)
 
-################ Needs to be added
+KonzoData.G.tr.top = prune_taxa(top_G, KonzoData.G.tr)
+physeqdf <- psmelt(KonzoData.G.tr.top)
+p <- ggplot(physeqdf, aes(x=Abundance, y=reorder(Sample, -Abundance), fill = reorder(genus, Abundance)))
+p <- p + geom_bar(stat="identity", width = 1)  
+p$data$Status <- factor(p$data$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))                               
+#p$data$genus <- factor(p$data$genus, levels = c("Prevotella","Bacteroides","Faecalibacterium","Escherichia","Alistipes", "Eubacterium", "Bifidobacterium","Butyricimonas","Anaerostipes") )
+p <- p + labs(y = element_blank(), x = "Relative Abundance") +  scale_fill_discrete(name = "Genus")
+top_genus_plot <- p + theme(legend.position="rigth") + theme(legend.key.size = unit(.2, "cm"), legend.text = element_text(face="italic"))
+
+top_genus_plot <- top_genus_plot + facet_grid(rows = vars(Status), scales = "free_y", space = "free", switch = "y", labeller = as_labeller(SSSL)) +
+  theme(strip.background = element_blank(), strip.placement = "outside", strip.text.y.left = element_text(angle = 0, vjust=0.5, hjust=0, size = 7))
+
+top_genus_plot<- top_genus_plot + theme(panel.spacing=unit(0, "lines"), panel.border = element_rect(color = "black", fill = NA, size = 0.5))
+
+top_genus_plot <- top_genus_plot + 
+  theme(legend.position="right", legend.margin=margin(0,0,0,0),
+        legend.box.margin=margin(-8,0,-8,-8)) + 
+  scale_x_continuous(expand = c(0,0), limits = c(0,0.9)) +
+  theme(plot.title = element_blank(), legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7), legend.title = element_text(size = 7)) + 
+  guides(fill=guide_legend(ncol=1,byrow=TRUE)) + 
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(size = 7), axis.title.x = element_text(size = 7)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"))
+top_genus_plot
+
+ad <- ggarrange(observed4, shan4, labels = c("A", "B"), font.label = list(size = 7), ncol = 2, nrow = 1, common.legend = TRUE, legend = "bottom", align = "hv") 
+PF <- ggarrange(top_phylum_plot, top_family_plot, labels = c("C", "D"), font.label = list(size = 7), ncol = 1, nrow = 2, align = "hv")
+
+ad_PF <- grid.arrange(ad, PF, ncol = 1, nrow =2, layout_matrix = rbind(c(1), c(2), c(2)))
+
+Gen <-  ggarrange(top_genus_plot, labels = c("E"), font.label = list(size = 7), ncol = 1, nrow = 1) 
+
+s <- plot_spacer() + theme_minimal()
+
+placeholder <-  ggarrange(s, labels = c("F"), font.label = list(size = 7), ncol = 1, nrow = 1)    
+
+Gen_ph <- ggarrange(Gen,placeholder, heights = c(1, 1), ncol = 1, nrow = 2)
+
+F1 <- arrangeGrob(ad_PF, Gen_ph, ncol = 2, nrow = 1,
+             layout_matrix = cbind(c(1), c(2)))
+
+tiff(filename = "KinshasaKonzo3_TaxaFigure_Temp.tiff", width = 7, height = 7, units = "in", res = 600)
+as_ggplot(F1)
+dev.off()
+                                     
                            
 #When adding heat map in gimp to full figure, make sure Image > Print Size has correct inches and ppi (set to >=300))
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Species")
 
 o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))                                                 
 tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap.tiff", width = 2.5, height = 3.25, units = "in", res = 600)
 heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,1.25), lwid = c(0.1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3),c(2,1,1),c(2,1,1),c(0,0,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
 dev.off()                          
-                           
+
+                                     
+                                     
+                                     
 ### Beta Diversity using Bray-Curtis for Bacteria Genus
                            
                            
