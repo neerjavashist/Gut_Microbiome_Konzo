@@ -37,6 +37,37 @@ library("raster")
 
 ### The general format for each taxanomic rank is the same, so the code is repetitive. Comments are provided in the Bacteria Phylum section to show what is happening, and the explainations are applicable to the other taxa ranks as well.
 
+### Naming Scheme Shorthand
+
+SL <- c(Kinshasa = "Kinshasa", Masimanimba = "Masi-manimba", Kahemba_Control_NonIntervention = "Unaffected LPZ", Kahemba_Konzo_NonIntervention = "Konzo LPZ", Kahemba_Control_Intervention = "Unaffected HPZ", Kahemba_Konzo_Intervention = "Konzo HPZ")
+
+SSL <- c(Kinshasa = "Kin", Masimanimba = "Mas", Kahemba_Control_NonIntervention = "Unaffected LPZ", Kahemba_Konzo_NonIntervention = "Konzo LPZ", Kahemba_Control_Intervention = "Unaffected HPZ", Kahemba_Konzo_Intervention = "Konzo HPZ")
+
+SSSL <- c(Kinshasa = "Kin", Masimanimba = "Mas", Kahemba_Control_NonIntervention = "ULPZ", Kahemba_Konzo_NonIntervention = "KLPZ", Kahemba_Control_Intervention = "UHPZ", Kahemba_Konzo_Intervention = "KHPZ")
+
+### Color Scheme
+
+#Kinshasa: "royalblue1"
+#Masi-manimba: "springgreen3"
+#ULPZ: "turquoise3"
+#KLPZ: "tomato"
+#UHPZ: "slateblue1"
+#KHPZ: "gold"
+
+kinmas_color <- c("royalblue1",   "springgreen3")
+kinulpz_color <- c("royalblue1",    "turquoise3")
+masulpz_color <- c("springgreen3",     "turquoise3")
+kinuhpz_color <- c("royalblue1",  "slateblue1")
+masuhpz_color <- c("springgreen3","slateblue1")
+
+nonintervention_color <- c("turquoise3",        "tomato" )
+intervention_color <- c( "slateblue1",        "gold")
+control_color <- c( "turquoise3",        "slateblue1")
+disease_color <- c("tomato", "gold")
+geography_color <- c("royalblue1",   "springgreen3", "turquoise3", "slateblue1")
+kahemba_color <- c("turquoise3", "tomato", "slateblue1", "gold")
+konzo_color <- c("royalblue1",   "springgreen3", "turquoise3", "tomato", "slateblue1", "gold")
+
 ### Konzo Meta Data
 #Konzo_meta contains any additional information needed. The relevant data for the project are in the Supplemental File 1 Sample_Metadata tab. Columns Sample, Name, Run, ID, Region, Age, and Sex are as here.
 #Konzo_meta "Status" is the Sample_Metadata "Group", and values Kahemba_Control_NonIntervention is changed to Kahemba_Unaffected_LPZ, Kahemba_Konzo_NonIntervention is changed to Kahemba_Konzo_LPZ, Kahemba_Control_Intervention is changed to Kahemba_Unaffected_HPZ, and Kahemba_Konzo_Intervention is changed to Kahemba_Konzo_HPZ
@@ -133,10 +164,107 @@ KonzoData.P.tr.status.f <- prune_taxa(f_0.0001, KonzoData.P.tr.status) #filtered
 #Bacteria Species
 
 ### Estimate Richness
+#Read Count from KonzoData.S (Bacteria Species data)                           
+otuD.S <- as.data.frame(t(otu_table(KonzoData.S)))
+diversity.S <- estimate_richness(KonzoData.S)
+diversity.S <- cbind(sample_data(KonzoData.S),diversity.S) #Check if correct sample data was cbind. Can be tricky so always confirm
+diversity.S$Status <- as.factor(diversity.S$Status)
+diversity.S$Status <- factor(diversity.S$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
 
+#STATISTICS for Estimate Richness
+#One-way ANOVA to see if there is a statitically significant difference in the measure of alpha diversity
+observed.aov <- aov(Observed ~ Status, data = diversity.S)
+chao1.aov <- aov(Chao1 ~ Status, data = diversity.S)
+shannon.aov <- aov(Shannon ~ Status, data = diversity.S)
+ACE.aov <- aov(ACE ~ Status, data = diversity.S)
+simpson.aov <- aov(Simpson ~ Status, data = diversity.S)
+fisher.aov <- aov(Fisher ~ Status, data = diversity.S)
+   
+###Figure 2:                           
+observed <- ggplot(diversity.S, aes(factor(Status), Observed)) + geom_boxplot(aes(fill = factor(Status)),fatten = 1, outlier.shape = NA) + labs(x = element_blank(), y = "OTU") + theme(axis.text.x = element_blank()) + theme_classic()
+observed <- observed + geom_jitter(position=position_jitter(0.2), size = 0.3)
+observed2 <- observed + stat_summary(fun=mean, geom="point", shape=23, size=1.5, color = "black", fill="white")
+observed3 <- observed2 + theme(legend.position="bottom", legend.margin=margin(-10,0,0,0)) + theme(legend.direction = "horizontal") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(axis.ticks.x = element_blank(), axis.title.y = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_blank())
+
+observed4 <- observed3 + guides(fill=guide_legend(ncol=6)) 
+observed4 <- observed4 + scale_fill_manual(values = konzo_color, labels = SSSL)
+
+shan <- ggplot(diversity.S, aes(factor(Status), Shannon))+ geom_boxplot(aes(fill = factor(Status)),fatten = 1, outlier.shape = NA) + labs(x = element_blank(), y = "Shannon Diversity Index") + theme(axis.text.x = element_blank()) + theme_classic()
+shan <- shan + geom_jitter(position=position_jitter(0.2), size = 0.3)
+shan2 <- shan + stat_summary(fun=mean, geom="point", shape=23, size=1.5, color = "black", fill="white")
+shan3 <- shan2 + theme(legend.position="bottom", legend.margin=margin(-10,0,0,0)) + theme(legend.direction = "horizontal") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(axis.ticks.x = element_blank(), axis.title.y = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_blank())
+
+shan4 <- shan3 + guides(fill=guide_legend(ncol=6)) 
+shan4 <- shan4 + scale_fill_manual(values = konzo_color, labels = SSSL)
+
+
+#Phylum
+top_P <- read.csv("Kinshasa_Konzo3_Phylum_Top4.csv", row.names = 1, colClasses = "character")
+top_P <- unlist(top_P)
+
+KonzoData.P.tr.status.top = prune_taxa(top_P, KonzoData.P.tr.status)
+
+p <- plot_bar(KonzoData.P.tr.status.top, "Sample", "Abundance", fill = 'phylum')
+p$data$Sample <- factor(p$data$Sample, levels = c("Kahemba_Konzo_Intervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_NonIntervention", "Masimanimba", "Kinshasa"))
+
+p <- p + labs(x = element_blank(), y = "Relative Abundance") +  scale_fill_discrete(name = "Phylum")
+top_phylum_plot <- p + theme(legend.position="bottom") + theme(legend.key.size = unit(.2, "cm"))
+
+top_phylum_plot <- top_phylum_plot + 
+  theme(legend.position="right", legend.margin=margin(0,0,0,0),
+        legend.box.margin=margin(-8,0,-8,-8)) + 
+  scale_y_continuous(expand = c(0,0), limits = c(0,1)) +
+  scale_x_discrete(labels= SSSL)+
+  theme(plot.title = element_blank(), legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7),legend.title = element_text(size = 7)) + 
+  guides(fill=guide_legend(ncol=1,byrow=TRUE)) + 
+  theme(axis.text.y = element_text(angle = 0, size = 7), axis.ticks.y = element_blank(), axis.text.x = element_text(angle = 0,vjust=1, hjust=0.5, size = 7), axis.title.y = element_text(size = 7), legend.title = element_text(size = 7)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), strip.text.x = element_text(size=7))
+top_phylum_plot <- top_phylum_plot + geom_bar(stat = "identity") + coord_flip() + theme(axis.title.x = element_text(size = 7))
+top_phylum_plot
+
+#Family
+top_F <- read.csv("Kinshasa_Konzo3_Family_Top5.csv", row.names = 1, colClasses = "character")
+top_F <- unlist(top_F)
+
+KonzoData.F.tr.status.top = prune_taxa(top_F, KonzoData.F.tr.status)
+
+p <- plot_bar(KonzoData.F.tr.status.top, "Sample", "Abundance", fill = 'family')
+p$data$Sample <- factor(p$data$Sample, levels = c("Kahemba_Konzo_Intervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_NonIntervention", "Masimanimba", "Kinshasa"))
+
+p <- p + labs(x = element_blank(), y = "Relative Abundance") +  scale_fill_discrete(name = "Family")
+top_family_plot <- p + theme(legend.position="bottom") + theme(legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7, face="italic"))
+
+top_family_plot <- top_family_plot + 
+  theme(legend.position="right", legend.margin=margin(0,0,0,0),
+        legend.box.margin=margin(-8,0,-8,-8)) + 
+  scale_y_continuous(expand = c(0,0), limits = c(0,0.7)) +
+  scale_x_discrete(labels= SSSL)+
+  theme(plot.title = element_blank(), legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7), legend.title = element_text(size = 7)) + 
+  guides(fill=guide_legend(ncol=1,byrow=TRUE)) + 
+  theme(axis.text.y = element_text(angle = 0, size = 7), axis.ticks.y = element_blank(), axis.text.x = element_text(angle = 0,vjust=1, hjust=0.5, size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), legend.title = element_text(size = 7)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), strip.text.x = element_text(size=7))
+top_family_plot <- top_family_plot + geom_bar(stat = "identity") + coord_flip()
+top_family_plot
+
+#Genus
+top_G <- read.csv("Kinshasa_Konzo3_Genus_Top7.csv", row.names = 1, colClasses = "character")
+top_G <- unlist(top_G)
+
+################ Needs to be added
+                           
+#When adding heat map in gimp to full figure, make sure Image > Print Size has correct inches and ppi (set to >=300))
+
+o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))                                                 
+tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap.tiff", width = 2.5, height = 3.25, units = "in", res = 600)
+heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,1.25), lwid = c(0.1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3),c(2,1,1),c(2,1,1),c(0,0,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
+dev.off()                          
+                           
 ### Beta Diversity using Bray-Curtis for Bacteria Genus
+                           
+                           
 
 ### Mann Whitney-Wilcox Test (with BH correction)
+                           
 #Bacteria Phylum
 #Bacteria Class
 #Bacteria Order
