@@ -645,7 +645,7 @@ dev.off()
                            
 
 ### Mann Whitney-Wilcox Test (with BH correction)
-#Supplemental File 3 where the WT (results from the mann whitney test) are joined into one excel sheet for all the different comparisions and different taxa                           
+#Supplemental File 3 where the saved WT (results from the mann whitney test) are joined into one excel sheet for all the different comparisions, and each tab is each taxa rank                           
                            
 #Bacteria Phylum
 #Bacteria Class
