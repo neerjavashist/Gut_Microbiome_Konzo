@@ -645,6 +645,7 @@ dev.off()
                            
 
 ### Mann Whitney-Wilcox Test (with BH correction)
+#Supplemental File 3 where the WT (results from the mann whitney test) are joined into one excel sheet for all the different comparisions and different taxa                           
                            
 #Bacteria Phylum
 #Bacteria Class
@@ -652,7 +653,302 @@ dev.off()
 #Bacteria Family
 #Bacteria Genus
 #Bacteria Species
+                           
+#KINSHASA AND MASIMANIMBA
+KinMas.S <-  prune_samples(KonzoData.S@sam_data$Status == "Kinshasa" | KonzoData.S@sam_data$Status == "Masimanimba", KonzoData.S)
+KinMas.S.tr <-  transform_sample_counts(KinMas.S, function(x) x / sum(x))
 
+#MWW 
+                                               
+S <- KinMas.S.tr
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- KinMas.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
+colnames(WT) <- c("Bacteria Genus", "Kinshasa vs. Masi-manimba p-value")
+
+for (i in 1:ncol(S.tr.DF))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "KinMas_Bacteria_Species_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "KinMas_Bacteria_Species_0.0001_ByStatus_WilcoxTest.csv")
+                                              
+
+#KINSHASA AND UNAFFECTED LPZ
+                                             
+KinCNI.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa" | KonzoData.S@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.S)
+KinCNI.S.tr <-  transform_sample_counts(KinCNI.S, function(x) x / sum(x))
+
+                                               
+S <- KinCNI.S.tr
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- KinCNI.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
+colnames(WT) <- c("Bacteria Genus", "Kinshasa vs. ULPZ p-value")
+
+for (i in 1:ncol(S.tr.DF))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "KinCNI_Bacteria_Species_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "KinCNI_Bacteria_Species_0.0001_ByStatus_WilcoxTest.csv")
+                                              
+
+#MASIMANIMBA AND UNAFFECTED LPZ                                        
+MasCNI.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba" | KonzoData.S@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.S)
+MasCNI.S.tr <- transform_sample_counts(MasCNI.S, function(x) x / sum(x)) 
+
+#MWW 
+                                               
+S <- MasCNI.S.tr
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- MasCNI.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
+colnames(WT) <- c("Bacteria Genus", "Masimanimba vs. ULPZ p-value")
+
+for (i in 1:ncol(S.tr.DF))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "MasCNI_Bacteria_Species_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "MasCNI_Bacteria_Species_0.0001_ByStatus_WilcoxTest.csv")
+
+#KINSHASA vs UHPZ (Kin vs. CI)
+KinCI.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa" | KonzoData.S@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.S)
+KinCI.S.tr <-  transform_sample_counts(KinCI.S, function(x) x / sum(x))
+
+#MWW                                       
+S <- KinCI.S.tr
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- KinCI.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
+colnames(WT) <- c("Bacteria Genus", "Kinshasa vs. UHPZ p-value")
+
+for (i in 1:ncol(S.tr.DF))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "KinCI_Bacteria_Species_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "KinCI_Bacteria_Species_0.0001_ByStatus_WilcoxTest.csv")
+
+#MASIMANIMBA vs. UHPZ (Mas vs. CI)
+MasCI.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba" | KonzoData.S@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.S)
+MasCI.S.tr <- transform_sample_counts(MasCI.S, function(x) x / sum(x)) 
+                                       
+#MWW 
+                                               
+S <- MasCI.S.tr
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- MasCI.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+    
+
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
+colnames(WT) <- c("Bacteria Genus", "Masi-manimba vs. UHPZ p-value")
+
+for (i in 1:ncol(S.tr.DF))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "MasCI_Bacteria_Species_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "MasCI_Bacteria_Species_0.0001_ByStatus_WilcoxTest.csv")
+
+                                       
+#CONTROL (UNAFFECTED)
+Control.S <- prune_samples(KonzoData.S@sam_data$Status != "Kinshasa", KonzoData.S)
+Control.S <- prune_samples(Control.S@sam_data$Status != "Masimanimba", Control.S)
+Control.S <- prune_samples(Control.S@sam_data$Status != "Kahemba_Konzo_NonIntervention", Control.S)
+Control.S <- prune_samples(Control.S@sam_data$Status != "Kahemba_Konzo_Intervention", Control.S)
+                                             
+Control.S.tr <- transform_sample_counts(Control.S, function(x) x / sum(x))
+                                        
+                                               
+S <- Control.S.tr
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- Control.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
+colnames(WT) <- c("Bacteria Genus", "ULPZ vs. UHPZ p-value")
+
+for (i in 1:ncol(S.tr.DF))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "Control_Bacteria_Species_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "Control_Bacteria_Species_0.0001_ByStatus_WilcoxTest.csv")
+
+                                      
+#DISEASE (KONZO)
+Disease.S <- prune_samples(KonzoData.S@sam_data$Status != "Kinshasa", KonzoData.S)
+Disease.S <- prune_samples(Disease.S@sam_data$Status != "Masimanimba", Disease.S)
+Disease.S <- prune_samples(Disease.S@sam_data$Status != "Kahemba_Control_NonIntervention", Disease.S)
+Disease.S <- prune_samples(Disease.S@sam_data$Status != "Kahemba_Control_Intervention", Disease.S)
+Disease.S.tr <- transform_sample_counts(Disease.S, function(x) x / sum(x))                                             
+
+
+S <- Disease.S.tr
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- Disease.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
+colnames(WT) <- c("Bacteria Genus", "KLPZ vs. KHPZ p-value")
+
+for (i in 1:ncol(S.tr.DF))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "Disease_Bacteria_Species_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "Disease_Bacteria_Species_0.0001_ByStatus_WilcoxTest.csv")
+
+#NON-INTERVENTION (LPZ)
+
+NonIntervention.S <- prune_samples(KonzoData.S@sam_data$Status != "Kinshasa", KonzoData.S)
+NonIntervention.S <- prune_samples(NonIntervention.S@sam_data$Status != "Masimanimba", NonIntervention.S)
+NonIntervention.S <- prune_samples(NonIntervention.S@sam_data$Status != "Kahemba_Control_Intervention", NonIntervention.S)
+NonIntervention.S <- prune_samples(NonIntervention.S@sam_data$Status != "Kahemba_Konzo_Intervention", NonIntervention.S)
+NonIntervention.S.tr <- transform_sample_counts(NonIntervention.S, function(x) x / sum(x))
+                                                
+                                                
+S <- NonIntervention.S.tr
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- NonIntervention.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
+colnames(WT) <- c("Bacteria Genus", "ULPZ vs. KLPZ p-value")
+
+for (i in 1:ncol(S.tr.DF))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "NonIntervention_Bacteria_Species_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "NonIntervention_Bacteria_Species_0.0001_ByStatus_WilcoxTest.csv")
+                                                
+#INTERVENTION (HPZ)
+Intervention.S <- prune_samples(KonzoData.S@sam_data$Status != "Kinshasa", KonzoData.S)
+Intervention.S <- prune_samples(Intervention.S@sam_data$Status != "Masimanimba", Intervention.S)
+Intervention.S <- prune_samples(Intervention.S@sam_data$Status != "Kahemba_Control_NonIntervention", Intervention.S)
+Intervention.S <- prune_samples(Intervention.S@sam_data$Status != "Kahemba_Konzo_NonIntervention", Intervention.S)
+Intervention.S.tr <- transform_sample_counts(Intervention.S, function(x) x / sum(x))
+
+S <- Intervention.S.tr
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- Intervention.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+                                                
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
+colnames(WT) <- c("Bacteria Genus", "UHPZ vs. KHPZ p-value")
+
+for (i in 1:ncol(S.tr.DF))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "Intervention_Bacteria_Species_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "Intervention_Bacteria_Species_0.0001_ByStatus_WilcoxTest.csv")
+
+
+
+                     
 
 
 
