@@ -648,9 +648,979 @@ dev.off()
 #Supplemental File 3 where the saved WT (results from the mann whitney test) are joined into one excel sheet for all the different comparisions, and each tab is each taxa rank                           
                            
 #Bacteria Phylum
+#KINSHASA AND MASIMANIMBA
+KinMas.P <-  prune_samples(Geography.P@sam_data$Status != "Kahemba_Control_NonIntervention", Geography.P)
+KinMas.P.tr <-  transform_sample_counts(KinMas.P, function(x) x / sum(x))
+
+#MWW 
+                                               
+P <- KinMas.P.tr
+                                               
+P.tr_META <- as.data.frame(P@sam_data)
+P.tr_OTU <- as.data.frame(t(P@otu_table))
+P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
+
+colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
+for (i in 1:nrow(P.tr.DF))
+  {P.tr.DF[i,]$Status <- KinMas.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("KinMas_Phylum ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(P.tr.DF))
+{
+  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
+  KW[i,1] = colnames(P.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "KinMas_Bacteria_Phylum_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "KinMas_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                       
+write.csv(KW.f, file = "KinMas_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv")  
+                                        
+WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
+colnames(WT) <- c("KinMas_Phylum ~Status", "BH correction p-value")
+
+for (i in 1:ncol(P.tr.DF))
+{
+  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(P.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "KinMas_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "KinMas_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "KinMas_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")          
+                                        
+
+   
+#KINSHASA AND UNAFFECTED LPZ
+                                             
+KinCNI.P <-  prune_samples(Geography.P@sam_data$Status != "Masimanimba", Geography.P)
+KinCNI.P.tr <-  transform_sample_counts(KinCNI.P, function(x) x / sum(x))
+
+#MWW 
+                                               
+P <- KinCNI.P.tr
+                                               
+P.tr_META <- as.data.frame(P@sam_data)
+P.tr_OTU <- as.data.frame(t(P@otu_table))
+P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
+
+colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
+for (i in 1:nrow(P.tr.DF))
+  {P.tr.DF[i,]$Status <- KinCNI.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("KinCNI_Phylum ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(P.tr.DF))
+{
+  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
+  KW[i,1] = colnames(P.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "KinCNI_Bacteria_Phylum_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "KinCNI_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                       
+write.csv(KW.f, file = "KinCNI_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv")                                           
+                                        
+WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
+colnames(WT) <- c("KinCNI_Phylum ~Status", "BH correction p-value")
+
+for (i in 1:ncol(P.tr.DF))
+{
+  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(P.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "KinCNI_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "KiCNI_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "KinCNI_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")          
+
+ 
+#MASIMANIMBA AND UNAFFECTED LPZ                                        
+MasCNI.P <- prune_samples(Geography.P@sam_data$Status != "Kinshasa", Geography.P)
+MasCNI.P.tr <- transform_sample_counts(MasCNI.P, function(x) x / sum(x)) 
+
+P <- MasCNI.P.tr
+                                               
+P.tr_META <- as.data.frame(P@sam_data)
+P.tr_OTU <- as.data.frame(t(P@otu_table))
+P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
+
+colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
+for (i in 1:nrow(P.tr.DF))
+  {P.tr.DF[i,]$Status <- MasCNI.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("MasCNI_Phylum ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(P.tr.DF))
+{
+  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
+  KW[i,1] = colnames(P.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "MasCNI_Bacteria_Phylum_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "MasCNI_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                                                      
+write.csv(KW.f, file = "MasCNI_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv")   
+
+WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
+colnames(WT) <- c("MasCNI_Phylum ~Status", "BH correction p-value")
+
+for (i in 1:ncol(P.tr.DF))
+{
+  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(P.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "MasCNI_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "MasCNI_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "MasCNI_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv") 
+
+#Geography with Kin, Mas, ULPZ, UHPZ
+Geography.P <- prune_samples(KonzoData.P@sam_data$Status != "Kahemba_Konzo_NonIntervention", KonzoData.P)
+Geography.P <- prune_samples(Geography.P@sam_data$Status != "Kahemba_Konzo_Intervention", Geography.P)
+ 
+#KINSHASA AND UNAFFECTED HPZ
+                                             
+KinCI.P <-  prune_samples(Geography.P@sam_data$Status != "Masimanimba" & Geography.P@sam_data$Status != "Kahemba_Control_NonIntervention", Geography.P)
+KinCI.P.tr <-  transform_sample_counts(KinCI.P, function(x) x / sum(x))
+
+#MWW 
+                                               
+P <- KinCI.P.tr
+                                               
+P.tr_META <- as.data.frame(P@sam_data)
+P.tr_OTU <- as.data.frame(t(P@otu_table))
+P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
+
+colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
+for (i in 1:nrow(P.tr.DF))
+  {P.tr.DF[i,]$Status <- KinCI.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("KinCI_Phylum ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(P.tr.DF))
+{
+  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
+  KW[i,1] = colnames(P.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "KinCI_Bacteria_Phylum_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "KinCI_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                       
+write.csv(KW.f, file = "KinCI_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv")                                           
+                                        
+WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
+colnames(WT) <- c("KinCI_Phylum ~Status", "BH correction p-value")
+
+for (i in 1:ncol(P.tr.DF))
+{
+  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(P.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "KinCI_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "KiCI_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "KinCI_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")          
+
+ 
+#MASIMANIMBA AND UNAFFECTED LPZ                                        
+MasCI.P <- prune_samples(Geography.P@sam_data$Status != "Kinshasa" & Geography.P@sam_data$Status != "Kahemba_Control_NonIntervention", Geography.P)
+MasCI.P.tr <- transform_sample_counts(MasCI.P, function(x) x / sum(x)) 
+
+P <- MasCI.P.tr
+                                               
+P.tr_META <- as.data.frame(P@sam_data)
+P.tr_OTU <- as.data.frame(t(P@otu_table))
+P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
+
+colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
+for (i in 1:nrow(P.tr.DF))
+  {P.tr.DF[i,]$Status <- MasCI.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("MasCI_Phylum ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(P.tr.DF))
+{
+  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
+  KW[i,1] = colnames(P.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "MasCI_Bacteria_Phylum_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "MasCI_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                                                      
+write.csv(KW.f, file = "MasCI_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv")   
+
+WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
+colnames(WT) <- c("MasCI_Phylum ~Status", "BH correction p-value")
+
+for (i in 1:ncol(P.tr.DF))
+{
+  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(P.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "MasCI_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "MasCI_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "MasCI_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv") 
+                                       
+                                       
+                                       
+#CONTROL (UNAFFECTED)
+Control.P <- prune_samples(KonzoData.P@sam_data$Status != "Kinshasa", KonzoData.P)
+Control.P <- prune_samples(Control.P@sam_data$Status != "Masimanimba", Control.P)
+Control.P <- prune_samples(Control.P@sam_data$Status != "Kahemba_Konzo_NonIntervention", Control.P)
+Control.P <- prune_samples(Control.P@sam_data$Status != "Kahemba_Konzo_Intervention", Control.P)
+                                             
+Control.P.tr <- transform_sample_counts(Control.P, function(x) x / sum(x))
+                                        
+                                               
+P <- Control.P.tr
+                                               
+P.tr_META <- as.data.frame(P@sam_data)
+P.tr_OTU <- as.data.frame(t(P@otu_table))
+P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
+
+colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
+for (i in 1:nrow(P.tr.DF))
+  {P.tr.DF[i,]$Status <- Control.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("Unaffected_Phylum ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(P.tr.DF))
+{
+  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
+  KW[i,1] = colnames(P.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "Control_Bacteria_Phylum_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "Control_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                                                 
+write.csv(KW.f, file = "Control_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv") 
+                                        
+WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
+colnames(WT) <- c("Unaffected_Phylum ~Status", "BH correction p-value")
+
+for (i in 1:ncol(P.tr.DF))
+{
+  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(P.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "Control_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "Control_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "Control_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")                                               
+
+                                             
+#DISEASE (KONZO)
+Disease.P <- prune_samples(KonzoData.P@sam_data$Status != "Kinshasa", KonzoData.P)
+Disease.P <- prune_samples(Disease.P@sam_data$Status != "Masimanimba", Disease.P)
+Disease.P <- prune_samples(Disease.P@sam_data$Status != "Kahemba_Control_NonIntervention", Disease.P)
+Disease.P <- prune_samples(Disease.P@sam_data$Status != "Kahemba_Control_Intervention", Disease.P)
+Disease.P.tr <- transform_sample_counts(Disease.P, function(x) x / sum(x))                                             
+
+P <- Disease.P.tr
+                                               
+P.tr_META <- as.data.frame(P@sam_data)
+P.tr_OTU <- as.data.frame(t(P@otu_table))
+P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
+
+colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
+for (i in 1:nrow(P.tr.DF))
+  {P.tr.DF[i,]$Status <- Disease.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("Konzo_Phylum ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(P.tr.DF))
+{
+  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
+  KW[i,1] = colnames(P.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "Disease_Bacteria_Phylum_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "Disease_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                   
+write.csv(KW.f, file = "Disease_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv") 
+
+WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
+colnames(WT) <- c("Konzo_Phylum ~Status", "BH correction p-value")
+
+for (i in 1:ncol(P.tr.DF))
+{
+  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(P.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "Disease_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "Disease_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "Disease_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")                                               
+
+                                               
+#INTERVENTION (HPZ)
+Intervention.P <- prune_samples(KonzoData.P@sam_data$Status != "Kinshasa", KonzoData.P)
+Intervention.P <- prune_samples(Intervention.P@sam_data$Status != "Masimanimba", Intervention.P)
+Intervention.P <- prune_samples(Intervention.P@sam_data$Status != "Kahemba_Control_NonIntervention", Intervention.P)
+Intervention.P <- prune_samples(Intervention.P@sam_data$Status != "Kahemba_Konzo_NonIntervention", Intervention.P)
+Intervention.P.tr <- transform_sample_counts(Intervention.P, function(x) x / sum(x))
+
+# HPZ Control vs. Konzo
+P <- Intervention.P.tr
+                                               
+P.tr_META <- as.data.frame(P@sam_data)
+P.tr_OTU <- as.data.frame(t(P@otu_table))
+P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
+
+colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
+for (i in 1:nrow(P.tr.DF))
+  {P.tr.DF[i,]$Status <- Intervention.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("Intervention_Phylum ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(P.tr.DF))
+{
+  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
+  KW[i,1] = colnames(P.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "Intervention_Bacteria_Phylum_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "Intervention_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                   
+write.csv(KW.f, file = "Intervention_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv") 
+
+WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
+colnames(WT) <- c("Intervention_Phylum ~Status", "BH correction p-value")
+
+for (i in 1:ncol(P.tr.DF))
+{
+  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(P.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "Intervention_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "Intervention_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "Intervention_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")                                               
+
+ 
+#NON-INTERVENTION (LPZ)
+
+NonIntervention.P <- prune_samples(KonzoData.P@sam_data$Status != "Kinshasa", KonzoData.P)
+NonIntervention.P <- prune_samples(NonIntervention.P@sam_data$Status != "Masimanimba", NonIntervention.P)
+NonIntervention.P <- prune_samples(NonIntervention.P@sam_data$Status != "Kahemba_Control_Intervention", NonIntervention.P)
+NonIntervention.P <- prune_samples(NonIntervention.P@sam_data$Status != "Kahemba_Konzo_Intervention", NonIntervention.P)
+NonIntervention.P.tr <- transform_sample_counts(NonIntervention.P, function(x) x / sum(x))
+                                                
+                                                
+#LPZ Control vs. Konzo
+P <- NonIntervention.P.tr
+                                               
+P.tr_META <- as.data.frame(P@sam_data)
+P.tr_OTU <- as.data.frame(t(P@otu_table))
+P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
+
+colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
+for (i in 1:nrow(P.tr.DF))
+  {P.tr.DF[i,]$Status <- NonIntervention.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("NonIntervention_Phylum ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(P.tr.DF))
+{
+  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
+  KW[i,1] = colnames(P.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "NonIntervention_Bacteria_Phylum_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "NonIntervention_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                   
+write.csv(KW.f, file = "NonIntervention_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv") 
+
+WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
+colnames(WT) <- c("NonIntervention_Phylum ~Status", "BH correction p-value")
+
+for (i in 1:ncol(P.tr.DF))
+{
+  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(P.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "NonIntervention_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "NonIntervention_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "NonIntervention_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")                                           
+                           
 #Bacteria Class
+Geography.C <- prune_samples(KonzoData.C@sam_data$Status != "Kahemba_Konzo_NonIntervention", KonzoData.C)
+Geography.C <- prune_samples(Geography.C@sam_data$Status != "Kahemba_Control_Intervention", Geography.C)
+Geography.C <- prune_samples(Geography.C@sam_data$Status != "Kahemba_Konzo_Intervention", Geography.C)
+
+#KINSHASA AND MASIMANIMBA
+KinMas.C <-  prune_samples(Geography.C@sam_data$Status != "Kahemba_Control_NonIntervention", Geography.C)
+KinMas.C.tr <-  transform_sample_counts(KinMas.C, function(x) x / sum(x))
+
+C <- KinMas.C.tr
+                                               
+C.tr_META <- as.data.frame(C@sam_data)
+C.tr_OTU <- as.data.frame(t(C@otu_table))
+C.tr.DF <- cbind(C.tr_OTU, C.tr_META$Status)
+
+colnames(C.tr.DF)[colnames(C.tr.DF)=="C.tr_META$Status"] <- "Status"
+for (i in 1:nrow(C.tr.DF))
+  {C.tr.DF[i,]$Status <- KinMas.C.tr@sam_data[rownames(C.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(C.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("KinMas_Class ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(C.tr.DF))
+{
+  kw <- kruskal.test(C.tr.DF[,i] ~Status, data = C.tr.DF)
+  KW[i,1] = colnames(C.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "KinMas_Bacteria_Class_ByStatus_KruskalTest.csv")
+
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "KinMas_Bacteria_Class_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                       
+write.csv(KW.f, file = "KinMas_Bacteria_Class_0.00001_ByStatus_KruskalTest.csv")                                           
+
+WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
+colnames(WT) <- c("KinMas_Class ~Status", "BH correction p-value")
+
+for (i in 1:ncol(C.tr.DF))
+{
+  wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(C.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "KinMas_Bacteria_Class_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "KinMas_Bacteria_Class_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "KinMas_Bacteria_Class_0.00001_ByStatus_WilcoxTest.csv")          
+
+                                        
+#KINSHASA AND UNAFFECTED LPZ (CNI)
+KinCNI.C <-  prune_samples(Geography.C@sam_data$Status != "Masimanimba", Geography.C)
+KinCNI.C.tr <-  transform_sample_counts(KinCNI.C, function(x) x / sum(x))
+                                        
+C <- KinCNI.C.tr
+                                               
+C.tr_META <- as.data.frame(C@sam_data)
+C.tr_OTU <- as.data.frame(t(C@otu_table))
+C.tr.DF <- cbind(C.tr_OTU, C.tr_META$Status)
+
+colnames(C.tr.DF)[colnames(C.tr.DF)=="C.tr_META$Status"] <- "Status"
+for (i in 1:nrow(C.tr.DF))
+  {C.tr.DF[i,]$Status <- KinCNI.C.tr@sam_data[rownames(C.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(C.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("KinCNI_Class ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(C.tr.DF))
+{
+  kw <- kruskal.test(C.tr.DF[,i] ~Status, data = C.tr.DF)
+  KW[i,1] = colnames(C.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "KinCNI_Bacteria_Class_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "KinCNI_Bacteria_Class_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                       
+write.csv(KW.f, file = "KinCNI_Bacteria_Class_0.00001_ByStatus_KruskalTest.csv")                                           
+
+WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
+colnames(WT) <- c("KinCNI_Class ~Status", "BH correction p-value")
+
+for (i in 1:ncol(C.tr.DF))
+{
+  wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(C.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "KinCNI_Bacteria_Class_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "KinCNI_Bacteria_Class_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "KinCNI_Bacteria_Class_0.00001_ByStatus_WilcoxTest.csv")          
+
+#MASIMANIMBA AND UNAFFECTED LPZ (CNI)
+MasCNI.C <- prune_samples(Geography.C@sam_data$Status != "Kinshasa", Geography.C)
+MasCNI.C.tr <- transform_sample_counts(MasCNI.C, function(x) x / sum(x)) 
+
+#MWW 
+                                               
+C <- MasCNI.C.tr
+                                               
+C.tr_META <- as.data.frame(C@sam_data)
+C.tr_OTU <- as.data.frame(t(C@otu_table))
+C.tr.DF <- cbind(C.tr_OTU, C.tr_META$Status)
+
+colnames(C.tr.DF)[colnames(C.tr.DF)=="C.tr_META$Status"] <- "Status"
+for (i in 1:nrow(C.tr.DF))
+  {C.tr.DF[i,]$Status <- MasCNI.C.tr@sam_data[rownames(C.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(C.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("MasCNI_Class ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(C.tr.DF))
+{
+  kw <- kruskal.test(C.tr.DF[,i] ~Status, data = C.tr.DF)
+  KW[i,1] = colnames(C.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "MasCNI_Bacteria_Class_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "MasCNI_Bacteria_Class_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                   
+                                    
+write.csv(KW.f, file = "MasCNI_Bacteria_Class_0.00001_ByStatus_KruskalTest.csv")   
+                                       
+                                       
+WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
+                                     
+colnames(WT) <- c("MasCNI_Class ~Status", "BH correction p-value")
+
+for (i in 1:ncol(C.tr.DF))
+{
+  wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(C.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "MasCNI_Bacteria_Class_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "MasCNI_Bacteria_Class_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "MasCNI_Bacteria_Class_0.00001_ByStatus_WilcoxTest.csv") 
+
+#Geo with Kin, Mas, ULPZ, UHPZ                                       
+Geography.C <- prune_samples(KonzoData.C@sam_data$Status != "Kahemba_Konzo_NonIntervention", KonzoData.C)
+Geography.C <- prune_samples(Geography.C@sam_data$Status != "Kahemba_Konzo_Intervention", Geography.C)
+                                       
+#Kin CI
+#KINSHASA AND UNAFFECTED HPZ (CI)
+KinCI.C <-  prune_samples(Geography.C@sam_data$Status != "Masimanimba" & Geography.C@sam_data$Status != "Kahemba_Control_NonIntervention", Geography.C)
+KinCI.C.tr <-  transform_sample_counts(KinCI.C, function(x) x / sum(x))
+                                        
+C <- KinCI.C.tr
+                                               
+C.tr_META <- as.data.frame(C@sam_data)
+C.tr_OTU <- as.data.frame(t(C@otu_table))
+C.tr.DF <- cbind(C.tr_OTU, C.tr_META$Status)
+
+colnames(C.tr.DF)[colnames(C.tr.DF)=="C.tr_META$Status"] <- "Status"
+for (i in 1:nrow(C.tr.DF))
+  {C.tr.DF[i,]$Status <- KinCI.C.tr@sam_data[rownames(C.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(C.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("KinCI_Class ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(C.tr.DF))
+{
+  kw <- kruskal.test(C.tr.DF[,i] ~Status, data = C.tr.DF)
+  KW[i,1] = colnames(C.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "KinCI_Bacteria_Class_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "KinCI_Bacteria_Class_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                       
+write.csv(KW.f, file = "KinCI_Bacteria_Class_0.00001_ByStatus_KruskalTest.csv")                                           
+
+WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
+colnames(WT) <- c("KinCI_Class ~Status", "BH correction p-value")
+
+for (i in 1:ncol(C.tr.DF))
+{
+  wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(C.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "KinCI_Bacteria_Class_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "KiCI_Bacteria_Class_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "KinCI_Bacteria_Class_0.00001_ByStatus_WilcoxTest.csv")                                         
+                                       
+#Mas CI 
+                                       
+#MASIMANIMBA AND UNAFFECTED HPZ (CI)
+MasCI.C <- prune_samples(Geography.C@sam_data$Status != "Kinshasa" & Geography.C@sam_data$Status != "Kahemba_Control_NonIntervention", Geography.C)
+MasCI.C.tr <- transform_sample_counts(MasCI.C, function(x) x / sum(x)) 
+
+#MWW 
+                                               
+C <- MasCI.C.tr
+                                               
+C.tr_META <- as.data.frame(C@sam_data)
+C.tr_OTU <- as.data.frame(t(C@otu_table))
+C.tr.DF <- cbind(C.tr_OTU, C.tr_META$Status)
+
+colnames(C.tr.DF)[colnames(C.tr.DF)=="C.tr_META$Status"] <- "Status"
+for (i in 1:nrow(C.tr.DF))
+  {C.tr.DF[i,]$Status <- MasCI.C.tr@sam_data[rownames(C.tr.DF[i,]),]$Status
+  }
+      
+KW <- matrix(nrow = ncol(C.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("MasCI_Class ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(C.tr.DF))
+{
+  kw <- kruskal.test(C.tr.DF[,i] ~Status, data = C.tr.DF)
+  KW[i,1] = colnames(C.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "MasCI_Bacteria_Class_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "MasCI_Bacteria_Class_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                   
+                                    
+write.csv(KW.f, file = "MasCI_Bacteria_Class_0.00001_ByStatus_KruskalTest.csv")   
+                                             
+                                      
+WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
+                                     
+colnames(WT) <- c("MasCI_Class ~Status", "BH correction p-value")
+
+for (i in 1:ncol(C.tr.DF))
+{
+  wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(C.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "MasCI_Bacteria_Class_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "MasCI_Bacteria_Class_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "MasCI_Bacteria_Class_0.00001_ByStatus_WilcoxTest.csv")                                        
+                                       
+#UNAFFECTED LPZ vs. HPZ
+Control.C <- prune_samples(KonzoData.C@sam_data$Status != "Kinshasa", KonzoData.C)
+Control.C <- prune_samples(Control.C@sam_data$Status != "Masimanimba", Control.C)
+Control.C <- prune_samples(Control.C@sam_data$Status != "Kahemba_Konzo_NonIntervention", Control.C)
+Control.C <- prune_samples(Control.C@sam_data$Status != "Kahemba_Konzo_Intervention", Control.C)
+                                             
+Control.C.tr <- transform_sample_counts(Control.C, function(x) x / sum(x))
+                                        
+#MWW 
+                                               
+C <- Control.C.tr
+                                               
+C.tr_META <- as.data.frame(C@sam_data)
+C.tr_OTU <- as.data.frame(t(C@otu_table))
+C.tr.DF <- cbind(C.tr_OTU, C.tr_META$Status)
+
+colnames(C.tr.DF)[colnames(C.tr.DF)=="C.tr_META$Status"] <- "Status"
+for (i in 1:nrow(C.tr.DF))
+  {C.tr.DF[i,]$Status <- Control.C.tr@sam_data[rownames(C.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(C.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("Unaffected_Class ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(C.tr.DF))
+{
+  kw <- kruskal.test(C.tr.DF[,i] ~Status, data = C.tr.DF)
+  KW[i,1] = colnames(C.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "Control_Bacteria_Class_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "Control_Bacteria_Class_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                   
+                                    
+write.csv(KW.f, file = "Control_Bacteria_Class_0.00001_ByStatus_KruskalTest.csv") 
+                                        
+                                        
+WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
+colnames(WT) <- c("Unaffected_Class ~Status", "BH correction p-value")
+
+for (i in 1:ncol(C.tr.DF))
+{
+  wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(C.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "Control_Bacteria_Class_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "Control_Bacteria_Class_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "Control_Bacteria_Class_0.00001_ByStatus_WilcoxTest.csv")                                               
+                                              
+#DISEASE (KONZO LPZ vs. HPZ)
+Disease.C <- prune_samples(KonzoData.C@sam_data$Status != "Kinshasa", KonzoData.C)
+Disease.C <- prune_samples(Disease.C@sam_data$Status != "Masimanimba", Disease.C)
+Disease.C <- prune_samples(Disease.C@sam_data$Status != "Kahemba_Control_NonIntervention", Disease.C)
+Disease.C <- prune_samples(Disease.C@sam_data$Status != "Kahemba_Control_Intervention", Disease.C)
+Disease.C.tr <- transform_sample_counts(Disease.C, function(x) x / sum(x))                                             
+                                              
+
+C <- Disease.C.tr
+                                               
+C.tr_META <- as.data.frame(C@sam_data)
+C.tr_OTU <- as.data.frame(t(C@otu_table))
+C.tr.DF <- cbind(C.tr_OTU, C.tr_META$Status)
+
+colnames(C.tr.DF)[colnames(C.tr.DF)=="C.tr_META$Status"] <- "Status"
+for (i in 1:nrow(C.tr.DF))
+  {C.tr.DF[i,]$Status <- Disease.C.tr@sam_data[rownames(C.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(C.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("Konzo_Class ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(C.tr.DF))
+{
+  kw <- kruskal.test(C.tr.DF[,i] ~Status, data = C.tr.DF)
+  KW[i,1] = colnames(C.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "Konzo_Bacteria_Class_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "Konzo_Bacteria_Class_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                   
+write.csv(KW.f, file = "Konzo_Bacteria_Class_0.00001_ByStatus_KruskalTest.csv") 
+
+                                        
+WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
+colnames(WT) <- c("Konzo_Class ~Status", "BH correction p-value")
+
+for (i in 1:ncol(C.tr.DF))
+{
+  wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(C.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "Konzo_Bacteria_Class_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "Konzo_Bacteria_Class_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "Konzo_Bacteria_Class_0.00001_ByStatus_WilcoxTest.csv")                                               
+
+                                        
+#UNAFFECTED HPZ vs. KONZO HPZ
+                                        
+Intervention.C <- prune_samples(KonzoData.C@sam_data$Status != "Kinshasa", KonzoData.C)
+Intervention.C <- prune_samples(Intervention.C@sam_data$Status != "Masimanimba", Intervention.C)
+Intervention.C <- prune_samples(Intervention.C@sam_data$Status != "Kahemba_Control_NonIntervention", Intervention.C)
+Intervention.C <- prune_samples(Intervention.C@sam_data$Status != "Kahemba_Konzo_NonIntervention", Intervention.C)
+Intervention.C.tr <- transform_sample_counts(Intervention.C, function(x) x / sum(x))
+
+C <- Intervention.C.tr
+                                               
+C.tr_META <- as.data.frame(C@sam_data)
+C.tr_OTU <- as.data.frame(t(C@otu_table))
+C.tr.DF <- cbind(C.tr_OTU, C.tr_META$Status)
+
+colnames(C.tr.DF)[colnames(C.tr.DF)=="C.tr_META$Status"] <- "Status"
+for (i in 1:nrow(C.tr.DF))
+  {C.tr.DF[i,]$Status <- Intervention.C.tr@sam_data[rownames(C.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(C.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("Intervention_Class ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(C.tr.DF))
+{
+  kw <- kruskal.test(C.tr.DF[,i] ~Status, data = C.tr.DF)
+  KW[i,1] = colnames(C.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "Intervention_Bacteria_Class_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "Intervention_Bacteria_Class_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                   
+write.csv(KW.f, file = "Intervention_Bacteria_Class_0.00001_ByStatus_KruskalTest.csv") 
+                                             
+WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
+colnames(WT) <- c("Intervention_Class ~Status", "BH correction p-value")
+
+for (i in 1:ncol(C.tr.DF))
+{
+  wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(C.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "Intervention_Bacteria_Class_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "Intervention_Bacteria_Class_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "Intervention_Bacteria_Class_0.00001_ByStatus_WilcoxTest.csv")                                               
+
+#NON-INTERVENTION (LPZ)
+
+NonIntervention.C <- prune_samples(KonzoData.C@sam_data$Status != "Kinshasa", KonzoData.C)
+NonIntervention.C <- prune_samples(NonIntervention.C@sam_data$Status != "Masimanimba", NonIntervention.C)
+NonIntervention.C <- prune_samples(NonIntervention.C@sam_data$Status != "Kahemba_Control_Intervention", NonIntervention.C)
+NonIntervention.C <- prune_samples(NonIntervention.C@sam_data$Status != "Kahemba_Konzo_Intervention", NonIntervention.C)
+NonIntervention.C.tr <- transform_sample_counts(NonIntervention.C, function(x) x / sum(x))
+
+C <- NonIntervention.C.tr
+                                               
+C.tr_META <- as.data.frame(C@sam_data)
+C.tr_OTU <- as.data.frame(t(C@otu_table))
+C.tr.DF <- cbind(C.tr_OTU, C.tr_META$Status)
+
+colnames(C.tr.DF)[colnames(C.tr.DF)=="C.tr_META$Status"] <- "Status"
+for (i in 1:nrow(C.tr.DF))
+  {C.tr.DF[i,]$Status <- NonIntervention.C.tr@sam_data[rownames(C.tr.DF[i,]),]$Status
+  }
+    
+KW <- matrix(nrow = ncol(C.tr_OTU),  ncol = 4)
+
+colnames(KW) <- c("NonIntervention_Class ~Status", "df", "chi-squared", "p-value")
+for (i in 1:ncol(C.tr.DF))
+{
+  kw <- kruskal.test(C.tr.DF[,i] ~Status, data = C.tr.DF)
+  KW[i,1] = colnames(C.tr.DF[i])
+  KW[i,3] = as.numeric(kw$statistic)
+  KW[i,2] = as.numeric(kw$parameter)
+  KW[i,4] = as.numeric(kw$p.value)
+}
+write.csv(KW, file = "NonIntervention_Bacteria_Class_ByStatus_KruskalTest.csv")
+KW <- data.frame(KW, row.names = TRUE)
+KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
+write.csv(KW.f, file = "NonIntervention_Bacteria_Class_0.0001_ByStatus_KruskalTest.csv")
+KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                   
+write.csv(KW.f, file = "NonIntervention_Bacteria_Class_0.00001_ByStatus_KruskalTest.csv") 
+                                                
+WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
+colnames(WT) <- c("NonIntervention_Class ~Status", "BH correction p-value")
+
+for (i in 1:ncol(C.tr.DF))
+{
+  wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(C.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "NonIntervention_Bacteria_Class_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "NonIntervention_Bacteria_Class_0.0001_ByStatus_WilcoxTest.csv")
+WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
+write.csv(WT.f, file = "NonIntervention_Bacteria_Class_0.00001_ByStatus_WilcoxTest.csv")                                                 
+                                                
 #Bacteria Order
+                                                
+                                                
 #Bacteria Family
+                                                
+                                                
 #Bacteria Genus
                            
 KinMas.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Masimanimba"),  KonzoData.G)
