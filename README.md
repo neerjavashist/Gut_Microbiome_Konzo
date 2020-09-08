@@ -11,5 +11,6 @@ The shell scripts may need to be adjusted depening on input folder, however the 
 5. Extract the Braken files that in Kraken report format (will be in the input folder) for downstream analysis in R since they are compatible with pavian. 
 6. Use pavain to consolidate the report files for all samples into one large file. Additionally, using the pavian filter feature, get different taxon (phylum, class, order, family, genus, species) for each of the different domains (here only Bacteria are analyzed). The lineage column is removed and the names of samples are changed to they match those in the Konzo_meta file prior to analysis in R. 
 7. Install any additional necessary packages as listed in Code.R, and follow the script for further analysis.
+8. Figure making is also included in the code. However, Gimp was used to combine some figures into a final layout. 
 
 Note: The code is commented up front for clarification, but most of the code is repetitive with changes depedning on input. Additionally, phylum input files are available for reference to have a better idea of what the input looks like as the files are separate and have more info than necessary/provided in Supplemental files in the paper submission. 
