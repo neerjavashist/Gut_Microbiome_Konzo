@@ -112,13 +112,13 @@ write.csv(KonzoData.P@otu_table), file = "./KonzoDataPhylum_ReadCounts.csv")
 
 #Read Counts to Relative Abundance
 KonzoData.P.tr <- transform_sample_counts(KonzoData.P, function(x) x / sum(x))
-#Writing the otu_table. Supplemental File 2, Phylum Tab                                     
+#Writing the otu_table in Supplemental File 2, Phylum Tab                                     
 write.csv(KonzoData.P.tr@otu_table), file = "./KonzoDataPhylum_AvgRelAbund.csv")  
 #Merge samples by group/status                                         
 KonzoData.P.tr.status <- merge_samples(KonzoData.P.tr, KonzoData.P.tr@sam_data$Status) #merge_smaples by default sums the values for otu
 KonzoData.P.tr.status <- transform_sample_counts(KonzoData.P.tr.status, function(x) x / 30) #average the sum of relabund in each group
                                                  
-#Writing the otu_table. Supplemental File 2, Phylum Tab                                                                                      
+#Writing the otu_table in Supplemental File 2, Phylum Tab (data is joined by phylum name with KonzoData.P.tr@otu_table)                                                                                     
 write.csv(t(KonzoData.P.tr.status@otu_table), file = "./KonzoDataPhylum_AvgRelAbund_ByStatus.csv")
   
 #keep Rel abund >= 0.01% in atleast one group
@@ -578,7 +578,185 @@ shan3 <- shan2 + theme(legend.position="bottom", legend.margin=margin(-10,0,0,0)
 shan4 <- shan3 + guides(fill=guide_legend(ncol=6)) 
 shan4 <- shan4 + scale_fill_manual(values = konzo_color, labels = SSSL)
 
+#To get Top taxa
 
+Kinshasa.P <- prune_samples(KonzoData.P@sam_data$Status == "Kinshasa", KonzoData.P)
+Kinshasa.P.tr <- transform_sample_counts(Kinshasa.P, function(x) x / sum(x))
+Masimanimba.P <- prune_samples(KonzoData.P@sam_data$Status == "Masimanimba", KonzoData.P)
+Masimanimba.P.tr <- transform_sample_counts(Masimanimba.P, function(x) x / sum(x))                                        
+ULPZ.P <- prune_samples(KonzoData.P@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.P)
+ULPZ.P.tr <- transform_sample_counts(ULPZ.P, function(x) x / sum(x))
+KLPZ.P <- prune_samples(KonzoData.P@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.P)
+KLPZ.P.tr <- transform_sample_counts(KLPZ.P, function(x) x / sum(x))
+UHPZ.P <- prune_samples(KonzoData.P@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.P)
+UHPZ.P.tr <- transform_sample_counts(UHPZ.P, function(x) x / sum(x))
+KHPZ.P <- prune_samples(KonzoData.P@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.P)
+KHPZ.P.tr <- transform_sample_counts(KHPZ.P, function(x) x / sum(x))
+   
+
+top1 = sort(taxa_sums(Kinshasa.P.tr), TRUE)[1:4]
+top2 = sort(taxa_sums(Masimanimba.P.tr), TRUE)[1:4]
+top3 = sort(taxa_sums(ULPZ.P.tr), TRUE)[1:4]
+top4 = sort(taxa_sums(KLPZ.P.tr), TRUE)[1:4]
+top5 = sort(taxa_sums(UHPZ.P.tr), TRUE)[1:4]
+top6 = sort(taxa_sums(KHPZ.P.tr), TRUE)[1:4]
+                                                                          
+top12 <- union(names(top1),names(top2)) #Kin, Mas
+top34 <- union(names(top3), names(top4)) #ULPZ, KLPZ
+top56 <- union(names(top5), names(top6))
+top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
+top_P <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
+                                     
+write.csv(top_P, file = "Kinshasa_Konzo3_Phylum_Top4.csv")
+
+#Class                                     
+Kinshasa.C <- prune_samples(KonzoData.C@sam_data$Status == "Kinshasa", KonzoData.C)
+Kinshasa.C.tr <- transform_sample_counts(Kinshasa.C, function(x) x / sum(x))
+Masimanimba.C <- prune_samples(KonzoData.C@sam_data$Status == "Masimanimba", KonzoData.C)
+Masimanimba.C.tr <- transform_sample_counts(Masimanimba.C, function(x) x / sum(x))                                        
+ULPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.C)
+ULPZ.C.tr <- transform_sample_counts(ULPZ.C, function(x) x / sum(x))
+KLPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.C)
+KLPZ.C.tr <- transform_sample_counts(KLPZ.C, function(x) x / sum(x))
+UHPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.C)
+UHPZ.C.tr <- transform_sample_counts(UHPZ.C, function(x) x / sum(x))
+KHPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.C)
+KHPZ.C.tr <- transform_sample_counts(KHPZ.C, function(x) x / sum(x))
+
+top1 = sort(taxa_sums(Kinshasa.C.tr), TRUE)[1:5]
+top2 = sort(taxa_sums(Masimanimba.C.tr), TRUE)[1:5]
+top3 = sort(taxa_sums(ULPZ.C.tr), TRUE)[1:5]
+top4 = sort(taxa_sums(KLPZ.C.tr), TRUE)[1:5]
+top5 = sort(taxa_sums(UHPZ.C.tr), TRUE)[1:5]
+top6 = sort(taxa_sums(KHPZ.C.tr), TRUE)[1:5]
+
+                                                                          
+top12 <- union(names(top1),names(top2)) #Kin, Mas
+top34 <- union(names(top3), names(top4)) #ULPZ, KLPZ
+top56 <- union(names(top5), names(top6))
+top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
+top_C <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
+
+write.csv(top_C, file = "Kinshasa_Konzo3_Class_Top5.csv")                                     
+                                     
+#ORDER
+Kinshasa.O <- prune_samples(KonzoData.O@sam_data$Status == "Kinshasa", KonzoData.O)
+Kinshasa.O.tr <- transform_sample_counts(Kinshasa.O, function(x) x / sum(x))
+Masimanimba.O <- prune_samples(KonzoData.O@sam_data$Status == "Masimanimba", KonzoData.O)
+Masimanimba.O.tr <- transform_sample_counts(Masimanimba.O, function(x) x / sum(x))                                        
+ULPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.O)
+ULPZ.O.tr <- transform_sample_counts(ULPZ.O, function(x) x / sum(x))
+KLPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.O)
+KLPZ.O.tr <- transform_sample_counts(KLPZ.O, function(x) x / sum(x))
+UHPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.O)
+UHPZ.O.tr <- transform_sample_counts(UHPZ.O, function(x) x / sum(x))
+KHPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.O)
+KHPZ.O.tr <- transform_sample_counts(KHPZ.O, function(x) x / sum(x))
+
+top1 = sort(taxa_sums(Kinshasa.O.tr), TRUE)[1:5]
+top2 = sort(taxa_sums(Masimanimba.O.tr), TRUE)[1:5]
+top3 = sort(taxa_sums(ULPZ.O.tr), TRUE)[1:5]
+top4 = sort(taxa_sums(KLPZ.O.tr), TRUE)[1:5]
+top5 = sort(taxa_sums(UHPZ.O.tr), TRUE)[1:5]
+top6 = sort(taxa_sums(KHPZ.O.tr), TRUE)[1:5]
+                                     
+top12 <- union(names(top1),names(top2)) #Kin, Mas
+top34 <- union(names(top3), names(top4)) #ULPZ, KLPZ
+top56 <- union(names(top5), names(top6))
+top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
+top_O <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ    
+                                     
+write.csv(top_O, file = "Kinshasa_Konzo3_Order_Top5.csv")
+                                     
+#FAMILY
+                           
+Kinshasa.F <- prune_samples(KonzoData.F@sam_data$Status == "Kinshasa", KonzoData.F)
+Kinshasa.F.tr <- transform_sample_counts(Kinshasa.F, function(x) x / sum(x))
+Masimanimba.F <- prune_samples(KonzoData.F@sam_data$Status == "Masimanimba", KonzoData.F)
+Masimanimba.F.tr <- transform_sample_counts(Masimanimba.F, function(x) x / sum(x))                                        
+ULPZ.F <- prune_samples(KonzoData.F@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.F)
+ULPZ.F.tr <- transform_sample_counts(ULPZ.F, function(x) x / sum(x))
+KLPZ.F <- prune_samples(KonzoData.F@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.F)
+KLPZ.F.tr <- transform_sample_counts(KLPZ.F, function(x) x / sum(x))
+UHPZ.F <- prune_samples(KonzoData.F@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.F)
+UHPZ.F.tr <- transform_sample_counts(UHPZ.F, function(x) x / sum(x))
+KHPZ.F <- prune_samples(KonzoData.F@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.F)
+KHPZ.F.tr <- transform_sample_counts(KHPZ.F, function(x) x / sum(x))
+                          
+top1 = sort(taxa_sums(Kinshasa.F.tr), TRUE)[1:5]
+top2 = sort(taxa_sums(Masimanimba.F.tr), TRUE)[1:5]
+top3 = sort(taxa_sums(ULPZ.F.tr), TRUE)[1:5]
+top4 = sort(taxa_sums(KLPZ.F.tr), TRUE)[1:5]
+top5 = sort(taxa_sums(UHPZ.F.tr), TRUE)[1:5]
+top6 = sort(taxa_sums(KHPZ.F.tr), TRUE)[1:5]
+                                     
+top12 <- union(names(top1),names(top2)) #Kin, Mas
+top34 <- union(names(top3), names(top4)) #ULPZ, KLPZ
+top56 <- union(names(top5), names(top6))
+top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
+top_F <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
+
+write.csv(top_F, file = "Kinshasa_Konzo3_Family_Top5.csv")
+                                     
+#GENUS
+Kinshasa.G <- prune_samples(KonzoData.G@sam_data$Status == "Kinshasa", KonzoData.G)
+Kinshasa.G.tr <- transform_sample_counts(Kinshasa.G, function(x) x / sum(x))
+Masimanimba.G <- prune_samples(KonzoData.G@sam_data$Status == "Masimanimba", KonzoData.G)
+Masimanimba.G.tr <- transform_sample_counts(Masimanimba.G, function(x) x / sum(x))                                        
+ULPZ.G <- prune_samples(KonzoData.G@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.G)
+ULPZ.G.tr <- transform_sample_counts(ULPZ.G, function(x) x / sum(x))
+KLPZ.G <- prune_samples(KonzoData.G@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.G)
+KLPZ.G.tr <- transform_sample_counts(KLPZ.G, function(x) x / sum(x))
+UHPZ.G <- prune_samples(KonzoData.G@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.G)
+UHPZ.G.tr <- transform_sample_counts(UHPZ.G, function(x) x / sum(x))
+KHPZ.G <- prune_samples(KonzoData.G@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.G)
+KHPZ.G.tr <- transform_sample_counts(KHPZ.G, function(x) x / sum(x))                           
+
+top1 = sort(taxa_sums(Kinshasa.G.tr), TRUE)[1:7]
+top2 = sort(taxa_sums(Masimanimba.G.tr), TRUE)[1:7]
+top3 = sort(taxa_sums(ULPZ.G.tr), TRUE)[1:7]
+top4 = sort(taxa_sums(KLPZ.G.tr), TRUE)[1:7]
+top5 = sort(taxa_sums(UHPZ.G.tr), TRUE)[1:7]
+top6 = sort(taxa_sums(KHPZ.G.tr), TRUE)[1:7]
+                                     
+top12 <- union(names(top1),names(top2)) #Kin, Mas
+top34 <- union(names(top3), names(top4)) #ULPZ, KLPZ
+top56 <- union(names(top5), names(top6))
+top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
+top_G <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
+
+#write.csv(top_G, file = "Kinshasa_Konzo3_Genus_Top7.csv")
+                                     
+#SPECIES
+Kinshasa.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa", KonzoData.S)
+Kinshasa.S.tr <- transform_sample_counts(Kinshasa.S, function(x) x / sum(x))
+Masimanimba.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba", KonzoData.S)
+Masimanimba.S.tr <- transform_sample_counts(Masimanimba.S, function(x) x / sum(x))                                        
+ULPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.S)
+ULPZ.S.tr <- transform_sample_counts(ULPZ.S, function(x) x / sum(x))
+KLPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.S)
+KLPZ.S.tr <- transform_sample_counts(KLPZ.S, function(x) x / sum(x))
+UHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.S)
+UHPZ.S.tr <- transform_sample_counts(UHPZ.S, function(x) x / sum(x))
+KHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.S)
+KHPZ.S.tr <- transform_sample_counts(KHPZ.S, function(x) x / sum(x))
+
+top1 = sort(taxa_sums(Kinshasa.S.tr), TRUE)[1:20]
+top2 = sort(taxa_sums(Masimanimba.S.tr), TRUE)[1:20]
+top3 = sort(taxa_sums(ULPZ.S.tr), TRUE)[1:20]
+top4 = sort(taxa_sums(KLPZ.S.tr), TRUE)[1:20]
+top5 = sort(taxa_sums(UHPZ.S.tr), TRUE)[1:20]
+top6 = sort(taxa_sums(KHPZ.S.tr), TRUE)[1:20]
+                                     
+top12 <- union(names(top1),names(top2)) #Kin, Mas
+top34 <- union(names(top3), names(top4)) #ULPZ, KLPZ
+top56 <- union(names(top5), names(top6))
+top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
+top_S <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
+
+write.csv(top_S, file = "Kinshasa_Konzo3_Species_Top20.csv")                           
+                           
+#Stacked Bar plots                           
 #Phylum
 top_P <- read.csv("Kinshasa_Konzo3_Phylum_Top4.csv", row.names = 1, colClasses = "character")
 top_P <- unlist(top_P)
@@ -649,7 +827,7 @@ dev.off()
                            
 #Bacteria Phylum
 #KINSHASA AND MASIMANIMBA
-KinMas.P <-  prune_samples(Geography.P@sam_data$Status != "Kahemba_Control_NonIntervention", Geography.P)
+KinMas.P <-  prune_samples(KonzoData.P@sam_data$Status == "Kinshasa" | KonzoData.P@sam_data$Status == "Masimanimba", KonzoData.P)
 KinMas.P.tr <-  transform_sample_counts(KinMas.P, function(x) x / sum(x))
 
 #MWW 
@@ -664,28 +842,10 @@ colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
 for (i in 1:nrow(P.tr.DF))
   {P.tr.DF[i,]$Status <- KinMas.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
   }
-    
-KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
-
-colnames(KW) <- c("KinMas_Phylum ~Status", "df", "chi-squared", "p-value")
-for (i in 1:ncol(P.tr.DF))
-{
-  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
-  KW[i,1] = colnames(P.tr.DF[i])
-  KW[i,3] = as.numeric(kw$statistic)
-  KW[i,2] = as.numeric(kw$parameter)
-  KW[i,4] = as.numeric(kw$p.value)
-}
-write.csv(KW, file = "KinMas_Bacteria_Phylum_ByStatus_KruskalTest.csv")
-KW <- data.frame(KW, row.names = TRUE)
-KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
-write.csv(KW.f, file = "KinMas_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
-KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                       
-write.csv(KW.f, file = "KinMas_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv")  
-                                        
+                                          
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("KinMas_Phylum ~Status", "BH correction p-value")
-
+#Will throw an error because it will run the wilcox test on Status by Status; run for loop with ncol(P.tr.DF)-1 to avoid this
 for (i in 1:ncol(P.tr.DF))
 {
   wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
@@ -696,14 +856,12 @@ write.csv(WT, file = "KinMas_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
 WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
 write.csv(WT.f, file = "KinMas_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
-WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
-write.csv(WT.f, file = "KinMas_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")          
                                         
 
    
 #KINSHASA AND UNAFFECTED LPZ
                                              
-KinCNI.P <-  prune_samples(Geography.P@sam_data$Status != "Masimanimba", Geography.P)
+KinCNI.P <-  prune_samples(KonzoData.P@sam_data$Status == "Kinshasa" | KonzoData.P@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.P)
 KinCNI.P.tr <-  transform_sample_counts(KinCNI.P, function(x) x / sum(x))
 
 #MWW 
@@ -718,25 +876,7 @@ colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
 for (i in 1:nrow(P.tr.DF))
   {P.tr.DF[i,]$Status <- KinCNI.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
   }
-    
-KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
-
-colnames(KW) <- c("KinCNI_Phylum ~Status", "df", "chi-squared", "p-value")
-for (i in 1:ncol(P.tr.DF))
-{
-  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
-  KW[i,1] = colnames(P.tr.DF[i])
-  KW[i,3] = as.numeric(kw$statistic)
-  KW[i,2] = as.numeric(kw$parameter)
-  KW[i,4] = as.numeric(kw$p.value)
-}
-write.csv(KW, file = "KinCNI_Bacteria_Phylum_ByStatus_KruskalTest.csv")
-KW <- data.frame(KW, row.names = TRUE)
-KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
-write.csv(KW.f, file = "KinCNI_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
-KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                       
-write.csv(KW.f, file = "KinCNI_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv")                                           
-                                        
+                                            
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("KinCNI_Phylum ~Status", "BH correction p-value")
 
@@ -750,12 +890,10 @@ write.csv(WT, file = "KinCNI_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
 WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
 write.csv(WT.f, file = "KiCNI_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
-WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
-write.csv(WT.f, file = "KinCNI_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")          
 
  
 #MASIMANIMBA AND UNAFFECTED LPZ                                        
-MasCNI.P <- prune_samples(Geography.P@sam_data$Status != "Kinshasa", Geography.P)
+MasCNI.P <- prune_samples(KonzoData.P@sam_data$Status == "Masimanimba" | KonzoData.P@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.P)
 MasCNI.P.tr <- transform_sample_counts(MasCNI.P, function(x) x / sum(x)) 
 
 P <- MasCNI.P.tr
@@ -769,24 +907,6 @@ for (i in 1:nrow(P.tr.DF))
   {P.tr.DF[i,]$Status <- MasCNI.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
   }
     
-KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
-
-colnames(KW) <- c("MasCNI_Phylum ~Status", "df", "chi-squared", "p-value")
-for (i in 1:ncol(P.tr.DF))
-{
-  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
-  KW[i,1] = colnames(P.tr.DF[i])
-  KW[i,3] = as.numeric(kw$statistic)
-  KW[i,2] = as.numeric(kw$parameter)
-  KW[i,4] = as.numeric(kw$p.value)
-}
-write.csv(KW, file = "MasCNI_Bacteria_Phylum_ByStatus_KruskalTest.csv")
-KW <- data.frame(KW, row.names = TRUE)
-KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
-write.csv(KW.f, file = "MasCNI_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
-KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                                                      
-write.csv(KW.f, file = "MasCNI_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv")   
-
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("MasCNI_Phylum ~Status", "BH correction p-value")
 
@@ -800,16 +920,10 @@ write.csv(WT, file = "MasCNI_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
 WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
 write.csv(WT.f, file = "MasCNI_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
-WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
-write.csv(WT.f, file = "MasCNI_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv") 
-
-#Geography with Kin, Mas, ULPZ, UHPZ
-Geography.P <- prune_samples(KonzoData.P@sam_data$Status != "Kahemba_Konzo_NonIntervention", KonzoData.P)
-Geography.P <- prune_samples(Geography.P@sam_data$Status != "Kahemba_Konzo_Intervention", Geography.P)
  
 #KINSHASA AND UNAFFECTED HPZ
                                              
-KinCI.P <-  prune_samples(Geography.P@sam_data$Status != "Masimanimba" & Geography.P@sam_data$Status != "Kahemba_Control_NonIntervention", Geography.P)
+KinCI.P <-  prune_samples(KonzoData.P@sam_data$Status == "Kinshasa" | KonzoData.P@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.P)
 KinCI.P.tr <-  transform_sample_counts(KinCI.P, function(x) x / sum(x))
 
 #MWW 
@@ -825,24 +939,6 @@ for (i in 1:nrow(P.tr.DF))
   {P.tr.DF[i,]$Status <- KinCI.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
   }
     
-KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
-
-colnames(KW) <- c("KinCI_Phylum ~Status", "df", "chi-squared", "p-value")
-for (i in 1:ncol(P.tr.DF))
-{
-  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
-  KW[i,1] = colnames(P.tr.DF[i])
-  KW[i,3] = as.numeric(kw$statistic)
-  KW[i,2] = as.numeric(kw$parameter)
-  KW[i,4] = as.numeric(kw$p.value)
-}
-write.csv(KW, file = "KinCI_Bacteria_Phylum_ByStatus_KruskalTest.csv")
-KW <- data.frame(KW, row.names = TRUE)
-KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
-write.csv(KW.f, file = "KinCI_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
-KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                       
-write.csv(KW.f, file = "KinCI_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv")                                           
-                                        
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("KinCI_Phylum ~Status", "BH correction p-value")
 
@@ -856,12 +952,10 @@ write.csv(WT, file = "KinCI_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
 WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
 write.csv(WT.f, file = "KiCI_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
-WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
-write.csv(WT.f, file = "KinCI_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")          
 
  
 #MASIMANIMBA AND UNAFFECTED LPZ                                        
-MasCI.P <- prune_samples(Geography.P@sam_data$Status != "Kinshasa" & Geography.P@sam_data$Status != "Kahemba_Control_NonIntervention", Geography.P)
+MasCI.P <- prune_samples(KonzoData.P@sam_data$Status == "Masimanimba" | KonzoData.P@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.P)
 MasCI.P.tr <- transform_sample_counts(MasCI.P, function(x) x / sum(x)) 
 
 P <- MasCI.P.tr
@@ -875,24 +969,6 @@ for (i in 1:nrow(P.tr.DF))
   {P.tr.DF[i,]$Status <- MasCI.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
   }
     
-KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
-
-colnames(KW) <- c("MasCI_Phylum ~Status", "df", "chi-squared", "p-value")
-for (i in 1:ncol(P.tr.DF))
-{
-  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
-  KW[i,1] = colnames(P.tr.DF[i])
-  KW[i,3] = as.numeric(kw$statistic)
-  KW[i,2] = as.numeric(kw$parameter)
-  KW[i,4] = as.numeric(kw$p.value)
-}
-write.csv(KW, file = "MasCI_Bacteria_Phylum_ByStatus_KruskalTest.csv")
-KW <- data.frame(KW, row.names = TRUE)
-KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
-write.csv(KW.f, file = "MasCI_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
-KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                                                      
-write.csv(KW.f, file = "MasCI_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv")   
-
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("MasCI_Phylum ~Status", "BH correction p-value")
 
@@ -906,11 +982,7 @@ write.csv(WT, file = "MasCI_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
 WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
 write.csv(WT.f, file = "MasCI_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
-WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
-write.csv(WT.f, file = "MasCI_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv") 
-                                       
-                                       
-                                       
+                                                                                                                  
 #CONTROL (UNAFFECTED)
 Control.P <- prune_samples(KonzoData.P@sam_data$Status != "Kinshasa", KonzoData.P)
 Control.P <- prune_samples(Control.P@sam_data$Status != "Masimanimba", Control.P)
@@ -930,25 +1002,7 @@ colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
 for (i in 1:nrow(P.tr.DF))
   {P.tr.DF[i,]$Status <- Control.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
   }
-    
-KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
-
-colnames(KW) <- c("Unaffected_Phylum ~Status", "df", "chi-squared", "p-value")
-for (i in 1:ncol(P.tr.DF))
-{
-  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
-  KW[i,1] = colnames(P.tr.DF[i])
-  KW[i,3] = as.numeric(kw$statistic)
-  KW[i,2] = as.numeric(kw$parameter)
-  KW[i,4] = as.numeric(kw$p.value)
-}
-write.csv(KW, file = "Control_Bacteria_Phylum_ByStatus_KruskalTest.csv")
-KW <- data.frame(KW, row.names = TRUE)
-KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
-write.csv(KW.f, file = "Control_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
-KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                                                 
-write.csv(KW.f, file = "Control_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv") 
-                                        
+                                            
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("Unaffected_Phylum ~Status", "BH correction p-value")
 
@@ -962,8 +1016,6 @@ write.csv(WT, file = "Control_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
 WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
 write.csv(WT.f, file = "Control_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
-WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
-write.csv(WT.f, file = "Control_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")                                               
 
                                              
 #DISEASE (KONZO)
@@ -984,24 +1036,6 @@ for (i in 1:nrow(P.tr.DF))
   {P.tr.DF[i,]$Status <- Disease.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
   }
     
-KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
-
-colnames(KW) <- c("Konzo_Phylum ~Status", "df", "chi-squared", "p-value")
-for (i in 1:ncol(P.tr.DF))
-{
-  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
-  KW[i,1] = colnames(P.tr.DF[i])
-  KW[i,3] = as.numeric(kw$statistic)
-  KW[i,2] = as.numeric(kw$parameter)
-  KW[i,4] = as.numeric(kw$p.value)
-}
-write.csv(KW, file = "Disease_Bacteria_Phylum_ByStatus_KruskalTest.csv")
-KW <- data.frame(KW, row.names = TRUE)
-KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
-write.csv(KW.f, file = "Disease_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
-KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                   
-write.csv(KW.f, file = "Disease_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv") 
-
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("Konzo_Phylum ~Status", "BH correction p-value")
 
@@ -1015,64 +1049,7 @@ write.csv(WT, file = "Disease_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
 WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
 write.csv(WT.f, file = "Disease_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
-WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
-write.csv(WT.f, file = "Disease_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")                                               
 
-                                               
-#INTERVENTION (HPZ)
-Intervention.P <- prune_samples(KonzoData.P@sam_data$Status != "Kinshasa", KonzoData.P)
-Intervention.P <- prune_samples(Intervention.P@sam_data$Status != "Masimanimba", Intervention.P)
-Intervention.P <- prune_samples(Intervention.P@sam_data$Status != "Kahemba_Control_NonIntervention", Intervention.P)
-Intervention.P <- prune_samples(Intervention.P@sam_data$Status != "Kahemba_Konzo_NonIntervention", Intervention.P)
-Intervention.P.tr <- transform_sample_counts(Intervention.P, function(x) x / sum(x))
-
-# HPZ Control vs. Konzo
-P <- Intervention.P.tr
-                                               
-P.tr_META <- as.data.frame(P@sam_data)
-P.tr_OTU <- as.data.frame(t(P@otu_table))
-P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
-
-colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
-for (i in 1:nrow(P.tr.DF))
-  {P.tr.DF[i,]$Status <- Intervention.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
-  }
-    
-KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
-
-colnames(KW) <- c("Intervention_Phylum ~Status", "df", "chi-squared", "p-value")
-for (i in 1:ncol(P.tr.DF))
-{
-  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
-  KW[i,1] = colnames(P.tr.DF[i])
-  KW[i,3] = as.numeric(kw$statistic)
-  KW[i,2] = as.numeric(kw$parameter)
-  KW[i,4] = as.numeric(kw$p.value)
-}
-write.csv(KW, file = "Intervention_Bacteria_Phylum_ByStatus_KruskalTest.csv")
-KW <- data.frame(KW, row.names = TRUE)
-KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
-write.csv(KW.f, file = "Intervention_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
-KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                   
-write.csv(KW.f, file = "Intervention_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv") 
-
-WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
-colnames(WT) <- c("Intervention_Phylum ~Status", "BH correction p-value")
-
-for (i in 1:ncol(P.tr.DF))
-{
-  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
-  WT[i,1] = colnames(P.tr.DF[i])
-  WT[i,2] = as.numeric(wt$p.value)
-}
-write.csv(WT, file = "Intervention_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
-WT <- data.frame(WT, row.names = TRUE)
-WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
-write.csv(WT.f, file = "Intervention_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
-WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
-write.csv(WT.f, file = "Intervention_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")                                               
-
- 
 #NON-INTERVENTION (LPZ)
 
 NonIntervention.P <- prune_samples(KonzoData.P@sam_data$Status != "Kinshasa", KonzoData.P)
@@ -1094,24 +1071,6 @@ for (i in 1:nrow(P.tr.DF))
   {P.tr.DF[i,]$Status <- NonIntervention.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
   }
     
-KW <- matrix(nrow = ncol(P.tr_OTU),  ncol = 4)
-
-colnames(KW) <- c("NonIntervention_Phylum ~Status", "df", "chi-squared", "p-value")
-for (i in 1:ncol(P.tr.DF))
-{
-  kw <- kruskal.test(P.tr.DF[,i] ~Status, data = P.tr.DF)
-  KW[i,1] = colnames(P.tr.DF[i])
-  KW[i,3] = as.numeric(kw$statistic)
-  KW[i,2] = as.numeric(kw$parameter)
-  KW[i,4] = as.numeric(kw$p.value)
-}
-write.csv(KW, file = "NonIntervention_Bacteria_Phylum_ByStatus_KruskalTest.csv")
-KW <- data.frame(KW, row.names = TRUE)
-KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
-write.csv(KW.f, file = "NonIntervention_Bacteria_Phylum_0.0001_ByStatus_KruskalTest.csv")
-KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                   
-write.csv(KW.f, file = "NonIntervention_Bacteria_Phylum_0.00001_ByStatus_KruskalTest.csv") 
-
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("NonIntervention_Phylum ~Status", "BH correction p-value")
 
@@ -1125,14 +1084,43 @@ write.csv(WT, file = "NonIntervention_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
 WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
 write.csv(WT.f, file = "NonIntervention_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
-WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
-write.csv(WT.f, file = "NonIntervention_Bacteria_Phylum_0.00001_ByStatus_WilcoxTest.csv")                                           
+                                                
+#INTERVENTION (HPZ)
+Intervention.P <- prune_samples(KonzoData.P@sam_data$Status != "Kinshasa", KonzoData.P)
+Intervention.P <- prune_samples(Intervention.P@sam_data$Status != "Masimanimba", Intervention.P)
+Intervention.P <- prune_samples(Intervention.P@sam_data$Status != "Kahemba_Control_NonIntervention", Intervention.P)
+Intervention.P <- prune_samples(Intervention.P@sam_data$Status != "Kahemba_Konzo_NonIntervention", Intervention.P)
+Intervention.P.tr <- transform_sample_counts(Intervention.P, function(x) x / sum(x))
+
+# HPZ Control vs. Konzo
+P <- Intervention.P.tr
+                                               
+P.tr_META <- as.data.frame(P@sam_data)
+P.tr_OTU <- as.data.frame(t(P@otu_table))
+P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
+
+colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
+for (i in 1:nrow(P.tr.DF))
+  {P.tr.DF[i,]$Status <- Intervention.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
+colnames(WT) <- c("Intervention_Phylum ~Status", "BH correction p-value")
+
+for (i in 1:ncol(P.tr.DF))
+{
+  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
+  WT[i,1] = colnames(P.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+write.csv(WT, file = "Intervention_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
+WT <- data.frame(WT, row.names = TRUE)
+WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
+write.csv(WT.f, file = "Intervention_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
+
                            
 #Bacteria Class
-Geography.C <- prune_samples(KonzoData.C@sam_data$Status != "Kahemba_Konzo_NonIntervention", KonzoData.C)
-Geography.C <- prune_samples(Geography.C@sam_data$Status != "Kahemba_Control_Intervention", Geography.C)
-Geography.C <- prune_samples(Geography.C@sam_data$Status != "Kahemba_Konzo_Intervention", Geography.C)
-
+                                             
 #KINSHASA AND MASIMANIMBA
 KinMas.C <-  prune_samples(Geography.C@sam_data$Status != "Kahemba_Control_NonIntervention", Geography.C)
 KinMas.C.tr <-  transform_sample_counts(KinMas.C, function(x) x / sum(x))
@@ -1148,25 +1136,6 @@ for (i in 1:nrow(C.tr.DF))
   {C.tr.DF[i,]$Status <- KinMas.C.tr@sam_data[rownames(C.tr.DF[i,]),]$Status
   }
     
-KW <- matrix(nrow = ncol(C.tr_OTU),  ncol = 4)
-
-colnames(KW) <- c("KinMas_Class ~Status", "df", "chi-squared", "p-value")
-for (i in 1:ncol(C.tr.DF))
-{
-  kw <- kruskal.test(C.tr.DF[,i] ~Status, data = C.tr.DF)
-  KW[i,1] = colnames(C.tr.DF[i])
-  KW[i,3] = as.numeric(kw$statistic)
-  KW[i,2] = as.numeric(kw$parameter)
-  KW[i,4] = as.numeric(kw$p.value)
-}
-write.csv(KW, file = "KinMas_Bacteria_Class_ByStatus_KruskalTest.csv")
-
-KW <- data.frame(KW, row.names = TRUE)
-KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
-write.csv(KW.f, file = "KinMas_Bacteria_Class_0.0001_ByStatus_KruskalTest.csv")
-KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                       
-write.csv(KW.f, file = "KinMas_Bacteria_Class_0.00001_ByStatus_KruskalTest.csv")                                           
-
 WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
 colnames(WT) <- c("KinMas_Class ~Status", "BH correction p-value")
 
@@ -1180,8 +1149,6 @@ write.csv(WT, file = "KinMas_Bacteria_Class_ByStatus_WilcoxTest.csv")
 WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
 write.csv(WT.f, file = "KinMas_Bacteria_Class_0.0001_ByStatus_WilcoxTest.csv")
-WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
-write.csv(WT.f, file = "KinMas_Bacteria_Class_0.00001_ByStatus_WilcoxTest.csv")          
 
                                         
 #KINSHASA AND UNAFFECTED LPZ (CNI)
@@ -1199,24 +1166,6 @@ for (i in 1:nrow(C.tr.DF))
   {C.tr.DF[i,]$Status <- KinCNI.C.tr@sam_data[rownames(C.tr.DF[i,]),]$Status
   }
     
-KW <- matrix(nrow = ncol(C.tr_OTU),  ncol = 4)
-
-colnames(KW) <- c("KinCNI_Class ~Status", "df", "chi-squared", "p-value")
-for (i in 1:ncol(C.tr.DF))
-{
-  kw <- kruskal.test(C.tr.DF[,i] ~Status, data = C.tr.DF)
-  KW[i,1] = colnames(C.tr.DF[i])
-  KW[i,3] = as.numeric(kw$statistic)
-  KW[i,2] = as.numeric(kw$parameter)
-  KW[i,4] = as.numeric(kw$p.value)
-}
-write.csv(KW, file = "KinCNI_Bacteria_Class_ByStatus_KruskalTest.csv")
-KW <- data.frame(KW, row.names = TRUE)
-KW.f <- subset(KW, rownames(KW) %in% f_0.0001)                                       
-write.csv(KW.f, file = "KinCNI_Bacteria_Class_0.0001_ByStatus_KruskalTest.csv")
-KW.f <- subset(KW, rownames(KW) %in% f_0.00001)                                       
-write.csv(KW.f, file = "KinCNI_Bacteria_Class_0.00001_ByStatus_KruskalTest.csv")                                           
-
 WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
 colnames(WT) <- c("KinCNI_Class ~Status", "BH correction p-value")
 
@@ -1230,8 +1179,6 @@ write.csv(WT, file = "KinCNI_Bacteria_Class_ByStatus_WilcoxTest.csv")
 WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
 write.csv(WT.f, file = "KinCNI_Bacteria_Class_0.0001_ByStatus_WilcoxTest.csv")
-WT.f <- subset(WT, rownames(WT) %in% f_0.00001)                                       
-write.csv(WT.f, file = "KinCNI_Bacteria_Class_0.00001_ByStatus_WilcoxTest.csv")          
 
 #MASIMANIMBA AND UNAFFECTED LPZ (CNI)
 MasCNI.C <- prune_samples(Geography.C@sam_data$Status != "Kinshasa", Geography.C)
