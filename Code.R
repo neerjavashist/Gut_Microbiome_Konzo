@@ -122,6 +122,7 @@ KonzoData.P.tr.status <- transform_sample_counts(KonzoData.P.tr.status, function
 write.csv(t(KonzoData.P.tr.status@otu_table), file = "./KonzoDataPhylum_AvgRelAbund_ByStatus.csv")
   
 #keep Rel abund >= 0.01% in atleast one group
+#Creating phyloseq with only one group                                                 
 Kinshasa.P <- prune_samples(KonzoData.P@sam_data$Status == "Kinshasa", KonzoData.P)
 Kinshasa.P.tr <- transform_sample_counts(Kinshasa.P, function(x) x / sum(x))
 Masimanimba.P <- prune_samples(KonzoData.P@sam_data$Status == "Masimanimba", KonzoData.P)
@@ -158,6 +159,80 @@ KonzoData.P.tr.f <- prune_taxa(f_0.0001, KonzoData.P.tr) #filtered rel abund phy
 KonzoData.P.tr.status.f <- prune_taxa(f_0.0001, KonzoData.P.tr.status) #filtered rel abund megerd by groups/status phyoseq object
                                                  
 #Bacteria Class
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
+
+#OTU
+Konzo_otu_c <- read.csv("./KinshasaControl_Konzo3_Bacteria_Class_ReadCounts.csv")
+Konzo_class <- read.csv("./KinshasaControl_Konzo3_Bacteria_class.csv")
+Konzo_Otu_C <-as.matrix(unname(Konzo_otu_c[1:nrow(Konzo_otu_c),5:(ncol(Konzo_otu_c))]))
+rownames(Konzo_Otu_C)<-as.character( Konzo_otu_c[,1])
+nam <-names(Konzo_otu_c)
+colnames(Konzo_Otu_C)<-c(as.character(nam[5:length(nam)]))
+OTU_C = otu_table(Konzo_Otu_C, taxa_are_rows = TRUE)
+
+#TAX
+Konzo_Class<-as.matrix(unname(Konzo_class[,2]))
+rownames(Konzo_Class)<-as.character(unname(Konzo_Class[,1]))
+colnames(Konzo_Class)<-"class"
+TAX_C = tax_table(Konzo_Class)
+
+#PhyloseqObject
+KonzoData_C <-phyloseq(OTU_C, TAX_C, META)
+#set all Na's to 0
+KonzoData_C@otu_table[is.na(KonzoData_C@otu_table)] <- 0
+KonzoData.C <- tax_glom(KonzoData_C, taxrank = "class")
+KonzoData.C@sam_data$Status <- factor(KonzoData.C@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+
+#Read Counts to Relative Abundance
+KonzoData.C.tr <- transform_sample_counts(KonzoData.C, function(x) x / sum(x))
+
+KonzoData.C.tr.status <- merge_samples(KonzoData.C.tr, KonzoData.C.tr@sam_data$Status)
+KonzoData.C.tr.status <- transform_sample_counts(KonzoData.C.tr.status, function(x) x / 30)
+                                                                                    
+Kinshasa.C <- prune_samples(KonzoData.C@sam_data$Status == "Kinshasa", KonzoData.C)
+Kinshasa.C.tr <- transform_sample_counts(Kinshasa.C, function(x) x / sum(x))
+Masimanimba.C <- prune_samples(KonzoData.C@sam_data$Status == "Masimanimba", KonzoData.C)
+Masimanimba.C.tr <- transform_sample_counts(Masimanimba.C, function(x) x / sum(x))                                        
+ULPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.C)
+ULPZ.C.tr <- transform_sample_counts(ULPZ.C, function(x) x / sum(x))
+KLPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.C)
+KLPZ.C.tr <- transform_sample_counts(KLPZ.C, function(x) x / sum(x))
+UHPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.C)
+UHPZ.C.tr <- transform_sample_counts(UHPZ.C, function(x) x / sum(x))
+KHPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.C)
+KHPZ.C.tr <- transform_sample_counts(KHPZ.C, function(x) x / sum(x))
+                                     
+#Filtering where mean in >= 0.01% (1E-4)
+
+Kinshasa.C.tr.f <- filter_taxa(Kinshasa.C.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+Masimanimba.C.tr.f <- filter_taxa(Masimanimba.C.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+ULPZ.C.tr.f <- filter_taxa(ULPZ.C.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+KLPZ.C.tr.f <- filter_taxa(KLPZ.C.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+UHPZ.C.tr.f <- filter_taxa(UHPZ.C.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+KHPZ.C.tr.f <- filter_taxa(KHPZ.C.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+
+filterList1 <- union(Kinshasa.C.tr.f@tax_table,Masimanimba.C.tr.f@tax_table) #Kin, Mas
+filterList2 <- union(ULPZ.C.tr.f@tax_table, KLPZ.C.tr.f@tax_table) #ULPZ, KLPZ
+filterList3 <- union(UHPZ.C.tr.f@tax_table,KHPZ.C.tr.f@tax_table)
+filterList4 <- union(filterList1, filterList2) #Kin, Mas, ULPZ, KLPZ
+filterList <- union(filterList3,filterList4) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
+
+                           
+write.csv(filterList, file = "Kinshasa_Konzo3_Class_f_0.0001.csv")
+                           
+x <- read.csv("Kinshasa_Konzo3_Class_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+                                                 
+KonzoData.C.f <- prune_taxa(f_0.0001, KonzoData.C)
+KonzoData.C.tr.f <- prune_taxa(f_0.0001, KonzoData.C.tr)
+
+KonzoData.C.tr.status.f <- prune_taxa(f_0.0001, KonzoData.C.tr.status)
+
+#write.csv((KonzoData.C@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Class_ReadCounts.csv")
+#write.csv((KonzoData.C.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Class_RelAbund.csv")
+#write.csv(t(KonzoData.C.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Class_Avg_RelAbund.csv")
+                                                                                 
+                           
 #Bacteria Order
 #Bacteria Family
 #Bacteria Genus
