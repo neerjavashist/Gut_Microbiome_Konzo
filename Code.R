@@ -1718,7 +1718,12 @@ write.csv(WT.f, file = "Intervention_Bacteria_Order_0.0001_ByStatus_WilcoxTest.c
 
                                                 
 #Bacteria Family
-#Kin Mas                                                    
+                                                                                         
+#Kin Mas  
+#KINSHASA AND MASIMANIMBA
+KinMas.F <-  prune_samples((KonzoData.F@sam_data$Status == "Kinshasa") | (KonzoData.F@sam_data$Status == "Kahemba_Control_NonIntervention"), KonzoData.F)                                      
+KinMas.F.tr <-  transform_sample_counts(KinMas.F, function(x) x / sum(x))
+                                                                                                                                    
 F <- KinMas.F.tr
                                                
 F.tr_META <- as.data.frame(F@sam_data)
@@ -1745,7 +1750,10 @@ WT.f <- subset(WT, rownames(WT) %in% f_0.0001)
 write.csv(WT.f, file = "KinMas_Bacteria_Family_0.0001_ByStatus_WilcoxTest.csv")
 
 #KINSHASA AND UNAFFECTED LPZ
-                                             
+                                            
+KinCNI.F <-  prune_samples((KonzoData.F@sam_data$Status == "Kinshasa") | (KonzoData.F@sam_data$Status == "Kahemba_Control_NonIntervention"), KonzoData.F)
+KinCNI.F.tr <-  transform_sample_counts(KinCNI.F, function(x) x / sum(x))
+                                          
 #MWW 
                                                
 F <- KinCNI.F.tr
@@ -1773,8 +1781,12 @@ WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
 write.csv(WT.f, file = "KiCNI_Bacteria_Family_0.0001_ByStatus_WilcoxTest.csv")
                                         
-#MASIMANIMBA AND UNAFFECTED LPZ                                        
-
+#MASIMANIMBA AND UNAFFECTED LPZ 
+                                     
+MasCNI.F <- prune_samples((KonzoData.F@sam_data$Status == "Masimanimba") | (KonzoData.F@sam_data$Status == "Kahemba_Control_NonIntervention"), KonzoData.F)
+MasCNI.F.tr <- transform_sample_counts(MasCNI.F, function(x) x / sum(x))                                         
+                                        
+  
 #MWW 
                                                
 F <- MasCNI.F.tr
@@ -1803,7 +1815,12 @@ WT <- data.frame(WT, row.names = TRUE)
 WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
 write.csv(WT.f, file = "MasCNI_Bacteria_Family_0.0001_ByStatus_WilcoxTest.csv")
 
-#Kin CI                                       
+#Kin CI  
+#KINSHASA AND UNAFFECTED HPZ
+KinCI.F <-  prune_samples((KonzoData.F@sam_data$Status == "Kinshasa") | (KonzoData.F@sam_data$Status == "Kahemba_Control_Intervention"), KonzoData.F)
+KinCI.F.tr <-  transform_sample_counts(KinCI.F, function(x) x / sum(x))
+
+                                       
 #MWW
                                        
 F <- KinCI.F.tr
@@ -1834,6 +1851,10 @@ write.csv(WT.f, file = "KinCI_Bacteria_Family_0.0001_ByStatus_WilcoxTest.csv")
 
           
 #MASIMANIMBA AND UNAFFECTED HPZ
+
+MasCI.F <- prune_samples((KonzoData.F@sam_data$Status == "Masimanimba") | (KonzoData.F@sam_data$Status == "Kahemba_Control_Intervention"), KonzoData.F)
+MasCI.F.tr <- transform_sample_counts(MasCI.F, function(x) x / sum(x)) 
+                                       
 #MWW
 F <- MasCI.F.tr
                                                
