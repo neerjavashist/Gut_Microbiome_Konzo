@@ -2,11 +2,14 @@
 The Gut Microbiome in Konzo
 
 The code outlined here assesses the bacterial profile of the gut microbiome of individuals from the Democratic Republic of Congo.
+The shell scripts may need to be adjusted depening on input folder, however the parameters are the same for all processed data. 
 
 1. Run bmtagger.sh to remove human reads using hg38 and the needed bmtagger.conf file. 
 2. Run skewer.sh on the fastq files to remove Illumina sequencing adapters. 
 3. Run kraken2.sh on the fastq post skewer using Kraken2 standard genome libraries, which include human, viral, bacteria, and archae. The detailed manual for the program can be found here: https://github.com/DerrickWood/kraken2/wiki/Manual
 4. Run bracken.sh on the classified reads from Kraken2 for secondary analysis.
 5. Extract the Braken files that in Kraken report format (will be in the input folder) for downstream analysis in R since they are compatible with pavian. 
-6. Use pavain to consolidate the report files for all samples into one large file. Additionally, using the pavian filter feature, get different taxon (phylum, class, order, family, genus, species) for each of the different domains (here only Bacteria are analyzed). 
-7. Install any additional necessary packages as listed in Code.R, and follow the script for further analysis. 
+6. Use pavain to consolidate the report files for all samples into one large file. Additionally, using the pavian filter feature, get different taxon (phylum, class, order, family, genus, species) for each of the different domains (here only Bacteria are analyzed). The lineage column is removed and the names of samples are changed to they match those in the Konzo_meta file prior to analysis in R. 
+7. Install any additional necessary packages as listed in Code.R, and follow the script for further analysis.
+
+Note: The code is commented up front for clarification, but most of the code is repetitive with changes to parameters. Additionally, phylum input files are available for reference to have a better idea of what the input looks like as the files are separate and have more info than necessary/provided in Supplemental files in the paper submission. 
