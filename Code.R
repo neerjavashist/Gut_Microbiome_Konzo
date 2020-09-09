@@ -913,6 +913,10 @@ dev.off()
 #Supplemental File 3 where the saved WT (results from the mann whitney test) are joined into one excel sheet for all the different comparisions, and each tab is each taxa rank                           
                            
 #Bacteria Phylum
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Phylum")
+x <- read.csv("Kinshasa_Konzo3_Phylum_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+                                                                                                              
 #KINSHASA AND MASIMANIMBA
 KinMas.P <-  prune_samples(KonzoData.P@sam_data$Status == "Kinshasa" | KonzoData.P@sam_data$Status == "Masimanimba", KonzoData.P)
 KinMas.P.tr <-  transform_sample_counts(KinMas.P, function(x) x / sum(x))
@@ -1206,6 +1210,9 @@ write.csv(WT.f, file = "Intervention_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.
 
                            
 #Bacteria Class
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
+x <- read.csv("Kinshasa_Konzo3_Class_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
                                              
 #KINSHASA AND MASIMANIMBA
 KinMas.C <-  prune_samples(KonzoData.C@sam_data$Status == "Kinshasa" | KonzoData.C@sam_data$Status == "Masimanimba", KonzoData.C)
@@ -1503,6 +1510,9 @@ write.csv(WT.f, file = "Intervention_Bacteria_Class_0.0001_ByStatus_WilcoxTest.c
 
                                                 
 #Bacteria Order
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Order")
+x <- read.csv("Kinshasa_Konzo3_Order_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
 
 #KINSHASA AND MASIMANIMBA
 KinMas.O <-  prune_samples(KonzoData.O@sam_data$Status == "Kinshasa" | KonzoData.O@sam_data$Status == "Masimanimba", KonzoData.O)
@@ -1804,7 +1814,10 @@ write.csv(WT.f, file = "Intervention_Bacteria_Order_0.0001_ByStatus_WilcoxTest.c
 
                                                 
 #Bacteria Family
-                                                                                         
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Family")
+x <- read.csv("Kinshasa_Konzo3_Family_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+                                             
 #Kin Mas  
 #KINSHASA AND MASIMANIMBA
 KinMas.F <-  prune_samples((KonzoData.F@sam_data$Status == "Kinshasa") | (KonzoData.F@sam_data$Status == "Kahemba_Control_NonIntervention"), KonzoData.F)                                      
@@ -2106,7 +2119,13 @@ write.csv(WT.f, file = "Intervention_Bacteria_Family_0.0001_ByStatus_WilcoxTest.
                                                
                                                 
 #Bacteria Genus
-                           
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
+x <- read.csv("Kinshasa_Konzo3_Genus_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+
+#MWW
+                                             
+#Kin Mas                                             
 KinMas.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Masimanimba"),  KonzoData.G)
 KinMas.G.tr <-  transform_sample_counts(KinMas.G, function(x) x / sum(x))
 
@@ -2402,7 +2421,10 @@ write.csv(WT.f, file = "Intervention_Bacteria_Genus_0.0001_ByStatus_WilcoxTest.c
 
                                                        
 #Bacteria Species
-                           
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Species")
+x <- read.csv("Kinshasa_Konzo3_Species_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+                                             
 #KINSHASA AND MASIMANIMBA
 KinMas.S <-  prune_samples(KonzoData.S@sam_data$Status == "Kinshasa" | KonzoData.S@sam_data$Status == "Masimanimba", KonzoData.S)
 KinMas.S.tr <-  transform_sample_counts(KinMas.S, function(x) x / sum(x))
