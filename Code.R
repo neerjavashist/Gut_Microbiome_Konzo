@@ -37,6 +37,7 @@ library("raster")
 library(gridExtra)
 library(grid)
 library(lattice)
+library(gplots)
 
 ### The general format for each taxanomic rank is the same, so the code is repetitive. Comments are provided in the Bacteria Phylum section to show what is happening, and the explainations are applicable to the other taxa ranks as well.
 
@@ -550,6 +551,7 @@ KonzoData.S.tr.status.f <- prune_taxa(f_0.0001, KonzoData.S.tr.status)
 write.csv((KonzoData.S.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Species_RelAbund.csv")
 write.csv((KonzoData.S@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Species_ReadCounts.csv")
 write.csv(t(KonzoData.S.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Species_Avg_RelAbund.csv")
+                                                 
                            
 ### Estimate Richness
 #Read Count from KonzoData.S (Bacteria Species data)                           
