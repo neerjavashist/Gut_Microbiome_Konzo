@@ -2721,7 +2721,14 @@ write.csv(WT.f, file = "Intervention_Bacteria_Species_0.0001_ByStatus_WilcoxTest
 
 
                                                                                                             
-### Beta Diversity using Bray-Curtis for Bacteria Genus                     
+### Beta Diversity using Bray-Curtis for Bacteria Genus  
+#Using phyloseq distnace function and bray method, and the sample wise distances are generated. Using the adonis (PERMANOVA) function, stats are performed with 10000 permutations
+#the p-values generated here are reported in Figure 3 and Figure 5 for the relavant comparisons  
+
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
+x <- read.csv("Kinshasa_Konzo3_Genus_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)                                             
+                                             
 otuD.G <- as.data.frame(t(otu_table(Geography.G)))
 diversity.G <- estimate_richness(Geography.G)
 diversity.G <- cbind(sample_data(Geography.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
@@ -2732,15 +2739,6 @@ brayd <- phyloseq::distance(Geography.G.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
 capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Geography.txt")
 
-otuD.G <- as.data.frame(t(otu_table(Geography.G)))
-diversity.G <- estimate_richness(Geography.G)
-diversity.G <- cbind(sample_data(Geography.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
-diversity.G$Region <- as.factor(diversity.G$Region)
-diversity.G$Region <- factor(diversity.G$Region, levels = c("Kinshasa", "Masimanimba", "Kahemba"))
-
-brayd <- phyloseq::distance(Geography.G.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ diversity.G$Region, perm=10000); bdiv_bray
-capture.output(bdiv_bray, file="relabund_bdiv__genus_adonis_Geography_byRegion.txt")
 
 otuD.G <- as.data.frame(t(otu_table(KinMas.G)))
 diversity.G <- estimate_richness(KinMas.G)
@@ -2837,7 +2835,7 @@ capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Intervention.txt")
 #Figure 3: Geography Genus PCoA
 
 #Genus and Corr PCoA Figure
-
+#Extract eigen values (values of the variance reported) after running ordinate function with bray distance (used by phyloseq in generating PCoA plots)
 b <- ordinate(Geography.G.tr, method="PCoA", dist="bray")
 b.DF <- as.data.frame(b$vectors)
 e.DF <- as.data.frame(b$values$Relative_eig)
@@ -2876,10 +2874,32 @@ for(i in 1:sum100)
 
 G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kinshasa", "Masimanimba","Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention"))
 
+#G.tr.DF now has the rel abund data, with eigen values for each axis as additional columns so correlation can be done between genus relative abundance and PCoA Axis values to see which genus correlated the best with each Axis values
+                                             
 for (i in 1:nrow(G.tr.DF))
   {G.tr.DF[i,]$Status <- Geography.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Status
   }
 
+a = n+2 #moves starting position to Axis.1 column
+#for loop to correlate each species with each Axis.1 using the spearman method                                                                                          
+for (i in a:ncol(G.tr.DF))
+{
+  Cor <- matrix(nrow = n,  ncol = 3)
+  colnames(Cor) <- c(paste(colnames(G.tr.DF[i])), "spearman cor", "p-value")
+  for (j in 1:n)
+  {
+    cor <- cor.test(G.tr.DF[,j], G.tr.DF[,i], method=c("spearman"))
+    Cor[j,1] = colnames(G.tr.DF[j])
+    Cor[j,2] = as.numeric(cor$estimate)
+    Cor[j,3] = as.numeric(cor$p.value)
+  }
+  write.csv(Cor, file = paste("Geography_Genus_",colnames(G.tr.DF[i]),"_Correlation.csv", sep = ""))
+  Cor <- data.frame(Cor, row.names = TRUE)
+  Cor.f <- subset(Cor, rownames(Cor) %in% f_0.0001)                                       
+  write.csv(Cor.f, file = paste("Geography_Genus_f_0.0001_",colnames(G.tr.DF[i]),"_Correlation.csv", sep = ""))
+}
+
+#Plot most correlated with Axis 1 and Axis 2                                             
 #Correlation Plot
 #Axis 1 Prevotella
 #Axis 2 Lachnoclostridium
@@ -3224,6 +3244,7 @@ PIBt <- PIBt + annotate("text", x = 0.45, y = -0.4, label = expression(paste("p 
 tiff(filename = "Kahemba_Genus_NonInt_Int_PCoA.tiff", width = 3.5, height = 1.75, units = "in", res = 600)
 ggarrange(PNIBt, PIBt, labels = c("A","B"), ncol = 2, nrow = 1, font.label = list(size = 7))
 dev.off()
+
 #Figure 7: Turicibacter and LAB
 
 S <- KonzoData.S.tr
