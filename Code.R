@@ -2679,7 +2679,117 @@ write.csv(WT.f, file = "Intervention_Bacteria_Species_0.0001_ByStatus_WilcoxTest
 
                                                                                                             
 ### Beta Diversity using Bray-Curtis for Bacteria Genus                     
+otuD.G <- as.data.frame(t(otu_table(Geography.G)))
+diversity.G <- estimate_richness(Geography.G)
+diversity.G <- cbind(sample_data(Geography.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+diversity.G$Status <- as.factor(diversity.G$Status)
+diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention"))
 
+brayd <- phyloseq::distance(Geography.G.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Geography.txt")
+
+otuD.G <- as.data.frame(t(otu_table(Geography.G)))
+diversity.G <- estimate_richness(Geography.G)
+diversity.G <- cbind(sample_data(Geography.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+diversity.G$Region <- as.factor(diversity.G$Region)
+diversity.G$Region <- factor(diversity.G$Region, levels = c("Kinshasa", "Masimanimba", "Kahemba"))
+
+brayd <- phyloseq::distance(Geography.G.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ diversity.G$Region, perm=10000); bdiv_bray
+capture.output(bdiv_bray, file="relabund_bdiv__genus_adonis_Geography_byRegion.txt")
+
+otuD.G <- as.data.frame(t(otu_table(KinMas.G)))
+diversity.G <- estimate_richness(KinMas.G)
+diversity.G <- cbind(sample_data(KinMas.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+diversity.G$Status <- as.factor(diversity.G$Status)
+diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Masimanimba"))
+
+brayd <- phyloseq::distance(KinMas.G.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_KinMas.txt")
+  
+otuD.G <- as.data.frame(t(otu_table(KinCNI.G)))
+diversity.G <- estimate_richness(KinCNI.G)
+diversity.G <- cbind(sample_data(KinCNI.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+diversity.G$Status <- as.factor(diversity.G$Status)
+diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Kahemba_Control_NonIntervention"))
+
+brayd <- phyloseq::distance(KinCNI.G.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_KinCNI.txt")
+  
+otuD.G <- as.data.frame(t(otu_table(MasCNI.G)))
+diversity.G <- estimate_richness(MasCNI.G)
+diversity.G <- cbind(sample_data(MasCNI.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+diversity.G$Status <- as.factor(diversity.G$Status)
+diversity.G$Status <- factor(diversity.G$Status, levels = c("Masimanimba", "Kahemba_Control_NonIntervention"))
+
+brayd <- phyloseq::distance(MasCNI.G.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_MasCNI.txt")
+ 
+otuD.G <- as.data.frame(t(otu_table(KinCI.G)))
+diversity.G <- estimate_richness(KinCI.G)
+diversity.G <- cbind(sample_data(KinCI.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+diversity.G$Status <- as.factor(diversity.G$Status)
+diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Kahemba_Control_Intervention"))
+
+brayd <- phyloseq::distance(KinCI.G.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_KinCI.txt")
+  
+otuD.G <- as.data.frame(t(otu_table(MasCI.G)))
+diversity.G <- estimate_richness(MasCI.G)
+diversity.G <- cbind(sample_data(MasCI.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+diversity.G$Status <- as.factor(diversity.G$Status)
+diversity.G$Status <- factor(diversity.G$Status, levels = c("Masimanimba", "Kahemba_Control_Intervention"))
+
+brayd <- phyloseq::distance(MasCI.G.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_MasCI.txt")
+
+otuD.G <- as.data.frame(t(otu_table(Control.G)))
+diversity.G <- estimate_richness(Control.G)
+diversity.G <- cbind(sample_data(Control.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+diversity.G$Status <- as.factor(diversity.G$Status)
+diversity.G$Status <- factor(diversity.G$Status, levels = c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention"))
+
+brayd <- phyloseq::distance(Control.G.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Control.txt")
+
+otuD.G <- as.data.frame(t(otu_table(Disease.G)))
+diversity.G <- estimate_richness(Disease.G)
+diversity.G <- cbind(sample_data(Disease.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+diversity.G$Status <- as.factor(diversity.G$Status)
+diversity.G$Status <- factor(diversity.G$Status, levels = c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"))
+
+brayd <- phyloseq::distance(Disease.G.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Disease.txt")
+  
+otuD.G <- as.data.frame(t(otu_table(NonIntervention.G)))
+diversity.G <- estimate_richness(NonIntervention.G)
+diversity.G <- cbind(sample_data(NonIntervention.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+diversity.G$Status <- as.factor(diversity.G$Status)
+diversity.G$Status <- factor(diversity.G$Status, levels = c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"))
+
+brayd <- phyloseq::distance(NonIntervention.G.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_NonIntervention.txt")
+
+otuD.G <- as.data.frame(t(otu_table(Intervention.G)))
+diversity.G <- estimate_richness(Intervention.G)
+diversity.G <- cbind(sample_data(Intervention.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+diversity.G$Status <- as.factor(diversity.G$Status)
+diversity.G$Status <- factor(diversity.G$Status, levels = c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+
+brayd <- phyloseq::distance(Intervention.G.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Intervention.txt")
+ 
+  
 
 #Figure 3: Geography Genus PCoA
 
