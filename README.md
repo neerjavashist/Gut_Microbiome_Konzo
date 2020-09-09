@@ -4,7 +4,7 @@ The Gut Microbiome in Konzo
 The code outlined here assesses the bacterial profile of the gut microbiome of individuals from the Democratic Republic of Congo.
 The shell scripts are there for referece and will need to be adjusted depending on input folder. However the parameters are the same for all processed data 
 
-1. Run bmtagger.sh to remove human reads using hg38 and the needed bmtagger.conf file. 
+1. Run bmtagger.sh to remove human reads by aligning to the human genome reference,hg38. The bmtagger.conf file is needed. 
 2. Run skewer.sh on the fastq files to remove Illumina sequencing adapters. 
 3. Run kraken2.sh on the fastq post skewer using Kraken2 standard genome libraries (kraken2-build.sh; built on March 3rd, 2019), which includes human, viral, bacteria, and archae. The detailed manual for the program installation and use can be found here: https://github.com/DerrickWood/kraken2/wiki/Manual
 4. Run bracken.sh on the classified reads from Kraken2 for secondary analysis and the manual for installation and use can be found here: https://ccb.jhu.edu/software/bracken/index.shtml?t=manual
@@ -13,4 +13,4 @@ The shell scripts are there for referece and will need to be adjusted depending 
 7. Install any additional necessary packages as listed in Code.R, and follow the script for further analysis.
 8. Figure making is also included in the code. However, Gimp was used to combine some figures into a final layout. 
 
-Note: The code is commented up front for clarification, but most of the code is repetitive with changes depedning on input. Additionally, phylum input files are available for reference to have a better idea of what the input looks like as the files are separate and have more info than necessary/provided in Supplemental files in the paper submission. 
+Note: The code is commented up front for clarification, but most of the code is repetitive with changes depending on input. Additionally, phylum input files are available for reference to have a better idea of what the input looks like as the files are separate and have more info than necessary/provided in Supplemental files in the paper submission. 
