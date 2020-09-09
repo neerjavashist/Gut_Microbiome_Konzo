@@ -1820,7 +1820,7 @@ f_0.0001 <- unlist(x)
                                              
 #Kin Mas  
 #KINSHASA AND MASIMANIMBA
-KinMas.F <-  prune_samples((KonzoData.F@sam_data$Status == "Kinshasa") | (KonzoData.F@sam_data$Status == "Kahemba_Control_NonIntervention"), KonzoData.F)                                      
+KinMas.F <-  prune_samples((KonzoData.F@sam_data$Status == "Kinshasa") | (KonzoData.F@sam_data$Status == "Masimanimba"), KonzoData.F)                                      
 KinMas.F.tr <-  transform_sample_counts(KinMas.F, function(x) x / sum(x))
                                                                                                                                     
 F <- KinMas.F.tr
