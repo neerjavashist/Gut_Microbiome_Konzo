@@ -3,7 +3,7 @@ The Gut Microbiome in Konzo
 
 The code outlined here assesses the bacterial profile of the gut microbiome of individuals from the Democratic Republic of Congo.
 
-Note: The shell scripts are there for reference and will need to be adjusted depending on input folder. However the parameters are the same for all processed data.\ 
+Note: The shell scripts are there for reference and will need to be adjusted depending on input folder. However the parameters are the same for all processed data. 
 
 Note: BMTagger, skewer, Kraken2, and Bracken were run on linux based OS, while R was run on a macOS with 32GB memory.
 
