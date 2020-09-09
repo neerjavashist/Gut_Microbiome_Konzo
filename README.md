@@ -3,7 +3,7 @@ The Gut Microbiome in Konzo
 
 The code outlined here assesses the bacterial profile of the gut microbiome of individuals from the Democratic Republic of Congo.\
 Note: The shell scripts are there for reference and will need to be adjusted depending on input folder. However the parameters are the same for all processed data.\ 
-Note: BMTagger, skewer, Kraken2, and Bracken were run on linux based OS, while R was run on a macOS with 32GB memory. \
+Note: BMTagger, skewer, Kraken2, and Bracken were run on linux based OS, while R was run on a macOS with 32GB memory.\
 Note: The code is commented up front for clarification, but most of the code is repetitive with changes depending on input. Additionally, phylum input files are available for reference to have a better idea of what the input looks like as the files are separate and have more info than necessary/provided in Supplemental files in the paper submission. The Supplemental file 1 includes all information needed to generate the same data output. 
 
 1. Run bmtagger.sh (version 1.1.0) to remove human reads by aligning to the human genome reference, hg38. The bmtagger.conf file may be necessary even if you have installed all dependencies. To successfully run BMTagger required programs, about 8.5Gb memory and around three times harddisk space to store index data is needed. Follow installation and running guidelines here: https://hmpdacc.org/hmp/doc/HumanSequenceRemoval_SOP.pdf  
