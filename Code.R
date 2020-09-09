@@ -3355,3 +3355,611 @@ tiff(filename = "Kinshasa_Konzo3_Turicibacter_LAB_BoxPlot.tiff", width = 5.5, he
 ggarrange(t,t6,labels = c("A","B"), widths = c(2.5, 3), ncol = 2, nrow = 1, font.label = list(size = 7), align = "hv")
 dev.off()
 
+##### Supplemental Figures
+## Supplementary Figure 2:
+
+#Class
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
+
+top_C <- read.csv("Kinshasa_Konzo3_Class_Top5.csv", row.names = 1, colClasses = "character")
+top_C <- unlist(top_C)
+
+KonzoData.C.tr.status.top = prune_taxa(top_C, KonzoData.C.tr.status)
+
+p <- plot_bar(KonzoData.C.tr.status.top, "Sample", "Abundance", fill = 'class')
+p$data$Sample <- factor(p$data$Sample, levels = c("Kahemba_Konzo_Intervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_NonIntervention", "Masimanimba", "Kinshasa"))
+#p <- p + geom_bar(stat = "identity") + coord_flip()
+p <- p + labs(x = element_blank(), y = "Relative Abundance") +  scale_fill_discrete(name = "Class")
+top_class_plot <- p + theme(legend.position="bottom") + theme(legend.key.size = unit(.4, "cm"))
+
+
+top_class_plot <- top_class_plot + 
+  theme(legend.position="right", legend.margin=margin(0,0,0,0),
+        legend.box.margin=margin(-8,0,-8,-8)) + 
+  scale_y_continuous(expand = c(0,0), limits = c(0,0.9)) +
+  scale_x_discrete(labels= SSSL)+
+  theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 7), legend.title = element_text(size = 7)) + 
+  guides(fill=guide_legend(ncol=1,byrow=TRUE)) + 
+  theme(axis.text.y = element_text(angle = 0, size = 7), axis.ticks.y = element_blank(), axis.text.x = element_text(angle = 0,vjust=1, hjust=0.5, size = 7), axis.title.x = element_text(size = 7), legend.title = element_text(size = 7)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), strip.text.x = element_text(size=7))
+top_class_plot <- top_class_plot + geom_bar(stat = "identity") + coord_flip() + theme(axis.title.y = element_blank())
+top_class_plot
+
+#Order
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Order")
+
+top_O <- read.csv("Kinshasa_Konzo3_Order_Top5.csv", row.names = 1, colClasses = "character")
+top_O <- unlist(top_O)
+
+KonzoData.O.tr.status.top = prune_taxa(top_O, KonzoData.O.tr.status)
+
+p <- plot_bar(KonzoData.O.tr.status.top, "Sample", "Abundance", fill = 'order')
+p$data$Sample <- factor(p$data$Sample, levels = c("Kahemba_Konzo_Intervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_NonIntervention", "Masimanimba", "Kinshasa"))
+
+p <- p + labs(x = element_blank(), y = "Relative Abundance") +  scale_fill_discrete(name = "Order")
+top_order_plot <- p + theme(legend.position="bottom") + theme(legend.key.size = unit(.4, "cm"))
+
+top_order_plot <- top_order_plot + 
+  theme(legend.position="right", legend.margin=margin(0,0,0,0),
+        legend.box.margin=margin(-8,0,-8,-8))+ 
+  scale_y_continuous(expand = c(0,0), limits = c(0,0.9)) +
+  scale_x_discrete(labels= SSSL)+
+  theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 7), legend.title = element_text(size = 7)) + 
+  guides(fill=guide_legend(ncol=1,byrow=TRUE)) + 
+  theme(axis.text.y = element_text(angle = 0, size = 7), axis.ticks.y = element_blank(), axis.text.x = element_text(angle = 0,vjust=1, hjust=0.5, size = 7), axis.title.x = element_text(size = 7), legend.title = element_text(size = 7)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), strip.text.x = element_text(size=7))
+top_order_plot <- top_order_plot + geom_bar(stat = "identity") + coord_flip() + theme(axis.title.y = element_blank())
+top_order_plot
+
+#Box Plot for Ratio of Prevotella / Bacteroides (Genus)
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
+
+#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention" ), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"), c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) 
+
+my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention")) 
+
+
+temp <- as.data.frame(t(otu_table(KonzoData.G.tr)))
+which( colnames(temp)=="Prevotella" )
+BP <- temp[,400:401, drop = FALSE]
+
+BP$Status <- "Mis"
+BP$Ratio <- 0
+BP$Status <- factor(BP$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention","Kahemba_Konzo_NonIntervention","Kahemba_Control_Intervention","Kahemba_Konzo_Intervention"))
+
+for (i in 1:nrow(BP))
+{BP[i,]$Status <- KonzoData.G.tr@sam_data[rownames(BP[i,]),]$Status
+}
+
+for (i in 1:nrow(BP))
+{BP[i,]$Ratio <- BP[i,1]/BP[i,2]
+}
+
+bp1 <- ggboxplot(BP, x = "Status", y = "Ratio" , fill = "Status", xlab = "Samples", ylab = "Rel. Abund of Prevotella/Bacteroides", title = "")
+bp2 <- bp1 + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "t.test", size = 3)
+bp3 <- bp2 + theme(legend.position="none") + theme(axis.title.y = element_text(size = 7), axis.title.x = element_blank(), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7)) + stat_boxplot(geom ="errorbar") + scale_fill_manual(values = konzo_color) + scale_x_discrete(labels = SSSL)
+bp3
+#tiff(filename = "KinshasaKonzo3_Genus_RelAbund_Prev_over_Bact.tiff", width = 2.5, height = 3, units = "in", res = 600)
+#bp3
+#dev.off()
+
+#Average Bray-Curtis for Genus with Relative Abundance (NOT READ COUNTS) for Each Group (Intra)
+
+brayd <- phyloseq::distance(KonzoData.G.tr, method="bray")
+brayd.DF <- as.data.frame(as.matrix(brayd))
+
+KIN <- matrix(nrow = 30, ncol = 30)
+colnames(KIN) <- colnames(brayd.DF[1:30])
+rownames(KIN) <- rownames(brayd.DF[1:30,])
+for (i in 1:30) {for (j in 1:30) {KIN[i,j] <- brayd.DF[i,j]}}
+#write.csv(KIN, file = "KinshasaControl_RelAbundBray_Genus.csv")
+
+KI <- matrix(nrow = 30, ncol = 30)
+colnames(KI) <- colnames(brayd.DF[31:60])
+rownames(KI) <- rownames(brayd.DF[31:60,])
+for (i in 1:30) {for (j in 1:30) {KI[i,j] <- brayd.DF[i+30,j+30]}}
+#write.csv(KI, file = "KonzoIntervention_RelAbundBray_Genus.csv")
+
+CI <- matrix(nrow = 30, ncol = 30)
+colnames(CI) <- colnames(brayd.DF[61:90])
+rownames(CI) <- rownames(brayd.DF[61:90,])
+for (i in 1:30) {for (j in 1:30) {CI[i,j] <- brayd.DF[i+60,j+60]}}
+#write.csv(CI, file = "ControlIntervention_RelAbundBray_Genus.csv")
+
+KNI <- matrix(nrow = 30, ncol = 30)
+colnames(KNI) <- colnames(brayd.DF[91:120])
+rownames(KNI) <- rownames(brayd.DF[91:120,])
+for (i in 1:30) {for (j in 1:30) {KNI[i,j] <- brayd.DF[i+90,j+90]}}
+#write.csv(KNI, file = "KonzoNonIntervention_RelAbundBray_Genus.csv")
+
+CNI <- matrix(nrow = 30, ncol = 30)
+colnames(CNI) <- colnames(brayd.DF[121:150])
+rownames(CNI) <- rownames(brayd.DF[121:150,])
+for (i in 1:30) {for (j in 1:30) {CNI[i,j] <- brayd.DF[i+120,j+120]}}
+#write.csv(CNI, file = "ControlNonIntervention_RelAbundBray_Genus.csv")
+
+MAS <- matrix(nrow = 30, ncol = 30)
+colnames(MAS) <- colnames(brayd.DF[151:180])
+rownames(MAS) <- rownames(brayd.DF[151:180,])
+for (i in 1:30) {for (j in 1:30) {MAS[i,j] <- brayd.DF[i+150,j+150]}}
+#write.csv(MIN, file = "Masimanimba_RelAbundBray_Genus.csv")
+
+bray_avg <- matrix(nrow = 180,  ncol = 3)
+
+colnames(bray_avg) <- c("Samples", "BrayAvg", "Status")
+
+for (i in 1:30) 
+{
+  bray_avg[i,1] <- rownames(KIN)[i]
+  bray_avg[i,2] <- mean(KIN[i,])
+  bray_avg[i,3] <- "Kinshasa"
+}
+
+for (i in 1:30) 
+{
+  bray_avg[i+30,1] <- rownames(MAS)[i]
+  bray_avg[i+30,2] <- mean(MAS[i,])
+  bray_avg[i+30,3] <- "Masimanimba"
+}
+
+for (i in 1:30) 
+{
+  bray_avg[i+60,1] <- rownames(CNI)[i]
+  bray_avg[i+60,2] <- mean(CNI[i,])
+  bray_avg[i+60,3] <- "Kahemba_Control_NonIntervention"
+}
+
+for (i in 1:30) 
+{
+  bray_avg[i+90,1] <- rownames(KNI)[i]
+  bray_avg[i+90,2] <- mean(KNI[i,])
+  bray_avg[i+90,3] <- "Kahemba_Konzo_NonIntervention"
+}
+
+for (i in 1:30) 
+{
+  bray_avg[i+120,1] <- rownames(CI)[i]
+  bray_avg[i+120,2] <- mean(CI[i,])
+  bray_avg[i+120,3] <- "Kahemba_Control_Intervention"
+}
+
+for (i in 1:30) 
+{
+  bray_avg[i+150,1] <- rownames(KI)[i]
+  bray_avg[i+150,2] <- mean(KI[i,])
+  bray_avg[i+150,3] <- "Kahemba_Konzo_Intervention"
+}
+
+#write.csv(bray_avg, file = "KinshasaControl_Konzo3_RelAbundBray_Averages_Genus_PerSamples.csv")
+
+bray_avg <- read.csv("./KinshasaControl_Konzo3_RelAbundBray_Averages_Genus_PerSamples.csv")
+
+bray_avg$Status <- factor(bray_avg$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+
+
+b <- ggplot(bray_avg, aes(factor(Status), BrayAvg)) + geom_boxplot(aes(fill = factor(Status))) + labs(x = element_blank(), y = "Average Bray-Curtis") + theme(axis.text.x = element_blank()) + theme_classic()
+b2 <- b + theme(legend.position="none")
+b3 <- b2 + theme(axis.title.y = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7)) + stat_boxplot(geom ="errorbar")
+b4 <- b3 + scale_fill_manual(values = konzo_color) + scale_x_discrete(labels = SSSL)
+#tiff("KinshasaControl_Konzo3_Bacteria_Genus_AvgRelAbundBrayDistancePerSamples.tiff", width = 2, height = 2.5, units = "in", res = 600)
+#b4
+#dev.off()
+
+#Supplemental Fig: Prev/Bact and Intra Bray
+tiff(filename = "Konzo1Konzo3_Class_Order_PrevOverBact_IntraBray.tiff", width = 7, height = 6, units = "in", res = 600)
+ggarrange(top_class_plot, top_order_plot, bp3, b4, labels = c("A","B", "C", "D"), ncol = 2, nrow = 2, font.label = list(size = 7))
+dev.off()
+
+
+##Supplementary Fig 4: Kin vs. Mas vs. ULPZ
+
+#Random Forest Box Plots
+s <- plot_spacer() + theme_minimal()
+#spacer plot is added so the percent breakdown for top ten taxa can be added using gimp
+
+#Geography (Kin vs. Mas vs. ULPZ)
+                                     
+my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Control_NonIntervention")) 
+g_color <- c("royalblue1",   "springgreen3", "turquoise3")
+
+#Specifically for this Figure
+                                     
+Geography.G <- prune_samples((KonzoData.G@sam_data$Status != "Kahemba_Control_Intervention") & (KonzoData.G@sam_data$Status != "Kahemba_Konzo_NonIntervention") & (KonzoData.G@sam_data$Status != "Kahemba_Konzo_Intervention"), KonzoData.G)                                              
+Geography.G.tr <-  transform_sample_counts(Geography.G, function(x) x / sum(x))
+Geography.G.tr.log10 <-  transform_sample_counts(Geography.G.tr, function(x) log10(x))
+
+G <- Geography.G.tr.log10
+                                               
+G.tr_META <- as.data.frame(G@sam_data)
+G.tr_OTU <- as.data.frame(t(G@otu_table))
+G.tr.DF <- cbind(G.tr_OTU, G.tr_META$Status)
+
+colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
+for (i in 1:nrow(G.tr.DF))
+  {G.tr.DF[i,]$Status <- Geography.G.tr.log10@sam_data[rownames(G.tr.DF[i,]),]$Status
+  }
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention"))
+
+#Kinshasa vs. ULPZ vs. Mas
+                                     
+#Actinomyces                                     
+#Clostridioides
+#Leuconostoc                                     
+#Megasphaera                                     
+#Mageeibacillus 
+#Selenomonas                                                  
+#Kordia                                                                       
+#Arachidicoccus
+#Cohnella
+#Aneurinibacillus
+                                                                                                                                                                  
+                                    
+g1 <- ggboxplot(G.tr.DF, x = "Status", y = "Actinomyces", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Actinomyces"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g1 <- g1 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g1 <- g1 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g1 <- g1 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g2 <- ggboxplot(G.tr.DF, x = "Status", y = "Clostridioides", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Clostridioides"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g2 <- g2 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g2 <- g2 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g2 <- g2 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g3 <- ggboxplot(G.tr.DF, x = "Status", y = "Leuconostoc", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Leuconostoc"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g3 <- g3 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g3 <- g3 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g3 <- g3 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g4 <- ggboxplot(G.tr.DF, x = "Status", y = "Megasphaera", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Megasphaera"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g4 <- g4 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g4 <- g4 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g4 <- g4 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g5 <- ggboxplot(G.tr.DF, x = "Status", y = "Mageeibacillus", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Mageeibacillus"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g5 <- g5 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g5 <- g5 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g5 <- g5 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+                                                 
+g6 <- ggboxplot(G.tr.DF, x = "Status", y = "Selenomonas", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Selenomonas"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g6 <- g6 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g6 <- g6 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g6 <- g6 + guides(fill=guide_legend(ncol=3,byrow=TRUE))                                                 
+
+g7 <- ggboxplot(G.tr.DF, x = "Status", y = "Kordia", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Kordia"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g7 <- g7 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g7 <- g7 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g7 <- g7 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g8 <- ggboxplot(G.tr.DF, x = "Status", y = "Arachidicoccus", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Arachidicoccus"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g8 <- g8 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g8 <- g8 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g8 <- g8 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g9 <- ggboxplot(G.tr.DF, x = "Status", y = "Cohnella", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Cohnella"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g9 <- g9 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g9 <- g9 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g9 <- g9 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g10 <- ggboxplot(G.tr.DF, x = "Status", y = "Aneurinibacillus", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Aneurinibacillus"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g10 <- g10 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g10 <- g10 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g10 <- g10 + guides(fill=guide_legend(ncol=3,byrow=TRUE))                                                                                                 
+
+tiff(filename = "KinshasaKonzo3_Genus_RF_Kin_Geo_Boxplot.tiff", width = 7, height = 7, units = "in", res = 600)
+ggarrange(s, s, g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, ncol = 4, nrow = 3, labels = c("", "", "A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), common.legend = TRUE, legend = "bottom")
+dev.off()    
+                
+## Supp 5 Mas vs. (Kin and ULPZ)
+                                                 
+                                                 
+#Masimanimba vs. All
+                                     
+#Phoenicibacter                                     
+#Tolumonas                                                                         
+#Rothia 
+#Faecalibacterium
+#Collinsella                                     
+#Salmonella
+#Megasphaera  
+#Faecalitalea                                                  
+#Actinomyces                                                                        
+#Gordonibacter                                                 
+                                                 
+g11 <- ggboxplot(G.tr.DF, x = "Status", y = "Phoenicibacter", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Phoenicibacter"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g11 <- g11 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g11 <- g11 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g11 <- g11 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g12 <- ggboxplot(G.tr.DF, x = "Status", y = "Tolumonas", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Tolumonas"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g12 <- g12 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g12 <- g12 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g12 <- g12 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g13 <- ggboxplot(G.tr.DF, x = "Status", y = "Rothia", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Rothia"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g13 <- g13 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g13 <- g13 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g13 <- g13 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g14 <- ggboxplot(G.tr.DF, x = "Status", y = "Faecalibacterium", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Faecalibacterium"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g14 <- g14 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g14 <- g14 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g14 <- g14 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g15 <- ggboxplot(G.tr.DF, x = "Status", y = "Collinsella", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Collinsella"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g15 <- g15 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g15 <- g15 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g15 <- g15 + guides(fill=guide_legend(ncol=3,byrow=TRUE))                                                 
+                                                 
+g16 <- ggboxplot(G.tr.DF, x = "Status", y = "Salmonella", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Salmonella"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g16 <- g16 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g16 <- g16 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g16 <- g16 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g17 <- ggboxplot(G.tr.DF, x = "Status", y = "Megasphaera", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Megasphaera"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g17 <- g17 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g17 <- g17 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g17 <- g17 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g18 <- ggboxplot(G.tr.DF, x = "Status", y = "Faecalitalea", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Faecalitalea"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g18 <- g18 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g18 <- g18 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g18 <- g18 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+                                                 
+g19 <- ggboxplot(G.tr.DF, x = "Status", y = "Actinomyces", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Actinomyces"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g19 <- g19 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g19 <- g19 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g19 <- g19 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g20 <- ggboxplot(G.tr.DF, x = "Status", y = "Gordonibacter", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Gordonibacter"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g20 <- g20 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g20 <- g20 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g20 <- g20 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+tiff(filename = "KinshasaKonzo3_Genus_RF_Mas_Geo_Boxplot.tiff", width = 7, height = 7, units = "in", res = 600)
+ggarrange(s,s,g11, g12, g13, g14, g15, g16, g17, g18, g19, g20, ncol = 4, nrow = 3, labels = c("", "", "A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), common.legend = TRUE, legend = "bottom")
+dev.off()                                                                                                 
+                                                               
+## Supp 6: ULPZ vs. (Kin and Mas)
+                                                 
+#ULPZ vs. All   
+                                     
+#Denitrobacterium    
+#Gemmantimonas                                    
+#Pandoraea                                    
+#Gottschalkia
+#Desulfovibrio                                     
+#Cyanothece                                 
+#Macrococcus
+#Desulfitobacterium
+#Melittangium                                     
+#Faecalibaculum
+                                                 
+g21 <- ggboxplot(G.tr.DF, x = "Status", y = "Denitrobacterium", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Denitrobacterium"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g21 <- g21 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 5.5),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g21 <- g21 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g21 <- g21 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g22 <- ggboxplot(G.tr.DF, x = "Status", y = "Gemmatimonas", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Gemmatimonas"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g22 <- g22 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 5.5),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g22 <- g22 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g22 <- g22 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g23 <- ggboxplot(G.tr.DF, x = "Status", y = "Pandoraea", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Pandoraea"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g23 <- g23 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 5.5),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g23 <- g23 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g23 <- g23 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+                                                 
+g24 <- ggboxplot(G.tr.DF, x = "Status", y = "Gottschalkia", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Gottschalkia"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g24 <- g24 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 5.5),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g24 <- g24 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g24 <- g24 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g25 <- ggboxplot(G.tr.DF, x = "Status", y = "Desulfovibrio", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Desulfovibrio"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g25 <- g25 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 5.5),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g25 <- g25 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g25 <- g25 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+                                 
+g26 <- ggboxplot(G.tr.DF, x = "Status", y = "Cyanothece", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Cyanothece"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g26 <- g26 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 5.5),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g26 <- g26 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g26 <- g26 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g27 <- ggboxplot(G.tr.DF, x = "Status", y = "Macrococcus", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Macrococcus"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g27 <- g27 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 5.5),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g27 <- g27 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g27 <- g27 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g28 <- ggboxplot(G.tr.DF, x = "Status", y = "Desulfitobacterium", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Desulfitobacterium"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g28 <- g28 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 5.5),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g28 <- g28 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g28 <- g28 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g29 <- ggboxplot(G.tr.DF, x = "Status", y = "Melittangium", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Melittangium"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g29 <- g29 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 5.5),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g29 <- g29 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g29 <- g29 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+
+g30 <- ggboxplot(G.tr.DF, x = "Status", y = "Faecalibaculum", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Faecalibaculum"))) + theme(axis.text.x = element_blank()) + theme_classic()
+g30 <- g30 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 5.5),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+g30 <- g30 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+g30 <- g30 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
+                                
+tiff(filename = "KinshasaKonzo3_Genus_RF_ULPZ_Geo_Boxplots.tiff", width = 7, height = 7, units = "in", res = 600)
+ggarrange(s,s,g21, g22, g23, g24, g25, g26, g27, g28, g29, g30, labels = c("","","A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), ncol = 4, nrow = 3, common.legend = TRUE, legend = "bottom")
+dev.off()  
+
+#log 10 phyloseq                                                 
+Control.G.tr.log10 <- transform_sample_counts(Control.G.tr, function(x) log10(x))
+Disease.G.tr.log10 <- transform_sample_counts(Disease.G.tr, function(x) log10(x))     
+Intervention.G.tr.log10 <- transform_sample_counts(Intervention.G.tr, function(x) log10(x))
+NonIntervention.G.tr.log10 <- transform_sample_counts(NonIntervention.G.tr, function(x) log10(x))
+                                                 
+                                                 
+#Supp 7: ULPZ vs. UHPZ
+#ULPZ vs. UHPZ (Control)
+                                                 
+#Gordonibacter                                                 
+#Denitrobacterium 
+#Tumebacillus
+#Adlercreutzia 
+#Photobacterium
+#Colwellia                                                 
+#Slackia                                    
+#Shewanella                                     
+#Moraxella
+#Tolumonas
+                                     
+my_comparisons <- list( c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention")) 
+#control_color <- c( "deepskyblue2",        "darkviolet")
+                                     
+G <- Control.G.tr.log10
+                                               
+G.tr_META <- as.data.frame(G@sam_data)
+G.tr_OTU <- as.data.frame(t(G@otu_table))
+G.tr.DF <- cbind(G.tr_OTU, G.tr_META$Status)
+
+colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
+for (i in 1:nrow(G.tr.DF))
+  {G.tr.DF[i,]$Status <- Control.G.tr.log10@sam_data[rownames(G.tr.DF[i,]),]$Status
+  }
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention"))
+
+c1 <- ggboxplot(G.tr.DF, x = "Status", y = "Gordonibacter", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Gordonibacter"))) + theme(axis.text.x = element_blank()) + theme_classic()
+c1 <- c1 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+c1 <- c1 + scale_fill_manual(labels = SSL, values = control_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+c1 <- c1 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+
+c2 <- ggboxplot(G.tr.DF, x = "Status", y = "Denitrobacterium", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Denitrobacterium"))) + theme(axis.text.x = element_blank()) + theme_classic()
+c2 <- c2 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+c2 <- c2 + scale_fill_manual(labels = SSL, values = control_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+c2 <- c2 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+
+c3 <- ggboxplot(G.tr.DF, x = "Status", y = "Tumebacillus", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Tumebacillus"))) + theme(axis.text.x = element_blank()) + theme_classic()
+c3 <- c3 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+c3 <- c3 + scale_fill_manual(labels = SSL, values = control_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+c3 <- c3 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+
+c4 <- ggboxplot(G.tr.DF, x = "Status", y = "Adlercreutzia", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Adlercreutzia"))) + theme(axis.text.x = element_blank()) + theme_classic()
+c4 <- c4 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+c4 <- c4 + scale_fill_manual(labels = SSL, values = control_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+c4 <- c4 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+
+c5 <- ggboxplot(G.tr.DF, x = "Status", y = "Photobacterium", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Photobacterium"))) + theme(axis.text.x = element_blank()) + theme_classic()
+c5 <- c5 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+c5 <- c5 + scale_fill_manual(labels = SSL, values = control_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+c5 <- c5 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+                                     
+c6 <- ggboxplot(G.tr.DF, x = "Status", y = "Colwellia", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Colwellia"))) + theme(axis.text.x = element_blank()) + theme_classic()
+c6 <- c6 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+c6 <- c6 + scale_fill_manual(labels = SSL, values = control_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+c6 <- c6 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+
+c7 <- ggboxplot(G.tr.DF, x = "Status", y = "Slackia", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Slackia"))) + theme(axis.text.x = element_blank()) + theme_classic()
+c7 <- c7 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+c7 <- c7 + scale_fill_manual(labels = SSL, values = control_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+c7 <- c7 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+
+c8 <- ggboxplot(G.tr.DF, x = "Status", y = "Shewanella", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Shewanella"))) + theme(axis.text.x = element_blank()) + theme_classic()
+c8 <- c8 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+c8 <- c8 + scale_fill_manual(labels = SSL, values = control_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+c8 <- c8 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+
+c9 <- ggboxplot(G.tr.DF, x = "Status", y = "Moraxella", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Moraxella"))) + theme(axis.text.x = element_blank()) + theme_classic()
+c9 <- c9 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+c9 <- c9 + scale_fill_manual(labels = SSL, values = control_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+c9 <- c9 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+
+c10 <- ggboxplot(G.tr.DF, x = "Status", y = "Tolumonas", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Tolumonas"))) + theme(axis.text.x = element_blank()) + theme_classic()
+c10 <- c10 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+c10 <- c10 + scale_fill_manual(labels = SSL, values = control_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
+c10 <- c10 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+                                     
+tiff(filename = "KinshasaKonzo3_Genus_RF_ULPZ_UHPZ_Boxplots.tiff", width = 7, height = 7, units = "in", res = 600)
+ggarrange(s,s,c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, ncol = 4, nrow = 3, labels = c("","","A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), common.legend = TRUE, legend = "bottom")
+dev.off()    
+                                                 
+##Supp 8: KLPZ vs. KHPZ
+#KLPZ vs. KHPZ (Disease)
+                                     
+#Adlercreutzia
+#Herminiimonas
+#Brevibacillus                                              
+#Eggerthella                                  
+#Flammeovirga 
+#Escherichia
+#Denitrobacterium                                                 
+#Psychrobacter
+#Acetoanaerobium                                                                
+#Thermacetogenium                                  
+
+                                     
+my_comparisons <- list( c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention")) 
+
+#disease_color <- c("firebrick2", "gold")
+                                     
+G <- Disease.G.tr.log10
+                                               
+G.tr_META <- as.data.frame(G@sam_data)
+G.tr_OTU <- as.data.frame(t(G@otu_table))
+G.tr.DF <- cbind(G.tr_OTU, G.tr_META$Status)
+
+colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
+for (i in 1:nrow(G.tr.DF))
+  {G.tr.DF[i,]$Status <- Disease.G.tr.log10@sam_data[rownames(G.tr.DF[i,]),]$Status
+  }
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"))
+                                     
+d1 <- ggboxplot(G.tr.DF, x = "Status", y = "Adlercreutzia", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Adlercreutzia"))) + theme(axis.text.x = element_blank()) + theme_classic()
+d1 <- d1 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+d1 <- d1 + scale_fill_manual(labels = SSL, values = disease_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+d1 <- d1 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+
+d2 <- ggboxplot(G.tr.DF, x = "Status", y = "Herminiimonas", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Herminiimonas"))) + theme(axis.text.x = element_blank()) + theme_classic()
+d2 <- d2 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+d2 <- d2 + scale_fill_manual(labels = SSL, values = disease_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+d2 <- d2 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+                                     
+d3 <- ggboxplot(G.tr.DF, x = "Status", y = "Brevibacillus", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Brevibacillus"))) + theme(axis.text.x = element_blank()) + theme_classic()
+d3 <- d3 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+d3 <- d3 + scale_fill_manual(labels = SSL, values = disease_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+d3 <- d3 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+                                                 
+d4 <- ggboxplot(G.tr.DF, x = "Status", y = "Eggerthella", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Eggerthella"))) + theme(axis.text.x = element_blank()) + theme_classic()
+d4 <- d4 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+d4 <- d4 + scale_fill_manual(labels = SSL, values = disease_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+d4 <- d4 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+                                     
+d5 <- ggboxplot(G.tr.DF, x = "Status", y = "Flammeovirga", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Flammeovirga"))) + theme(axis.text.x = element_blank()) + theme_classic()
+d5 <- d5 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+d5 <- d5 + scale_fill_manual(labels = SSL, values = disease_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+d5 <- d5 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+                                                 
+d6 <- ggboxplot(G.tr.DF, x = "Status", y = "Escherichia", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Escherichia"))) + theme(axis.text.x = element_blank()) + theme_classic()
+d6 <- d6 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+d6 <- d6 + scale_fill_manual(labels = SSL, values = disease_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+d6 <- d6 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+                                     
+d7 <- ggboxplot(G.tr.DF, x = "Status", y = "Denitrobacterium", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Denitrobacterium"))) + theme(axis.text.x = element_blank()) + theme_classic()
+d7 <- d7 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+d7 <- d7 + scale_fill_manual(labels = SSL, values = disease_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+d7 <- d7 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+                                     
+d8 <- ggboxplot(G.tr.DF, x = "Status", y = "Psychrobacter", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Psychrobacter"))) + theme(axis.text.x = element_blank()) + theme_classic()
+d8 <- d8 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+d8 <- d8 + scale_fill_manual(labels = SSL, values = disease_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+d8 <- d8 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+                                     
+d9 <- ggboxplot(G.tr.DF, x = "Status", y = "Acetoanaerobium", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Acetoanaerobium"))) + theme(axis.text.x = element_blank()) + theme_classic()
+d9 <- d9 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+d9 <- d9 + scale_fill_manual(labels = SSL, values = disease_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+d9 <- d9 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
+                                                                         
+d10 <- ggboxplot(G.tr.DF, x = "Status", y = "Thermacetogenium", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Thermacetogenium"))) + theme(axis.text.x = element_blank()) + theme_classic()
+d10 <- d10 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
+d10 <- d10 + scale_fill_manual(labels = SSL, values = disease_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+d10 <- d10 + guides(fill=guide_legend(ncol=2,byrow=TRUE))                                   
+
+tiff(filename = "KinshasaKonzo3_Genus_RF_KLPZ_KHPZ_Boxplots.tiff", width = 7, height = 7, units = "in", res = 600)
+ggarrange(s,s, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, labels = c("","","A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), ncol = 4, nrow = 3, common.legend = TRUE, legend = "bottom")
+dev.off()                                              
+                                             
