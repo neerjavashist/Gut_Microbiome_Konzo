@@ -1,7 +1,7 @@
 # Gut_Microbiome_Konzo
 The Gut Microbiome in Konzo
 
-The code outlined here assesses the bacterial profile of the gut microbiome of individuals from the Democratic Republic of Congo.
+The code outlined here assesses the bacterial profile of the gut microbiome of individuals from the Democratic Republic of Congo.\
 Note: The shell scripts are there for reference and will need to be adjusted depending on input folder. However the parameters are the same for all processed data. 
 
 1. Run bmtagger.sh to remove human reads by aligning to the human genome reference, hg38. The bmtagger.conf file may be necessary even if you have installed all dependencies. Follow installation and guidelines here: https://hmpdacc.org/hmp/doc/HumanSequenceRemoval_SOP.pdf  
