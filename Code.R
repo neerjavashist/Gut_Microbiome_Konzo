@@ -932,8 +932,7 @@ for (i in 1:nrow(P.tr.DF))
                                           
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Phylum", "Kinshasa vs. Masi-manimba p-value")
-#Will exit with an error because it will run the wilcox test on Status by Status last; you can run for loop with ncol(P.tr.DF)-1 to avoid this
-for (i in 1:ncol(P.tr.DF))
+for (i in 1:(ncol(P.tr.DF)-1)) #ncol - 1 because the last column is Status, so need to run test on that
 {
   wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(P.tr.DF[i])
@@ -967,7 +966,7 @@ for (i in 1:nrow(P.tr.DF))
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Phylum", "Kinshasa vs. ULPZ p-value")
 
-for (i in 1:ncol(P.tr.DF))
+for (i in 1:(ncol(P.tr.DF)-1))
 {
   wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(P.tr.DF[i])
@@ -997,7 +996,7 @@ for (i in 1:nrow(P.tr.DF))
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Phylum", "Masi-manimba vs. ULPZ p-value")
 
-for (i in 1:ncol(P.tr.DF))
+for (i in 1:(ncol(P.tr.DF)-1))
 {
   wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(P.tr.DF[i])
@@ -1029,7 +1028,7 @@ for (i in 1:nrow(P.tr.DF))
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Phylum", "Kinshasa vs. UHPZ p-value")
 
-for (i in 1:ncol(P.tr.DF))
+for (i in 1:(ncol(P.tr.DF)-1))
 {
   wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(P.tr.DF[i])
@@ -1059,7 +1058,7 @@ for (i in 1:nrow(P.tr.DF))
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Phylum", "Masi-manimba vs. UHPZ p-value")
 
-for (i in 1:ncol(P.tr.DF))
+for (i in 1:(ncol(P.tr.DF)-1))
 {
   wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(P.tr.DF[i])
@@ -1093,7 +1092,7 @@ for (i in 1:nrow(P.tr.DF))
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Phylum", "ULPZ vs. UHPZ p-value")
 
-for (i in 1:ncol(P.tr.DF))
+for (i in 1:(ncol(P.tr.DF)-1))
 {
   wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(P.tr.DF[i])
@@ -1126,7 +1125,7 @@ for (i in 1:nrow(P.tr.DF))
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Phylum", "KLPZ vs. KHPZ p-value")
 
-for (i in 1:ncol(P.tr.DF))
+for (i in 1:(ncol(P.tr.DF)-1))
 {
   wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(P.tr.DF[i])
@@ -1161,7 +1160,7 @@ for (i in 1:nrow(P.tr.DF))
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Phylum", "ULPZ vs. KLPZ p-value")
 
-for (i in 1:ncol(P.tr.DF))
+for (i in 1:(ncol(P.tr.DF)-1))
 {
   wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(P.tr.DF[i])
@@ -1194,7 +1193,7 @@ for (i in 1:nrow(P.tr.DF))
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Phylum", "UHPZ vs. KHPZ p-value")
 
-for (i in 1:ncol(P.tr.DF))
+for (i in 1:(ncol(P.tr.DF)-1))
 {
   wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(P.tr.DF[i])
@@ -1226,7 +1225,7 @@ for (i in 1:nrow(C.tr.DF))
 WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Class", "Kinshasa vs. Masi-manimba p-value")
 
-for (i in 1:ncol(C.tr.DF))
+for (i in 1:(ncol(C.tr.DF)-1))
 {
   wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(C.tr.DF[i])
@@ -1256,7 +1255,7 @@ for (i in 1:nrow(C.tr.DF))
 WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Class", "Kinshasa vs. ULPZ  p-value")
 
-for (i in 1:ncol(C.tr.DF))
+for (i in 1:(ncol(C.tr.DF)-1))
 {
   wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(C.tr.DF[i])
@@ -1289,7 +1288,7 @@ WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
                                      
 colnames(WT) <- c("Bacteria Class", "Masi-manimba vs. ULPZ p-value")
 
-for (i in 1:ncol(C.tr.DF))
+for (i in 1:(ncol(C.tr.DF)-1))
 {
   wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(C.tr.DF[i])
@@ -1319,7 +1318,7 @@ for (i in 1:nrow(C.tr.DF))
 WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Class", "Kinshasa vs. UHPZ p-value")
 
-for (i in 1:ncol(C.tr.DF))
+for (i in 1:(ncol(C.tr.DF)-1))
 {
   wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(C.tr.DF[i])
@@ -1354,7 +1353,7 @@ WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
                                      
 colnames(WT) <- c("Bacteria Class", "Masi-manimba vs. UHPZ p-value")
 
-for (i in 1:ncol(C.tr.DF))
+for (i in 1:(ncol(C.tr.DF)-1))
 {
   wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(C.tr.DF[i])
@@ -1390,7 +1389,7 @@ for (i in 1:nrow(C.tr.DF))
 WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Class", "ULPZ vs. UHPZ p-value")
 
-for (i in 1:ncol(C.tr.DF))
+for (i in 1:(ncol(C.tr.DF)-1))
 {
   wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(C.tr.DF[i])
@@ -1424,7 +1423,7 @@ for (i in 1:nrow(C.tr.DF))
 WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Class", "KLPZ vs. KHPZ p-value")
 
-for (i in 1:ncol(C.tr.DF))
+for (i in 1:(ncol(C.tr.DF)-1))
 {
   wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(C.tr.DF[i])
@@ -1457,7 +1456,7 @@ for (i in 1:nrow(C.tr.DF))
 WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Class", "ULPZ vs. KLPZ p-value")
 
-for (i in 1:ncol(C.tr.DF))
+for (i in 1:(ncol(C.tr.DF)-1))
 {
   wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(C.tr.DF[i])
@@ -1491,7 +1490,7 @@ for (i in 1:nrow(C.tr.DF))
 WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Class", "UHPZ vs. KHPZ p-value")
 
-for (i in 1:ncol(C.tr.DF))
+for (i in 1:(ncol(C.tr.DF)-1))
 {
   wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(C.tr.DF[i])
@@ -1523,7 +1522,7 @@ for (i in 1:nrow(O.tr.DF))
 WT <- matrix(nrow = ncol(O.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Order", "Kinshasa vs. Masi-manimba p-value")
 
-for (i in 1:ncol(O.tr.DF))
+for (i in 1:(ncol(O.tr.DF)-1))
 {
   wt <- wilcox.test(O.tr.DF[,i] ~O.tr.DF$Status, data = O.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(O.tr.DF[i])
@@ -1556,7 +1555,7 @@ for (i in 1:nrow(O.tr.DF))
 WT <- matrix(nrow = ncol(O.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Order", "Kinshasa vs. ULPZ p-value")
 
-for (i in 1:ncol(O.tr.DF))
+for (i in 1:(ncol(O.tr.DF)-1))
 {
   wt <- wilcox.test(O.tr.DF[,i] ~O.tr.DF$Status, data = O.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(O.tr.DF[i])
@@ -1587,7 +1586,7 @@ for (i in 1:nrow(O.tr.DF))
 WT <- matrix(nrow = ncol(O.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Order", "Masi-manimba vs. ULPZ p-value")
 
-for (i in 1:ncol(O.tr.DF))
+for (i in 1:(ncol(O.tr.DF)-1))
 {
   wt <- wilcox.test(O.tr.DF[,i] ~O.tr.DF$Status, data = O.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(O.tr.DF[i])
@@ -1619,7 +1618,7 @@ for (i in 1:nrow(O.tr.DF))
 WT <- matrix(nrow = ncol(O.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Order", "Kinshasa vs. UHPZ p-value")
 
-for (i in 1:ncol(O.tr.DF))
+for (i in 1:(ncol(O.tr.DF)-1))
 {
   wt <- wilcox.test(O.tr.DF[,i] ~O.tr.DF$Status, data = O.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(O.tr.DF[i])
@@ -1650,7 +1649,7 @@ for (i in 1:nrow(O.tr.DF))
 WT <- matrix(nrow = ncol(O.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Order", "Masi-manimba vs. UHPZ p-value")
 
-for (i in 1:ncol(O.tr.DF))
+for (i in 1:(ncol(O.tr.DF)-1))
 {
   wt <- wilcox.test(O.tr.DF[,i] ~O.tr.DF$Status, data = O.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(O.tr.DF[i])
@@ -1686,7 +1685,7 @@ for (i in 1:nrow(O.tr.DF))
 WT <- matrix(nrow = ncol(O.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Order", "ULPZ vs. UHPZ p-value")
 
-for (i in 1:ncol(O.tr.DF))
+for (i in 1:(ncol(O.tr.DF)-1))
 {
   wt <- wilcox.test(O.tr.DF[,i] ~O.tr.DF$Status, data = O.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(O.tr.DF[i])
@@ -1721,7 +1720,7 @@ for (i in 1:nrow(O.tr.DF))
 WT <- matrix(nrow = ncol(O.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Order", "KLPZ vs. KHPZ p-value")
 
-for (i in 1:ncol(O.tr.DF))
+for (i in 1:(ncol(O.tr.DF)-1))
 {
   wt <- wilcox.test(O.tr.DF[,i] ~O.tr.DF$Status, data = O.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(O.tr.DF[i])
@@ -1758,7 +1757,7 @@ for (i in 1:nrow(O.tr.DF))
 WT <- matrix(nrow = ncol(O.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Order", "ULPZ vs. KLPZ p-value")
 
-for (i in 1:ncol(O.tr.DF))
+for (i in 1:(ncol(O.tr.DF)-1))
 {
   wt <- wilcox.test(O.tr.DF[,i] ~O.tr.DF$Status, data = O.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(O.tr.DF[i])
@@ -1792,7 +1791,7 @@ for (i in 1:nrow(O.tr.DF))
 WT <- matrix(nrow = ncol(O.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Order", "UHPZ vs. KHPZ p-value")
 
-for (i in 1:ncol(O.tr.DF))
+for (i in 1:(ncol(O.tr.DF)-1))
 {
   wt <- wilcox.test(O.tr.DF[,i] ~O.tr.DF$Status, data = O.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(O.tr.DF[i])
@@ -1825,7 +1824,7 @@ for (i in 1:nrow(F.tr.DF))
 WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Family", "Kinshasa vs. Masi-manimba p-value")
 
-for (i in 1:ncol(F.tr.DF))
+for (i in 1:(ncol(F.tr.DF)-1))
 {
   wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(F.tr.DF[i])
@@ -1857,7 +1856,7 @@ for (i in 1:nrow(F.tr.DF))
 WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Family", "Kinshasa vs. ULPZ p-value")
 
-for (i in 1:ncol(F.tr.DF))
+for (i in 1:(ncol(F.tr.DF)-1))
 {
   wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(F.tr.DF[i])
@@ -1891,7 +1890,7 @@ for (i in 1:nrow(F.tr.DF))
 WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Family", "Masi-manimba vs. ULPZ p-value")
 
-for (i in 1:ncol(F.tr.DF))
+for (i in 1:(ncol(F.tr.DF)-1))
 {
   wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(F.tr.DF[i])
@@ -1925,7 +1924,7 @@ for (i in 1:nrow(F.tr.DF))
 WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Family", "Kinshasa vs. UHPZ p-value")
 
-for (i in 1:ncol(F.tr.DF))
+for (i in 1:(ncol(F.tr.DF)-1))
 {
   wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(F.tr.DF[i])
@@ -1959,7 +1958,7 @@ for (i in 1:nrow(F.tr.DF))
 WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Family", "Masi-manimba vs. UHPZ p-value")
 
-for (i in 1:ncol(F.tr.DF))
+for (i in 1:(ncol(F.tr.DF)-1))
 {
   wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(F.tr.DF[i])
@@ -1989,7 +1988,7 @@ for (i in nrow(F.tr.DF))
 WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Family", "ULPZ vs. UHPZ p-value")
 
-for (i in 1:ncol(F.tr.DF))
+for (i in 1:(ncol(F.tr.DF)-1))
 {
   wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(F.tr.DF[i])
@@ -2017,7 +2016,7 @@ for (i in nrow(F.tr.DF))
 WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Family", "KLPZ vs. KHPZ p-value")
 
-for (i in 1:ncol(F.tr.DF))
+for (i in 1:(ncol(F.tr.DF)-1))
 {
   wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(F.tr.DF[i])
@@ -2044,7 +2043,7 @@ for (i in nrow(F.tr.DF))
 WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Family", "ULPZ vs. KLPZ p-value")
 
-for (i in 1:ncol(F.tr.DF))
+for (i in 1:(ncol(F.tr.DF)-1))
 {
   wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(F.tr.DF[i])
@@ -2072,7 +2071,7 @@ for (i in nrow(F.tr.DF))
 WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Family", "UHPZ vs. KHPZ p-value")
 
-for (i in 1:ncol(F.tr.DF))
+for (i in 1:(ncol(F.tr.DF)-1))
 {
   wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(F.tr.DF[i])
@@ -2103,7 +2102,7 @@ for (i in 1:nrow(G.tr.DF))
 WT <- matrix(nrow = ncol(G.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Genus", "Kinshasa vs. Masi-manimba p-value")
 
-for (i in 1:ncol(G.tr.DF))
+for (i in 1:(ncol(G.tr.DF)-1))
 {
   wt <- wilcox.test(G.tr.DF[,i] ~G.tr.DF$Status, data = G.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(G.tr.DF[i])
@@ -2136,7 +2135,7 @@ for (i in 1:nrow(G.tr.DF))
 WT <- matrix(nrow = ncol(G.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Genus", "Kinshasa vs. ULPZ p-value")
 
-for (i in 1:ncol(G.tr.DF))
+for (i in 1:(ncol(G.tr.DF)-1))
 {
   wt <- wilcox.test(G.tr.DF[,i] ~G.tr.DF$Status, data = G.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(G.tr.DF[i])
@@ -2168,7 +2167,7 @@ for (i in 1:nrow(G.tr.DF))
 WT <- matrix(nrow = ncol(G.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Genus", "Masimanimba vs. ULPZ p-value")
 
-for (i in 1:ncol(G.tr.DF))
+for (i in 1:(ncol(G.tr.DF)-1))
 {
   wt <- wilcox.test(G.tr.DF[,i] ~G.tr.DF$Status, data = G.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(G.tr.DF[i])
@@ -2199,7 +2198,7 @@ for (i in 1:nrow(G.tr.DF))
 WT <- matrix(nrow = ncol(G.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Genus", "Kinshasa vs. UHPZ p-value")
 
-for (i in 1:ncol(G.tr.DF))
+for (i in 1:(ncol(G.tr.DF)-1))
 {
   wt <- wilcox.test(G.tr.DF[,i] ~G.tr.DF$Status, data = G.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(G.tr.DF[i])
@@ -2232,7 +2231,7 @@ for (i in 1:nrow(G.tr.DF))
 WT <- matrix(nrow = ncol(G.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Genus", "Masi-manimba vs. UHPZ p-value")
 
-for (i in 1:ncol(G.tr.DF))
+for (i in 1:(ncol(G.tr.DF)-1))
 {
   wt <- wilcox.test(G.tr.DF[,i] ~G.tr.DF$Status, data = G.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(G.tr.DF[i])
@@ -2267,7 +2266,7 @@ for (i in 1:nrow(G.tr.DF))
 WT <- matrix(nrow = ncol(G.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Genus", "ULPZ vs. UHPZ p-value")
 
-for (i in 1:ncol(G.tr.DF))
+for (i in 1:(ncol(G.tr.DF)-1))
 {
   wt <- wilcox.test(G.tr.DF[,i] ~G.tr.DF$Status, data = G.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(G.tr.DF[i])
@@ -2301,7 +2300,7 @@ for (i in 1:nrow(G.tr.DF))
 WT <- matrix(nrow = ncol(G.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Genus", "KLPZ vs. KHPZ p-value")
 
-for (i in 1:ncol(G.tr.DF))
+for (i in 1:(ncol(G.tr.DF)-1))
 {
   wt <- wilcox.test(G.tr.DF[,i] ~G.tr.DF$Status, data = G.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(G.tr.DF[i])
@@ -2335,7 +2334,7 @@ for (i in 1:nrow(G.tr.DF))
 WT <- matrix(nrow = ncol(G.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Genus", "ULPZ vs. KLPZ p-value")
 
-for (i in 1:ncol(G.tr.DF))
+for (i in 1:(ncol(G.tr.DF)-1))
 {
   wt <- wilcox.test(G.tr.DF[,i] ~G.tr.DF$Status, data = G.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(G.tr.DF[i])
@@ -2368,7 +2367,7 @@ for (i in 1:nrow(G.tr.DF))
 WT <- matrix(nrow = ncol(G.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Genus", "UHPZ vs. KHPZ p-value")
 
-for (i in 1:ncol(G.tr.DF))
+for (i in 1:(ncol(G.tr.DF)-1))
 {
   wt <- wilcox.test(G.tr.DF[,i] ~G.tr.DF$Status, data = G.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(G.tr.DF[i])
@@ -2402,7 +2401,7 @@ for (i in 1:nrow(S.tr.DF))
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Species", "Kinshasa vs. Masi-manimba p-value")
 #Does individual wilcox tests with the BH correction for each taxa by Status
-for (i in 1:ncol(S.tr.DF))
+for (i in 1:(ncol(S.tr.DF)-1))
 {
   wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(S.tr.DF[i])
@@ -2435,7 +2434,7 @@ for (i in 1:nrow(S.tr.DF))
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Species", "Kinshasa vs. ULPZ p-value")
 
-for (i in 1:ncol(S.tr.DF))
+for (i in 1:(ncol(S.tr.DF)-1))
 {
   wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(S.tr.DF[i])
@@ -2467,7 +2466,7 @@ for (i in 1:nrow(S.tr.DF))
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Species", "Masi-manimba vs. ULPZ p-value")
 
-for (i in 1:ncol(S.tr.DF))
+for (i in 1:(ncol(S.tr.DF)-1))
 {
   wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(S.tr.DF[i])
@@ -2497,7 +2496,7 @@ for (i in 1:nrow(S.tr.DF))
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Species", "Kinshasa vs. UHPZ p-value")
 
-for (i in 1:ncol(S.tr.DF))
+for (i in 1:(ncol(S.tr.DF)-1))
 {
   wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(S.tr.DF[i])
@@ -2529,7 +2528,7 @@ for (i in 1:nrow(S.tr.DF))
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Species", "Masi-manimba vs. UHPZ p-value")
 
-for (i in 1:ncol(S.tr.DF))
+for (i in 1:(ncol(S.tr.DF)-1))
 {
   wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(S.tr.DF[i])
@@ -2564,7 +2563,7 @@ for (i in 1:nrow(S.tr.DF))
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Species", "ULPZ vs. UHPZ p-value")
 
-for (i in 1:ncol(S.tr.DF))
+for (i in 1:(ncol(S.tr.DF)-1))
 {
   wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(S.tr.DF[i])
@@ -2598,7 +2597,7 @@ for (i in 1:nrow(S.tr.DF))
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Species", "KLPZ vs. KHPZ p-value")
 
-for (i in 1:ncol(S.tr.DF))
+for (i in 1:(ncol(S.tr.DF)-1))
 {
   wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(S.tr.DF[i])
@@ -2632,7 +2631,7 @@ for (i in 1:nrow(S.tr.DF))
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Species", "ULPZ vs. KLPZ p-value")
 
-for (i in 1:ncol(S.tr.DF))
+for (i in 1:(ncol(S.tr.DF)-1))
 {
   wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(S.tr.DF[i])
@@ -2664,7 +2663,7 @@ for (i in 1:nrow(S.tr.DF))
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 2)
 colnames(WT) <- c("Bacteria Species", "UHPZ vs. KHPZ p-value")
 
-for (i in 1:ncol(S.tr.DF))
+for (i in 1:(ncol(S.tr.DF)-1))
 {
   wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
   WT[i,1] = colnames(S.tr.DF[i])
