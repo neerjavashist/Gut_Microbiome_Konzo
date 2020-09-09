@@ -2,9 +2,9 @@
 The Gut Microbiome in Konzo
 
 The code outlined here assesses the bacterial profile of the gut microbiome of individuals from the Democratic Republic of Congo.\
-Note: The shell scripts are there for reference and will need to be adjusted depending on input folder. However the parameters are the same for all processed data 
+Note: The shell scripts are there for reference and will need to be adjusted depending on input folder. However the parameters are the same for all processed data. 
 
-1. Run bmtagger.sh to remove human reads by aligning to the human genome reference,hg38. The bmtagger.conf file is needed. 
+1. Run bmtagger.sh to remove human reads by aligning to the human genome reference, hg38. The bmtagger.conf file is needed. Follow installation and guidelines here: https://hmpdacc.org/hmp/doc/HumanSequenceRemoval_SOP.pdf  
 2. Run skewer.sh on the fastq files to remove Illumina sequencing adapters. 
 3. Run kraken2.sh on the fastq post skewer using Kraken2 standard genome libraries (kraken2-build.sh; built on March 3rd, 2019), which includes human, viral, bacteria, and archae. The detailed manual for the program installation and use can be found here: https://github.com/DerrickWood/kraken2/wiki/Manual
 4. Run bracken.sh on the classified reads from Kraken2 for secondary analysis and the manual for installation and use can be found here: https://ccb.jhu.edu/software/bracken/index.shtml?t=manual
