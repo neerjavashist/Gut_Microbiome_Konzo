@@ -2,7 +2,7 @@
 The Gut Microbiome in Konzo
 
 The code outlined here assesses the bacterial profile of the gut microbiome of individuals from the Democratic Republic of Congo.
-The shell scripts are there for referece and will need to be adjusted depending on input folder. However the parameters are the same for all processed data 
+Note: The shell scripts are there for reference and will need to be adjusted depending on input folder. However the parameters are the same for all processed data 
 
 1. Run bmtagger.sh to remove human reads by aligning to the human genome reference,hg38. The bmtagger.conf file is needed. 
 2. Run skewer.sh on the fastq files to remove Illumina sequencing adapters. 
