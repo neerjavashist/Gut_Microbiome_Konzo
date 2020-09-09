@@ -2675,5 +2675,502 @@ write.csv(WT.f, file = "Intervention_Bacteria_Species_0.0001_ByStatus_WilcoxTest
 ### Beta Diversity using Bray-Curtis for Bacteria Genus                     
 
 
+#Figure 3: Geography Genus PCoA
 
+#Genus and Corr PCoA Figure
+
+b <- ordinate(Geography.G.tr, method="PCoA", dist="bray")
+b.DF <- as.data.frame(b$vectors)
+e.DF <- as.data.frame(b$values$Relative_eig)
+e.DF["Percent"] <- (b$values$Relative_eig*100)
+
+#Find out how many Axis needed to reach >= 1 or 100% variance
+esum = 0
+sum100 = 0
+for (i in 1:nrow(e.DF))
+{
+  esum = esum + e.DF[i,1]
+  if(esum >= 1)
+  {
+    sum100 = i
+    break
+  }
+}
+
+G <- Geography.G.tr
+G.tr.DF <- as.data.frame(t(G@otu_table))
+
+n = ncol(G.tr.DF)
+
+G.tr.DF["Status"] <- NA
+
+#Add the needed Axis Values
+
+for(i in 1:sum100)
+{
+  G.tr.DF[colnames(b.DF[i])] <- NA
+          for (j in 1:nrow(G.tr.DF))
+          {
+            G.tr.DF[j,colnames(b.DF[i])] <- b.DF[rownames(G.tr.DF[j,]),i]
+          }
+}
+
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kinshasa", "Masimanimba","Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention"))
+
+for (i in 1:nrow(G.tr.DF))
+  {G.tr.DF[i,]$Status <- Geography.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Status
+  }
+
+#Correlation Plot
+#Axis 1 Prevotella
+#Axis 2 Lachnoclostridium
+
+a1 <- ggplot(G.tr.DF, aes(x = Axis.1, y = Prevotella)) +
+    geom_point(aes(color = factor(Status)), size = 1, stroke = 0, shape = 16) + theme_classic() + ylab("Prev.") + theme(axis.title.x = element_blank(), axis.text.x = element_text(size = 7))
+a1 <- a1 + scale_color_manual(labels = SL, values = geography_color) + theme(legend.position="none", panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme (axis.title.y = element_text(size = 7, face = "italic"), axis.text.y = element_text(size = 7))  
+a1 <- a1 + geom_smooth(method=lm, color = "black", size = 0.5) + theme(plot.margin=unit(c(0.15,0.15,0.25,0.15), "lines")) + scale_y_continuous(breaks = seq(-0.1, 0.4, by = 0.2))
+#a1 <- a1 + stat_cor(method = "spearman", size = 5) 
+
+a2 <- ggplot(G.tr.DF, aes(x = Lachnoclostridium, y = Axis.2)) +
+    geom_point(aes(color = factor(Status)), size = 1, stroke = 0, shape = 16) + theme_classic() + xlab("Lach.") + theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 7))
+a2 <- a2 + scale_color_manual(labels = SL, values = geography_color) + theme(legend.position="none", panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme (axis.title.x = element_text(size = 7, face = "italic"), axis.text.x = element_text(size = 7))  
+a2 <- a2 + scale_y_continuous(position = "right") + scale_x_continuous(position = "top", breaks = seq(0.01, 0.02, by = 0.01))
+a2 <- a2 + geom_smooth(method=lm, color = "black", size = 0.5) + theme(plot.margin=unit(c(0.15,0.125,0.15,0.15), "lines"))
+
+p1 = plot_ordination(Geography.G.tr, ordinate(Geography.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 2, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+#p1 <- as_ggplot(p1)
+PGB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = geography_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA), legend.margin=margin(c(0,0,0,0))) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
+
+l <- get_legend(PGB)
+l <- as_ggplot(l)
+l <- l + theme(plot.margin=unit(c(-1,0,0,-1), "lines"))
+
+PGBt <- PGB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+PGBt <- PGBt + theme(legend.position="none")
+PGBt <- PGBt + annotate("text", x = -0.43, y = -0.42, label = expression(paste("p = 9.999x",10^-5)), size = 2.5)
+PGBt <- ggarrange(PGBt,labels = c("A"),font.label = list(size = 7))
+
+PGB <- PGB + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines")) + theme(legend.position="none")
+
+
+G <- arrangeGrob(PGBt, a1,                               # bar plot spaning two columns
+             a2, l,                               # box plot and scatter plot
+             ncol = 2, nrow = 2,
+             layout_matrix = rbind(c(1,1,1,3), c(1,1,1,3), c(1,1,1,3), c(2, 2, 2, 4)))
+
+tiff(filename = "Overall_Geography_Genus_PCoA_Corr.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
+ggarrange(as_ggplot(G))
+dev.off()
+
+#KinMas
+p1 = plot_ordination(KinMas.G.tr, ordinate(KinMas.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+#p1 <- as_ggplot(p1)
+PKMB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = kinmas_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
+
+PKMBt <- PKMB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+PKMBt <- PKMBt + theme(legend.position="none")
+PKMBt <- PKMBt + annotate("text", x = 0.4, y = -0.43, label = expression(paste("p = 2x",10^-4)), size = 2)
+PKMBt <- ggarrange(PKMBt,labels = c("B"),font.label = list(size = 7))
+#KinULPZ
+p1 = plot_ordination(KinCNI.G.tr, ordinate(KinCNI.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+#p1 <- as_ggplot(p1)
+PKUB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = kinulpz_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
+
+PKUBt <- PKUB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+PKUBt <- PKUBt + theme(legend.position="none")
+PKUBt <- PKUBt + annotate("text", x = 0.4, y = -0.43, label = expression(paste("p = 0.0014")), size = 2)
+PKUBt <- ggarrange(PKUBt,labels = c("C"),font.label = list(size = 7))
+#MasULPZ
+p1 = plot_ordination(MasCNI.G.tr, ordinate(MasCNI.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+#p1 <- as_ggplot(p1)
+PMUB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = masulpz_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
+
+PMUBt <- PMUB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+PMUBt <- PMUBt + theme(legend.position="none")
+PMUBt <- PMUBt + annotate("text", x = 0.34, y = -0.27, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+PMUBt <- ggarrange(PMUBt,labels = c("E"),font.label = list(size = 7))
+
+#KinUHPZ
+p1 = plot_ordination(KinCI.G.tr, ordinate(KinCI.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+#p1 <- as_ggplot(p1)
+PKUHB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = kinuhpz_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
+
+PKUHBt <- PKUHB + stat_ellipse(type = "t") +  scale_y_continuous(position = "right")+ theme(plot.margin=unit(c(0.15,0.15,0.15,0.6), "lines"))
+PKUHBt <- PKUHBt + theme(legend.position="none")
+PKUHBt <- PKUHBt + annotate("text", x = 0.35, y = -0.43, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+PKUHBt <- ggarrange(PKUHBt,labels = c("D"),font.label = list(size = 7))
+
+#MasULPZ
+p1 = plot_ordination(MasCI.G.tr, ordinate(MasCI.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+#p1 <- as_ggplot(p1)
+PMUHB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = masuhpz_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
+
+PMUHBt <- PMUHB + stat_ellipse(type = "t") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.6,0.15,0.15,0.15), "lines"))
+PMUHBt <- PMUHBt + theme(legend.position="none")
+PMUHBt <- PMUHBt + annotate("text", x = 0.31, y = -0.33, label = expression(paste("p = 0.0035")), size = 2)
+PMUHBt <- ggarrange(PMUHBt,labels = c("F"),font.label = list(size = 7))
+
+#EF <- ggarrange(PMUBt, PMUHBt, ncol = 1, nrow = 2, labels = c("E", "F"))
+#BCD <- ggarrange(PKMBt, PKUBt, PKUHBt, ncol = 3, nrow = 1, align = "h")
+#Geo_Test <- ggarrange(G, EF, BCD, ncol = 2, nrow = 2, widths = c(3,1), heights = c(3,1))
+#V1
+Geo <- arrangeGrob(PGBt, a1,                              
+             a2, l, PMUBt, PMUHBt, PKMBt, PKUBt, PKUHBt,                             
+             ncol = 6, nrow = 6,
+             layout_matrix = rbind(c(1,1,1,3,5,5), c(1,1,1,3,5,5), c(1,1,1,3,6,6), c(2,2,2,4,6,6), c(7,7,8,8,9,9), c(7,7,8,8,9,9)))
+
+tiff(filename = "Geography_Genus_PCoA_Corr.tiff", width = 5.5, height = 5.5, units = "in", res = 600)
+ggarrange(as_ggplot(Geo))
+dev.off()
+
+#Figure 4: ROC Curve/RF Tables
+#Figure 5: Kahemba Prevalence Zone Genus PCoA
+
+#Control
+
+b <- ordinate(Control.G.tr, method="PCoA", dist="bray")
+b.DF <- as.data.frame(b$vectors)
+
+G <- Control.G.tr
+G.tr.DF <- as.data.frame(t(G@otu_table))
+
+n = ncol(G.tr.DF)
+
+G.tr.DF["Status"] <- NA
+G.tr.DF["Axis.1"] <- NA
+G.tr.DF["Axis.2"] <- NA
+
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention"))
+
+for (i in 1:nrow(G.tr.DF))
+  {G.tr.DF[i,]$Status <- Control.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Status
+  }
+
+for (i in 1:nrow(G.tr.DF))
+  {G.tr.DF[i,]$Axis.1 <- b.DF[rownames(G.tr.DF[i,]),1]
+  }
+
+for (i in 1:nrow(G.tr.DF))
+  {G.tr.DF[i,]$Axis.2 <- b.DF[rownames(G.tr.DF[i,]),2]
+  }
+
+Cor <- matrix(nrow = n,  ncol = 3)
+
+colnames(Cor) <- c("Genus vs. Axis.1", "spearman cor", "p-value")
+for (i in 1:n)
+{
+  cor <- cor.test(G.tr.DF[,i], G.tr.DF$Axis.1, method=c("spearman"))
+  Cor[i,1] = colnames(G.tr.DF[i])
+  Cor[i,2] = as.numeric(cor$estimate)
+  Cor[i,3] = as.numeric(cor$p.value)
+}
+
+Cor <- matrix(nrow = n,  ncol = 3)
+
+colnames(Cor) <- c("Genus vs. Axis.2", "spearman cor", "p-value")
+for (i in 1:n)
+{
+  cor <- cor.test(G.tr.DF[,i], G.tr.DF$Axis.2, method=c("spearman"))
+  Cor[i,1] = colnames(G.tr.DF[i])
+  Cor[i,2] = as.numeric(cor$estimate)
+  Cor[i,3] = as.numeric(cor$p.value)
+}
+
+#Correlation Plots
+#Faecalibacterium Axis 1
+#Prevotella Axis 2
+
+a1 <- ggplot(G.tr.DF, aes(x = Axis.1, y = Faecalibacterium)) +
+    geom_point(aes(color = factor(Status)), size = 0.75, stroke = 0, shape = 16) + theme_classic() + ylab("Faec.") + theme(axis.title.x = element_blank(), axis.text.x = element_text(size = 6))
+a1 <- a1 + scale_color_manual(labels = SSSL, values = control_color) + theme(legend.position="none", panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme (axis.title.y = element_text(size = 7, face = "italic"), axis.text.y = element_text(size = 6))  
+a1 <- a1 + geom_smooth(method=lm, color = "black", size = 0.5) + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines")) + scale_y_continuous(breaks = seq(-0.1, 0.3, by = 0.2))
+#a1 <- a1 + stat_cor(method = "spearman", size = 5) 
+
+a2 <- ggplot(G.tr.DF, aes(x = Prevotella, y = Axis.2)) +
+    geom_point(aes(color = factor(Status)), size = 0.75, stroke = 0, shape = 16) + theme_classic() + xlab("Prev.") + theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 6))
+a2 <- a2 + scale_color_manual(labels = SSSL, values = control_color) + theme(legend.position="none", panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme (axis.title.x = element_text(size = 7, face = "italic"), axis.text.x = element_text(size = 6))  
+a2 <- a2 + scale_y_continuous(position = "right") + scale_x_continuous(position = "top", breaks = seq(0.1, 0.4, by = 0.2))
+a2 <- a2 + geom_smooth(method=lm, color = "black", size = 0.5) + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+
+p1 = plot_ordination(Control.G.tr, ordinate(Control.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+
+PCB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = control_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.2, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
+
+P <- PCB + guides(colour = guide_legend(override.aes = list(size=1)))
+
+l <- get_legend(P)
+l <- as_ggplot(l)
+l <- l + theme(plot.margin=unit(c(-1,0,0,-1), "lines"))
+
+
+PCBt <- PCB + stat_ellipse(type = "t") + scale_x_continuous(position = "top", breaks = seq(-0.1, 0.5, by = 0.5) ) + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+
+
+PCBt <- PCBt + theme(legend.position="none")
+PCBt <- PCBt + annotate("text", x = 0.375, y = -0.22, label = expression(paste("p = 5x",10^-4)), size = 2)
+
+C <- arrangeGrob(PCBt, a1,                               # bar plot spaning two columns
+             a2, l,                               # box plot and scatter plot
+             ncol = 2, nrow = 2,
+             layout_matrix = rbind(c(1,1,1,3), c(1,1,1,3), c(1,1,1,3), c(2, 2, 2, 4)))
+as_ggplot(C)
+
+#Figure: Prevotella and Faecalibacterium for ULPZ vs. UHPZ
+
+G <- Control.G.tr
+
+G.tr_META <- as.data.frame(G@sam_data)
+G.tr_OTU <- as.data.frame(t(G@otu_table))
+G.tr.DF <- cbind(G.tr_OTU, G.tr_META$Status)
+G.tr.DF <- cbind(G.tr.DF, G.tr_META$Intervention)
+
+colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
+colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Intervention"] <- "Intervention"
+
+for (i in nrow(G.tr.DF))
+{G.tr.DF[i,]$Status <- Control.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Status
+}
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kahemba_Control_NonIntervention" ,"Kahemba_Control_Intervention"))
+
+for (i in nrow(G.tr.DF))
+{G.tr.DF[i,]$Intervention <- Control.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Intervention
+}
+G.tr.DF$Intervention <- factor(G.tr.DF$Intervention, levels = c("Kahemba_NonIntervention", "Kahemba_Intervention"))
+
+#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), 
+                        #c("Masimanimba", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), 
+                       #c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"), 
+                        #c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) #Turcibacter
+
+
+my_comparisons <- list(c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention"))
+
+#remove outlier.shape = NA and add outlier.size if you don't want jitter
+p <- ggplot(G.tr.DF,aes(x = Status,y = Prevotella)) + 
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.75) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Prevotella")))) + stat_boxplot(geom ='errorbar')
+p <- p + geom_jitter(position=position_jitter(0.2), size = 0.5)
+p <- p + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+p <- p + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2.5)
+p <- p + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
+#remove outlier.shape = NA and add outlier.size if you don't want jitter
+f <- ggplot(G.tr.DF,aes(x = Status,y = Faecalibacterium)) + 
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.75) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Faecalibacterium")))) + stat_boxplot(geom ='errorbar')
+f <- f + geom_jitter(position=position_jitter(0.2), size = 0.5)
+f <- f + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+f <- f + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2.5)
+f <- f + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
+
+tiff(filename = "Kinshasa_Konzo3_Control_Prevotella_Faecalibacterium.tiff", width = 2, height = 2.5, units = "in", res = 600)
+ggarrange(p,f, ncol = 2, nrow = 1, align = "hv")
+dev.off()
+
+pf <- ggarrange(p,f, ncol = 2, nrow = 1, align = "hv")
+
+#Figure 4: Kahemba Prevalence Zone Genus PCoA
+
+p1 = plot_ordination(Disease.G.tr, ordinate(Disease.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+PKB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = disease_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom",legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.3, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
+
+PKB <- PKB + guides(colour = guide_legend(override.aes = list(size=1)))
+
+PKBt <- PKB + stat_ellipse(type = "t", show.legend = FALSE) + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+
+PKBt <- PKBt + annotate("text", x = 0.42, y = -0.35, label = "p = 0.0159", size = 2)
+
+PKBt
+
+tiff(filename = "Kinshasa_Konzo3_PZ_PCoA_RelBoxPlot.tiff", width = 7, height = 3, units = "in", res = 600)
+ggarrange(as_ggplot(C),pf, PKBt, labels = c("A","B", "C"), font.label = list(size = 7), ncol = 3, nrow = 1, widths = c(2.5, 2, 2.5))
+dev.off()
+
+#Figure 6: Kahemba Disease Genus PCoA
+#PCoA for Kahemba
+#ULPZ vs. KLPZ
+p1 = plot_ordination(NonIntervention.G.tr, ordinate(NonIntervention.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+PNIB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = nonintervention_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom", legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
+
+PNIBt <- PNIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
+PNIBt <- PNIBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.9161")), size = 2)
+
+#UHPZ vs. KHPZ
+p1 = plot_ordination(Intervention.G.tr, ordinate(Intervention.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+PIB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = intervention_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom", legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
+
+
+PIBt <- PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
+PIBt <- PIBt + annotate("text", x = 0.45, y = -0.4, label = expression(paste("p = 0.5784")), size = 2)
+
+tiff(filename = "Kahemba_Genus_NonInt_Int_PCoA.tiff", width = 3.5, height = 1.75, units = "in", res = 600)
+ggarrange(PNIBt, PIBt, labels = c("A","B"), ncol = 2, nrow = 1, font.label = list(size = 7))
+dev.off()
+#Figure 7: Turicibacter and LAB
+
+S <- KonzoData.S.tr
+
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+S.tr.DF <- cbind(S.tr.DF, S.tr_META$Intervention)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Intervention"] <- "Intervention"
+
+for (i in nrow(S.tr.DF))
+{S.tr.DF[i,]$Status <- KonzoData.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Status
+}
+S.tr.DF$Status <- factor(S.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+
+for (i in nrow(S.tr.DF))
+{S.tr.DF[i,]$Intervention <- KonzoData.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Intervention
+}
+S.tr.DF$Intervention <- factor(S.tr.DF$Intervention, levels = c("Kinshasa_Control", "Masimanimba_Control", "Kahemba_NonIntervention", "Kahemba_Intervention"))
+
+#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention" ), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"), c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) 
+
+
+colnames(S.tr.DF)<- gsub( " ", ".", colnames(S.tr.DF)) 
+
+S.tr.DF.status <- melt(S.tr.DF[,c('Status', 'Leuconostoc.mesenteroides', 'Lactobacillus.plantarum', 'Lactococcus.lactis')],id.vars = 1)
+S.tr.DF.intervention <- melt(S.tr.DF[,c('Intervention','Leuconostoc.mesenteroides', 'Lactobacillus.plantarum', 'Lactococcus.lactis')],id.vars = 1)
+
+# for box plot: facet_zoom(ylim = c(0, 0.0015))
+
+
+#temp <- c(`Leuconostoc.mesenteroides` = "Leuconostoc mesenteroides", `Lactobacillus.plantarum` = "Lactobacillus plantarum", `Lactococcus.lactis` = "Lactococcus lactis")
+temp <- c(`Leuconostoc.mesenteroides` = "L. mesenteroides", `Lactobacillus.plantarum` = "L. plantarum", `Lactococcus.lactis` = "L. lactis")
+
+errors = aggregate(. ~ Status + variable, 
+                   data = S.tr.DF.status, 
+                   FUN = sd)
+errors2 = aggregate(. ~ Status + variable, 
+                   data = S.tr.DF.status, 
+                   FUN = se)
+means = aggregate(. ~ Status + variable, 
+                  data = S.tr.DF.status, FUN = mean)
+
+t6 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
+    geom_boxplot(aes(fill = variable), outlier.size = 0.5, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.")
+#t6 <- t6 + geom_jitter(position=position_jitter(0.2), size = 0.5)
+t6 <- t6 + theme(legend.position="top", legend.margin=margin(0,-10,-10,-10)) + scale_x_discrete(labels= SSSL) + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+t6 <- t6 + scale_fill_discrete(labels = temp)
+t6 <- t6 + scale_y_continuous(expand = c(0,0), limits = c(0,0.0017))
+
+ 
+tiff(filename = "Kinshasa_Konzo3_LAB_Species_BoxPlot_Zoomed.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
+t6
+dev.off()
+
+###
+
+
+G <- KonzoData.G.tr.log10
+
+G.tr_META <- as.data.frame(G@sam_data)
+G.tr_OTU <- as.data.frame(t(G@otu_table))
+G.tr.DF <- cbind(G.tr_OTU, G.tr_META$Status)
+G.tr.DF <- cbind(G.tr.DF, G.tr_META$Intervention)
+
+colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
+colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Intervention"] <- "Intervention"
+
+for (i in nrow(G.tr.DF))
+{G.tr.DF[i,]$Status <- KonzoData.G.tr.log10@sam_data[rownames(G.tr.DF[i,]),]$Status
+}
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+
+for (i in nrow(G.tr.DF))
+{G.tr.DF[i,]$Intervention <- KonzoData.G.tr.log10@sam_data[rownames(G.tr.DF[i,]),]$Intervention
+}
+G.tr.DF$Intervention <- factor(G.tr.DF$Intervention, levels = c("Kinshasa_Control", "Masimanimba_Control", "Kahemba_NonIntervention", "Kahemba_Intervention"))
+
+#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), 
+                        #c("Masimanimba", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), 
+                       #c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"), 
+                        #c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) #Turcibacter
+
+
+my_comparisons <- list(c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), 
+                         c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), 
+                       c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"), 
+                        c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) #Turcibacter
+
+t <- ggplot(G.tr.DF,aes(x = Status,y = Turicibacter)) + 
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("log(rel. abund.) of ", italic("Turicibacter")))) + stat_boxplot(geom ='errorbar')
+t <- t + geom_jitter(position=position_jitter(0.2), size = 0.3)
+t <- t + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+t <- t + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+
+
+tiff(filename = "Kinshasa_Konzo3_Genus_Turicibacter_BoxPlot_Log10.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
+t
+dev.off()
+
+###
+tiff(filename = "Kinshasa_Konzo3_Turicibacter_LAB_BoxPlot.tiff", width = 5.5, height = 3.5, units = "in", res = 600)
+ggarrange(t,t6,labels = c("A","B"), widths = c(2.5, 3), ncol = 2, nrow = 1, font.label = list(size = 7), align = "hv")
+dev.off()
 
