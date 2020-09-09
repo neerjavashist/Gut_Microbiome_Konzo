@@ -34,6 +34,9 @@ library("magrittr")
 library("tidyr")
 library("cvcqv")
 library("raster")
+library(gridExtra)
+library(grid)
+library(lattice)
 
 ### The general format for each taxanomic rank is the same, so the code is repetitive. Comments are provided in the Bacteria Phylum section to show what is happening, and the explainations are applicable to the other taxa ranks as well.
 
@@ -886,7 +889,7 @@ Gen_ph <- ggarrange(Gen,placeholder, heights = c(1, 1), ncol = 1, nrow = 2)
 F1 <- arrangeGrob(ad_PF, Gen_ph, ncol = 2, nrow = 1,
              layout_matrix = cbind(c(1), c(2)))
 
-tiff(filename = "KinshasaKonzo3_TaxaFigure_Temp.tiff", width = 7, height = 7, units = "in", res = 600)
+tiff(filename = "Figure2_7X7_KinshasaKonzo3_TaxaFigure_WithoutHeatMap.tiff", width = 7, height = 7, units = "in", res = 600)
 as_ggplot(F1)
 dev.off()
                                      
@@ -899,13 +902,7 @@ tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap.tiff", width = 2.5, hei
 heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,1.25), lwid = c(0.1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3),c(2,1,1),c(2,1,1),c(0,0,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
 dev.off()                          
 
-                                     
-                                     
-                                     
-### Beta Diversity using Bray-Curtis for Bacteria Genus
-                           
-                           
-
+                                                     
 ### MANN WHITNEY_WILCOX TEST (with BH correction)
 #Supplemental File 3 where the saved WT (results from the mann whitney test) are joined into one excel sheet for all the different comparisions, and each tab is each taxa rank                           
                            
@@ -2674,7 +2671,8 @@ write.csv(WT.f, file = "Intervention_Bacteria_Species_0.0001_ByStatus_WilcoxTest
 
 
 
-                     
+                                                                                                            
+### Beta Diversity using Bray-Curtis for Bacteria Genus                     
 
 
 
