@@ -1970,6 +1970,11 @@ WT.f <- subset(WT, rownames(WT) %in% f_0.0001)
 write.csv(WT.f, file = "MasCI_Bacteria_Family_0.0001_ByStatus_WilcoxTest.csv")                                      
                                        
 #CONTROL (UNAFFECTED)
+Control.F <- prune_samples(KonzoData.F@sam_data$Status != "Kinshasa", KonzoData.F)
+Control.F <- prune_samples(Control.F@sam_data$Status != "Masimanimba", Control.F)
+Control.F <- prune_samples(Control.F@sam_data$Status != "Kahemba_Konzo_NonIntervention", Control.F)
+Control.F <- prune_samples(Control.F@sam_data$Status != "Kahemba_Konzo_Intervention", Control.F)                                             
+Control.F.tr <- transform_sample_counts(Control.F, function(x) x / sum(x))
                                         
 #MWW 
                                                
@@ -2001,6 +2006,11 @@ write.csv(WT.f, file = "Control_Bacteria_Family_0.0001_ByStatus_WilcoxTest.csv")
  
                                              
 #DISEASE (KONZO)
+Disease.F <- prune_samples(KonzoData.F@sam_data$Status != "Kinshasa", KonzoData.F)
+Disease.F <- prune_samples(Disease.F@sam_data$Status != "Masimanimba", Disease.F)
+Disease.F <- prune_samples(Disease.F@sam_data$Status != "Kahemba_Control_NonIntervention", Disease.F)
+Disease.F <- prune_samples(Disease.F@sam_data$Status != "Kahemba_Control_Intervention", Disease.F)
+Disease.F.tr <- transform_sample_counts(Disease.F, function(x) x / sum(x))                                                                                     
 
 F <- Disease.F.tr
                                                
@@ -2029,6 +2039,11 @@ write.csv(WT.f, file = "Disease_Bacteria_Class_0.0001_ByStatus_WilcoxTest.csv")
 
 #NON-INTERVENTION (LPZ)                                                
 #LPZ Control vs. Konzo
+NonIntervention.F <- prune_samples(KonzoData.F@sam_data$Status != "Kinshasa", KonzoData.F)
+NonIntervention.F <- prune_samples(NonIntervention.F@sam_data$Status != "Masimanimba", NonIntervention.F)
+NonIntervention.F <- prune_samples(NonIntervention.F@sam_data$Status != "Kahemba_Control_Intervention", NonIntervention.F)
+NonIntervention.F <- prune_samples(NonIntervention.F@sam_data$Status != "Kahemba_Konzo_Intervention", NonIntervention.F)
+NonIntervention.F.tr <- transform_sample_counts(NonIntervention.F, function(x) x / sum(x))                                        
 F <- NonIntervention.F.tr
                                                
 F.tr_META <- as.data.frame(F@sam_data)
@@ -2056,6 +2071,13 @@ write.csv(WT.f, file = "NonIntervention_Bacteria_Family_0.0001_ByStatus_WilcoxTe
                                              
 #INTERVENTION (HPZ)
 #HPZ Control vs. Konzo
+Intervention.F <- prune_samples(KonzoData.F@sam_data$Status != "Kinshasa", KonzoData.F)
+Intervention.F <- prune_samples(Intervention.F@sam_data$Status != "Masimanimba", Intervention.F)
+Intervention.F <- prune_samples(Intervention.F@sam_data$Status != "Kahemba_Control_NonIntervention", Intervention.F)
+Intervention.F <- prune_samples(Intervention.F@sam_data$Status != "Kahemba_Konzo_NonIntervention", Intervention.F)
+Intervention.F.tr <- transform_sample_counts(Intervention.F, function(x) x / sum(x))                                            
+                                        
+                                        
 F <- Intervention.F.tr
                                                
 F.tr_META <- as.data.frame(F@sam_data)
