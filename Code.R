@@ -3557,7 +3557,7 @@ dev.off()
 s <- plot_spacer() + theme_minimal()
 #spacer plot is added so the percent breakdown for top ten taxa can be added using gimp
 
-#Geography (Kin vs. Mas vs. ULPZ)
+#IMPORTANT CHANGE: Geography (Kin vs. Mas vs. ULPZ only)
                                      
 my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Control_NonIntervention")) 
 g_color <- c("royalblue1",   "springgreen3", "turquoise3")
@@ -3791,8 +3791,6 @@ dev.off()
 #log 10 phyloseq                                                 
 Control.G.tr.log10 <- transform_sample_counts(Control.G.tr, function(x) log10(x))
 Disease.G.tr.log10 <- transform_sample_counts(Disease.G.tr, function(x) log10(x))     
-Intervention.G.tr.log10 <- transform_sample_counts(Intervention.G.tr, function(x) log10(x))
-NonIntervention.G.tr.log10 <- transform_sample_counts(NonIntervention.G.tr, function(x) log10(x))
                                                  
                                                  
 #Supp 7: ULPZ vs. UHPZ
@@ -3810,7 +3808,7 @@ NonIntervention.G.tr.log10 <- transform_sample_counts(NonIntervention.G.tr, func
 #Tolumonas
                                      
 my_comparisons <- list( c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention")) 
-#control_color <- c( "deepskyblue2",        "darkviolet")
+
                                      
 G <- Control.G.tr.log10
                                                
@@ -3895,7 +3893,6 @@ dev.off()
                                      
 my_comparisons <- list( c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention")) 
 
-#disease_color <- c("firebrick2", "gold")
                                      
 G <- Disease.G.tr.log10
                                                
