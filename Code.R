@@ -39,6 +39,10 @@ library(grid)
 library(lattice)
 library(gplots)
 
+
+### for pavian
+
+
 ### The general format for each taxanomic rank is the same, so the code is repetitive. Comments are provided in the Bacteria Phylum section to show what is happening, and the explainations are applicable to the other taxa ranks as well.
 
 ### Naming Scheme Shorthand
@@ -589,7 +593,8 @@ capture.output(summary(simpson.aov), append = TRUE, file="KinshasaControl_Konzo3
 write("Fisher ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
 capture.output(summary(fisher.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
                            
-###Figure 2:                           
+###Figure 2 ------------------------------ 
+                           
 observed <- ggplot(diversity.S, aes(factor(Status), Observed)) + geom_boxplot(aes(fill = factor(Status)),fatten = 1, outlier.shape = NA) + labs(x = element_blank(), y = "OTU") + theme(axis.text.x = element_blank()) + theme_classic()
 observed <- observed + geom_jitter(position=position_jitter(0.2), size = 0.3)
 observed2 <- observed + stat_summary(fun=mean, geom="point", shape=23, size=1.5, color = "black", fill="white")
@@ -894,8 +899,8 @@ Gen_ph <- ggarrange(Gen,placeholder, heights = c(1, 1), ncol = 1, nrow = 2)
 
 F1 <- arrangeGrob(ad_PF, Gen_ph, ncol = 2, nrow = 1,
              layout_matrix = cbind(c(1), c(2)))
-
-tiff(filename = "Figure2_7X7_KinshasaKonzo3_TaxaFigure_WithoutHeatMap.tiff", width = 7, height = 7, units = "in", res = 600)
+#Figure 2
+tiff(filename = "KinshasaKonzo3_TaxaFigure_WithoutHeatMap.tiff", width = 7, height = 7, units = "in", res = 600)
 as_ggplot(F1)
 dev.off()
                                      
@@ -908,7 +913,8 @@ tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap.tiff", width = 2.5, hei
 heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,1.25), lwid = c(0.1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3),c(2,1,1),c(2,1,1),c(0,0,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
 dev.off()                          
 
-                                                     
+#------------------------------------------------
+                                     
 ### MANN WHITNEY_WILCOX TEST (with BH correction)
 #Supplemental File 3 where the saved WT (results from the mann whitney test) are joined into one excel sheet for all the different comparisions, and each tab is each taxa rank                           
                            
@@ -2721,9 +2727,10 @@ write.csv(WT.f, file = "Intervention_Bacteria_Species_0.0001_ByStatus_WilcoxTest
 
 
                                                                                                             
-### Beta Diversity using Bray-Curtis for Bacteria Genus  
+### Beta Diversity using Bray-Curtis for Bacteria Genus ----------------- 
+                                             
 #Using phyloseq distnace function and bray method, and the sample wise distances are generated. Using the adonis (PERMANOVA) function, stats are performed with 10000 permutations
-#the p-values generated here are reported in Figure 3 and Figure 5 for the relavant comparisons  
+#the p-values generated here are reported in PCoA Figures for the relavant comparisons  
 
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
 x <- read.csv("Kinshasa_Konzo3_Genus_f_0.0001.csv", row.names = 1, colClasses = "character")
@@ -3038,8 +3045,8 @@ tiff(filename = "Geography_Genus_PCoA_Corr.tiff", width = 5.5, height = 5.5, uni
 ggarrange(as_ggplot(Geo))
 dev.off()
 
-#Figure 4: ROC Curve/RF Tables
-#Figure 5: Kahemba Prevalence Zone Genus PCoA
+                                             
+###Figure 5: Kahemba Prevalence Zone Genus PCoA------------------------
 
 #Control
 
@@ -3356,6 +3363,75 @@ ggarrange(t,t6,labels = c("A","B"), widths = c(2.5, 3), ncol = 2, nrow = 1, font
 dev.off()
 
 ##### Supplemental Figures
+                                             
+## Supplementary Figure 1:
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken")                                             
+diet <- read.csv("./Kinshasa_Konzo3_Diet.csv")
+                                             
+diet$Status <- factor(diet$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba"))
+
+
+empty_bar <- 2
+to_add <- data.frame( matrix(NA, empty_bar*nlevels(diet$Status), ncol(diet)) )
+colnames(to_add) <- colnames(diet)
+to_add$Status <- rep(levels(diet$Status), each=empty_bar)
+diet <- rbind(diet, to_add)
+diet <- diet %>% arrange(Status)
+diet$id <- seq(1, nrow(diet))
+
+label_diet <- diet
+number_of_bar <- nrow(label_diet)
+angle <- 90 - 360 * (label_diet$id-0.5) /number_of_bar     # I substract 0.5 because the letter must have the angle of the center of the bars. Not extreme right(1) or extreme left (0)
+label_diet$hjust <- ifelse( angle < -90, 1, 0)
+label_diet$angle <- ifelse(angle < -90, angle+180, angle)
+
+base_diet <- diet %>% 
+  dplyr::group_by(Status) %>% 
+  dplyr::summarize(start=min(id), end=max(id) - empty_bar) %>% 
+  dplyr::rowwise() %>% 
+  dplyr::mutate(title=mean(c(start, end)))
+
+# prepare a data frame for grid (scales)
+grid_diet <- base_diet
+grid_diet$end <- grid_diet$end[ c(nrow(grid_diet), 1:nrow(grid_diet)-1)] + 1
+grid_diet$start <- grid_diet$start - 1
+grid_diet <- grid_diet[-1,]
+
+
+p <- ggplot(diet, aes(x=as.factor(id), y=Frequency, fill=Food)) +       # Note that id is a factor. If x is numeric, there is some space between the first bar
+  geom_bar(aes(x=as.factor(id), y=Frequency, fill=Food), stat="identity", width = 1) +
+  
+  # Add a val=100/75/50/25 lines. I do it at the beginning to make sur barplots are OVER it.
+  geom_segment(data=grid_diet, aes(x = end, y = 7, xend = start, yend = 7), colour = "black", alpha=1, size=0.2 , inherit.aes = FALSE ) +
+  geom_segment(data=grid_diet, aes(x = end, y = 5, xend = start, yend = 5), colour = "black", alpha=1, size=0.2 , inherit.aes = FALSE ) +
+  geom_segment(data=grid_diet, aes(x = end, y = 3, xend = start, yend = 3), colour = "black", alpha=1, size=0.2 , inherit.aes = FALSE ) +
+  geom_segment(data=grid_diet, aes(x = end, y = 1, xend = start, yend = 1), colour = "black", alpha=1, size=0.2 , inherit.aes = FALSE ) +
+  
+  # Add text showing the value of each 100/75/50/25 lines
+  annotate("text", x = rep(max(diet$id),4), y = c(1, 3, 5, 7), label = c("1d", "3d", "5d", "7d") , color="black", size=3 , angle=0, hjust=1) +
+  
+  ylim(-10,NA) +
+  theme_minimal() +
+  theme(
+    legend.position = c(0.5,0.5),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    plot.margin = unit(rep(-1,4), "cm"), 
+    legend.text = element_text(size = 5),
+    legend.key.size = unit(.2, "cm"),
+    legend.title = element_blank()
+  ) + 
+  guides(fill=guide_legend(ncol=2,byrow=TRUE)) +
+  coord_polar() +
+  geom_segment(data=base_diet, aes(x = start, y = -1, xend = end, yend = -1), colour = "black", size=0.3 , inherit.aes = FALSE ) + geom_text(data=base_diet, aes(x = title, y = -2.5, label=Status), hjust=c(1,0.5,1), angle=c(-45, 0, 75), colour = "black", size=2.5, inherit.aes = FALSE)
+
+p
+
+tiff(filename = "KinshasaKonzo3_Diet.tiff", width =6, height = 6, units = "in", res = 600)
+p
+dev.off()                                             
+                                             
 ## Supplementary Figure 2:
 
 #Class
@@ -3530,7 +3606,7 @@ for (i in 1:30)
   bray_avg[i+150,3] <- "Kahemba_Konzo_Intervention"
 }
 
-#write.csv(bray_avg, file = "KinshasaControl_Konzo3_RelAbundBray_Averages_Genus_PerSamples.csv")
+write.csv(bray_avg, file = "KinshasaControl_Konzo3_RelAbundBray_Averages_Genus_PerSamples.csv")
 
 bray_avg <- read.csv("./KinshasaControl_Konzo3_RelAbundBray_Averages_Genus_PerSamples.csv")
 
@@ -3545,19 +3621,20 @@ b4 <- b3 + scale_fill_manual(values = konzo_color) + scale_x_discrete(labels = S
 #b4
 #dev.off()
 
-#Supplemental Fig: Prev/Bact and Intra Bray
+#Supplemental Fig: Class, Order, Prev/Bact and Intra Bray
 tiff(filename = "Konzo1Konzo3_Class_Order_PrevOverBact_IntraBray.tiff", width = 7, height = 6, units = "in", res = 600)
 ggarrange(top_class_plot, top_order_plot, bp3, b4, labels = c("A","B", "C", "D"), ncol = 2, nrow = 2, font.label = list(size = 7))
 dev.off()
 
 
 ##Supplementary Fig 4: Kin vs. Mas vs. ULPZ
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
 
 #Random Forest Box Plots
 s <- plot_spacer() + theme_minimal()
 #spacer plot is added so the percent breakdown for top ten taxa can be added using gimp
 
-#IMPORTANT CHANGE: Geography (Kin vs. Mas vs. ULPZ only)
+##----IMPORTANT CHANGE----------- Geography (Kin vs. Mas vs. ULPZ only)
                                      
 my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Control_NonIntervention")) 
 g_color <- c("royalblue1",   "springgreen3", "turquoise3")
