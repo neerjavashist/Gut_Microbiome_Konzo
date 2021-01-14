@@ -558,44 +558,53 @@ write.csv(t(KonzoData.S.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_B
                                                  
                            
 ### Estimate Richness
-#Read Count from KonzoData.S (Bacteria Species data)                           
-otuD.S <- as.data.frame(t(otu_table(KonzoData.S)))
-diversity.S <- estimate_richness(KonzoData.S)
-diversity.S <- cbind(sample_data(KonzoData.S),diversity.S) #Check if correct sample data was cbind. Can be tricky so always confirm
-diversity.S$Status <- as.factor(diversity.S$Status)
-diversity.S$Status <- factor(diversity.S$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+                           
+#for any sample where the relabund is <0.0001, set the read count to 0 for alpha diversity calcs                           
+setzero = function(x){
+  x[(x / sum(x)) < (1e-4)] <- 0
+  return(x)
+}                           
+#Transform Read Count from KonzoData.S (Bacteria Species data)                           
+KonzoData.S.0 <- transform_sample_counts(KonzoData.S, setzero)
+                           
+otuD.S.0 <- as.data.frame(t(otu_table(KonzoData.S.0)))
+diversity.S.0 <- estimate_richness(KonzoData.S.0)
+diversity.S.0 <- cbind(sample_data(KonzoData.S.0),diversity.S.0) #Check if correct sample data was cbind. Can be tricky so always confirm
+diversity.S.0$Status <- as.factor(diversity.S.0$Status)
+diversity.S.0$Status <- factor(diversity.S.0$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
 
+#methods that are reliant on singletons such as ACE cannot be accurately calculated. Here only methods not reliant on singletons are assessed, so warning can be ignored                           
 #STATISTICS for Estimate Richness
 #One-way ANOVA to see if there is a statitically significant difference in the measure of alpha diversity and output saved in txt file
-observed.aov <- aov(Observed ~ Status, data = diversity.S)
-chao1.aov <- aov(Chao1 ~ Status, data = diversity.S)
-shannon.aov <- aov(Shannon ~ Status, data = diversity.S)
-ACE.aov <- aov(ACE ~ Status, data = diversity.S)
-simpson.aov <- aov(Simpson ~ Status, data = diversity.S)
-fisher.aov <- aov(Fisher ~ Status, data = diversity.S)
+observed.aov <- aov(Observed ~ Status, data = diversity.S.0)
+#chao1.aov <- aov(Chao1 ~ Status, data = diversity.S.0)
+shannon.aov <- aov(Shannon ~ Status, data = diversity.S.0)
+#ACE.aov <- aov(ACE ~ Status, data = diversity.S.0)
+simpson.aov <- aov(Simpson ~ Status, data = diversity.S.0)
+fisher.aov <- aov(Fisher ~ Status, data = diversity.S.0)
 
 
-write("Observed ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
-capture.output(summary(observed.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
+write("Observed ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(observed.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
 
-write("Chao1 ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
-capture.output(summary(chao1.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
+#write("Chao1 ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
+#capture.output(summary(chao1.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
 
-write("Shannon ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
-capture.output(summary(shannon.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
+write("Shannon ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(shannon.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
 
-write("ACE ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
-capture.output(summary(ACE.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
+#write("ACE ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
+#capture.output(summary(ACE.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
 
-write("Simpson ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
-capture.output(summary(simpson.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
+write("Simpson ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(simpson.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
 
-write("Fisher ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt" ,append=TRUE)
-capture.output(summary(fisher.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_ANOVA_EstimateRichness.txt") 
+write("Fisher ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(fisher.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
                            
 ###Figure 2 ------------------------------ 
                            
-observed <- ggplot(diversity.S, aes(factor(Status), Observed)) + geom_boxplot(aes(fill = factor(Status)),fatten = 1, outlier.shape = NA) + labs(x = element_blank(), y = "OTU") + theme(axis.text.x = element_blank()) + theme_classic()
+observed <- ggplot(diversity.S.0, aes(factor(Status), Observed)) + geom_boxplot(aes(fill = factor(Status)),fatten = 1, outlier.shape = NA) + labs(x = element_blank(), y = "Species") + theme(axis.text.x = element_blank()) + theme_classic()
 observed <- observed + geom_jitter(position=position_jitter(0.2), size = 0.3)
 observed2 <- observed + stat_summary(fun=mean, geom="point", shape=23, size=1.5, color = "black", fill="white")
 observed3 <- observed2 + theme(legend.position="bottom", legend.margin=margin(-10,0,0,0)) + theme(legend.direction = "horizontal") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(axis.ticks.x = element_blank(), axis.title.y = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_blank())
@@ -603,7 +612,7 @@ observed3 <- observed2 + theme(legend.position="bottom", legend.margin=margin(-1
 observed4 <- observed3 + guides(fill=guide_legend(ncol=6)) 
 observed4 <- observed4 + scale_fill_manual(values = konzo_color, labels = SSSL)
 
-shan <- ggplot(diversity.S, aes(factor(Status), Shannon))+ geom_boxplot(aes(fill = factor(Status)),fatten = 1, outlier.shape = NA) + labs(x = element_blank(), y = "Shannon Diversity Index") + theme(axis.text.x = element_blank()) + theme_classic()
+shan <- ggplot(diversity.S.0, aes(factor(Status), Shannon))+ geom_boxplot(aes(fill = factor(Status)),fatten = 1, outlier.shape = NA) + labs(x = element_blank(), y = "Shannon Diversity Index") + theme(axis.text.x = element_blank()) + theme_classic()
 shan <- shan + geom_jitter(position=position_jitter(0.2), size = 0.3)
 shan2 <- shan + stat_summary(fun=mean, geom="point", shape=23, size=1.5, color = "black", fill="white")
 shan3 <- shan2 + theme(legend.position="bottom", legend.margin=margin(-10,0,0,0)) + theme(legend.direction = "horizontal") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(axis.ticks.x = element_blank(), axis.title.y = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_blank())
