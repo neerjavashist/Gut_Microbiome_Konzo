@@ -864,6 +864,9 @@ top_family_plot <- top_family_plot + geom_bar(stat = "identity") + coord_flip()
 top_family_plot
 
 #Genus
+#Perhaps a rearrangement of the colorscheme for this                                     
+#t3_cols = c("#00B9E3","#D39200","#00C19F","#F8766D","#619CFF","#93AA00", "#DB72FB", "#00BA38", "#FF61C3")
+                                     
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
                                      
 top_G <- read.csv("Kinshasa_Konzo3_Genus_Top7.csv", row.names = 1, colClasses = "character")
@@ -888,7 +891,7 @@ top_genus_plot <- top_genus_plot +
         legend.box.margin=margin(-8,0,-8,-8)) + 
   scale_x_continuous(expand = c(0,0), limits = c(0,0.9)) +
   theme(plot.title = element_blank(), legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7), legend.title = element_text(size = 7)) + 
-  guides(fill=guide_legend(ncol=1,byrow=TRUE)) + 
+  guides(fill=guide_legend(ncol=1,byrow=TRUE)) + # scale_fill_manual(values = t3_cols) +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(size = 7), axis.title.x = element_text(size = 7)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"))
 top_genus_plot
