@@ -583,7 +583,13 @@ shannon.aov <- aov(Shannon ~ Status, data = diversity.S.0)
 simpson.aov <- aov(Simpson ~ Status, data = diversity.S.0)
 fisher.aov <- aov(Fisher ~ Status, data = diversity.S.0)
 
-
+observed.tukey <- TukeyHSD(observed.aov, data = diversity.S.0)
+#chao1.tukey <- TukeyHSD(chao1.aov, data = diversity.S.0)
+#shannon.tukey <- TukeyHSD(shannon.aov, data = diversity.S.0)
+#ACE.tukey <- TukeyHSD(ACE.aov, data = diversity.S.0)
+#simpsom.tukey <- TukeyHSD(simpson.aov, data = diversity.S.0)
+fisher.tukey <- TukeyHSD(fisher.aov, data = diversity.S.0)
+                           
 write("Observed ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
 capture.output(summary(observed.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
 
@@ -601,6 +607,15 @@ capture.output(summary(simpson.aov), append = TRUE, file="KinshasaControl_Konzo3
 
 write("Fisher ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
 capture.output(summary(fisher.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
+
+#TukeyHSD test for anova tests that were sig. diff
+                           
+write("TukeyHSA observed.aov", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_TukeyHSD_EstimateRichness.txt" ,append=TRUE)
+capture.output(observed.tukey, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_TukeyHSD_EstimateRichness.txt") 
+                           
+write("TukeyHSA fisher.aov", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_TukeyHSD_EstimateRichness.txt" ,append=TRUE)
+capture.output(fisher.tukey, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_TukeyHSD_EstimateRichness.txt") 
+                           
                            
 ###Figure 2 ------------------------------ 
                            
