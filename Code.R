@@ -47,11 +47,13 @@ library(gplots)
 
 ### Naming Scheme Shorthand
 
-SL <- c(Kinshasa = "Kinshasa", Masimanimba = "Masi-manimba", Kahemba_Control_NonIntervention = "Unaffected LPZ", Kahemba_Konzo_NonIntervention = "Konzo LPZ", Kahemba_Control_Intervention = "Unaffected HPZ", Kahemba_Konzo_Intervention = "Konzo HPZ")
+#Old Nameing: Kinshasa = Kinshasa; Masimanimba = Masimanimba; Kahemba_Control_NonIntervention = Unaffected_Low_Prevalence_Zone;  Kahemba_Konzo_NonIntervention = Konzo_Low_Prevalence_Zone;  Kahemba_Control_Intervention = Unaffected_High_Prevalence_Zone;  Kahemba_Konzo_Intervention = Konzo_High_Prevalence_Zone;  
 
-SSL <- c(Kinshasa = "Kin", Masimanimba = "Mas", Kahemba_Control_NonIntervention = "Unaffected LPZ", Kahemba_Konzo_NonIntervention = "Konzo LPZ", Kahemba_Control_Intervention = "Unaffected HPZ", Kahemba_Konzo_Intervention = "Konzo HPZ")
+SL <- c(Kinshasa = "Kinshasa", Masimanimba = "Masi-manimba", Unaffected_Low_Prevalence_Zone = "Unaffected LPZ", Konzo_Low_Prevalence_Zone = "Konzo LPZ", Unaffected_High_Prevalence_Zone = "Unaffected HPZ", Konzo_High_Prevalence_Zone = "Konzo HPZ")
 
-SSSL <- c(Kinshasa = "Kin", Masimanimba = "Mas", Kahemba_Control_NonIntervention = "ULPZ", Kahemba_Konzo_NonIntervention = "KLPZ", Kahemba_Control_Intervention = "UHPZ", Kahemba_Konzo_Intervention = "KHPZ")
+SSL <- c(Kinshasa = "Kin", Masimanimba = "Mas", Unaffected_Low_Prevalence_Zone = "Unaffected LPZ", Konzo_Low_Prevalence_Zone = "Konzo LPZ", Unaffected_High_Prevalence_Zone = "Unaffected HPZ", Konzo_High_Prevalence_Zone = "Konzo HPZ")
+
+SSSL <- c(Kinshasa = "Kin", Masimanimba = "Mas", Unaffected_Low_Prevalence_Zone = "ULPZ", Konzo_Low_Prevalence_Zone = "KLPZ", Unaffected_High_Prevalence_Zone = "UHPZ", Konzo_High_Prevalence_Zone = "KHPZ")
 
 ### Color Scheme
 
@@ -78,13 +80,12 @@ konzo_color <- c("royalblue1",   "springgreen3", "turquoise3", "tomato", "slateb
 
 ### Konzo Meta Data
 #Konzo_meta contains any additional information needed. The relevant data for the project are in the Supplemental File 1 Sample_Metadata tab. Columns Sample, Name, Run, ID, Region, Age, and Sex are as here.
-#Konzo_meta "Status" is the Sample_Metadata "Group", and values Kahemba_Control_NonIntervention is changed to Kahemba_Unaffected_LPZ, Kahemba_Konzo_NonIntervention is changed to Kahemba_Konzo_LPZ, Kahemba_Control_Intervention is changed to Kahemba_Unaffected_HPZ, and Kahemba_Konzo_Intervention is changed to Kahemba_Konzo_HPZ
-
+#Konzo_meta "Status" is the Sample_Metadata "Group"
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken")
 
 #META
-Konzo_meta <- read.csv("./KinshasaControl_Konzo3_Meta.csv")
-names(Konzo_meta)<-c("Sample","Name","Run","ID","Region","Status","Disease","Sample_ID","Collection_date","DNA_Concentration","Isolation_date","Elution","Age","Sex","Disease_Old","Intervention")
+Konzo_meta <- read.csv("./KinshasaControl_Konzo3_Meta_Mod.csv")
+names(Konzo_meta)<-c("Sample","Name","Run","ID","Region","Status","Disease","Sample_ID","Collection_date","DNA_Concentration","Isolation_date","Elution","Age","Sex","Disease_Old","Geography")
 rownames(Konzo_meta)<-as.character(Konzo_meta[,1])
 META<-sample_data(Konzo_meta)
 
@@ -113,7 +114,7 @@ KonzoData_P <-phyloseq(OTU_P, TAX_P, META)
 #Set NAs to 0
 KonzoData_P@otu_table[is.na(KonzoData_P@otu_table)] <- 0
 KonzoData.P <- tax_glom(KonzoData_P, taxrank = "phylum")
-KonzoData.P@sam_data$Status <- factor(KonzoData.P@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+KonzoData.P@sam_data$Status <- factor(KonzoData.P@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 #Writing the otu_table. Supplemental File 1, Phylum Tab
 write.csv(KonzoData.P@otu_table), file = "./KonzoDataPhylum_ReadCounts.csv")  
 
@@ -189,8 +190,7 @@ KonzoData_C <-phyloseq(OTU_C, TAX_C, META)
 #set all Na's to 0
 KonzoData_C@otu_table[is.na(KonzoData_C@otu_table)] <- 0
 KonzoData.C <- tax_glom(KonzoData_C, taxrank = "class")
-KonzoData.C@sam_data$Status <- factor(KonzoData.C@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
-
+KonzoData.C@sam_data$Status <- factor(KonzoData.C@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 #Read Counts to Relative Abundance
 KonzoData.C.tr <- transform_sample_counts(KonzoData.C, function(x) x / sum(x))
 
@@ -264,8 +264,7 @@ KonzoData_O <-phyloseq(OTU_O, TAX_O, META)
 #set all Na's to 0
 KonzoData_O@otu_table[is.na(KonzoData_O@otu_table)] <- 0
 KonzoData.O <- tax_glom(KonzoData_O, taxrank = "order")
-KonzoData.O@sam_data$Status <- factor(KonzoData.O@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
-
+KonzoData.O@sam_data$Status <- factor(KonzoData.O@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 #Reads Counts to Relative Abundance
 KonzoData.O.tr <- transform_sample_counts(KonzoData.O, function(x) x / sum(x))
 
@@ -339,8 +338,7 @@ KonzoData_F <-phyloseq(OTU_F, TAX_F, META)
 #set all Na's to 0
 KonzoData_F@otu_table[is.na(KonzoData_F@otu_table)] <- 0
 KonzoData.F <- tax_glom(KonzoData_F, taxrank = "family")
-KonzoData.F@sam_data$Status <- factor(KonzoData.F@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
-
+KonzoData.F@sam_data$Status <- factor(KonzoData.F@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 #Read Counts to Relative Abundance
 KonzoData.F.tr <- transform_sample_counts(KonzoData.F, function(x) x / sum(x))
 
@@ -416,7 +414,7 @@ KonzoData_G@otu_table[is.na(KonzoData_G@otu_table)] <- 0
 
 #Might not be necessary to taxglom since only genus in input file
 KonzoData.G <- tax_glom(KonzoData_G, taxrank = "genus") 
-KonzoData.G@sam_data$Status <- factor(KonzoData.G@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+KonzoData.G@sam_data$Status <- factor(KonzoData.G@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 KonzoData.G@sam_data$Region <- factor(KonzoData.G@sam_data$Region, levels = c("Kinshasa", "Masimanimba", "Kahemba"))
 
 #Read Count to Relative Abundance
