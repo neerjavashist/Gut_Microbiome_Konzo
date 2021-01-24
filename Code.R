@@ -469,7 +469,7 @@ write.csv((KonzoData.G.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria
 write.csv(t(KonzoData.G.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Genus_Avg_RelAbund.csv")
 
 #Needed later for Figure 3 (Geography excluded all konzo individuals)                           
-Geography.G <- prune_samples((KonzoData.G@sam_data$Status != "Kahemba_Konzo_NonIntervention") & (KonzoData.G@sam_data$Status != "Kahemba_Konzo_Intervention"), KonzoData.G)                                              
+Geography.G <- prune_samples((KonzoData.G@sam_data$Status != "Konzo_Low_Prevelance_Zone") & (KonzoData.G@sam_data$Status != "Konzo_High_Prevelance_Zone"), KonzoData.G)                                              
 Geography.G.tr <-  transform_sample_counts(Geography.G, function(x) x / sum(x))
 Geography.G.tr.log10 <-  transform_sample_counts(Geography.G.tr, function(x) log10(x))                           
                            
@@ -502,7 +502,7 @@ KonzoData_S@otu_table[is.na(KonzoData_S@otu_table)] <- 0
 #Probs can skip next step since the input file only contains species data so not require to grab/glom species taxa only
 KonzoData.S <- tax_glom(KonzoData_S, taxrank = "species")
 
-KonzoData.S@sam_data$Status <- factor(KonzoData.S@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+KonzoData.S@sam_data$Status <- factor(KonzoData.S@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevelance_Zone", "Konzo_Low_Prevelance_Zone", "Unaffected_High_Prevelance_Zone", "Konzo_High_Prevelance_Zone"))
 
 #Read Counts to Relative Abundance
 KonzoData.S.tr <- transform_sample_counts(KonzoData.S, function(x) x / sum(x))
@@ -517,13 +517,13 @@ Kinshasa.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa", KonzoData
 Kinshasa.S.tr <- transform_sample_counts(Kinshasa.S, function(x) x / sum(x))
 Masimanimba.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba", KonzoData.S)
 Masimanimba.S.tr <- transform_sample_counts(Masimanimba.S, function(x) x / sum(x))                                        
-ULPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.S)
+ULPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Unaffected_Low_Prevelance_Zone", KonzoData.S)
 ULPZ.S.tr <- transform_sample_counts(ULPZ.S, function(x) x / sum(x))
-KLPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.S)
+KLPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Konzo_Low_Prevelance_Zone", KonzoData.S)
 KLPZ.S.tr <- transform_sample_counts(KLPZ.S, function(x) x / sum(x))
-UHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.S)
+UHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Unaffected_High_Prevelance_Zone", KonzoData.S)
 UHPZ.S.tr <- transform_sample_counts(UHPZ.S, function(x) x / sum(x))
-KHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.S)
+KHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Konzo_High_Prevelance_Zone", KonzoData.S)
 KHPZ.S.tr <- transform_sample_counts(KHPZ.S, function(x) x / sum(x))
 
                                          
@@ -569,7 +569,7 @@ otuD.S.0 <- as.data.frame(t(otu_table(KonzoData.S.0)))
 diversity.S.0 <- estimate_richness(KonzoData.S.0)
 diversity.S.0 <- cbind(sample_data(KonzoData.S.0),diversity.S.0) #Check if correct sample data was cbind. Can be tricky so always confirm
 diversity.S.0$Status <- as.factor(diversity.S.0$Status)
-diversity.S.0$Status <- factor(diversity.S.0$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+diversity.S.0$Status <- factor(diversity.S.0$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevelance_Zone", "Konzo_Low_Prevelance_Zone", "Unaffected_High_Prevelance_Zone", "Konzo_High_Prevelance_Zone"))
 
 #methods that are reliant on singletons such as ACE cannot be accurately calculated. Here only methods not reliant on singletons are assessed, so warning can be ignored                           
 #STATISTICS for Estimate Richness
@@ -642,13 +642,13 @@ Kinshasa.P <- prune_samples(KonzoData.P@sam_data$Status == "Kinshasa", KonzoData
 Kinshasa.P.tr <- transform_sample_counts(Kinshasa.P, function(x) x / sum(x))
 Masimanimba.P <- prune_samples(KonzoData.P@sam_data$Status == "Masimanimba", KonzoData.P)
 Masimanimba.P.tr <- transform_sample_counts(Masimanimba.P, function(x) x / sum(x))                                        
-ULPZ.P <- prune_samples(KonzoData.P@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.P)
+ULPZ.P <- prune_samples(KonzoData.P@sam_data$Status == "Unaffected_Low_Prevelance_Zone", KonzoData.P)
 ULPZ.P.tr <- transform_sample_counts(ULPZ.P, function(x) x / sum(x))
-KLPZ.P <- prune_samples(KonzoData.P@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.P)
+KLPZ.P <- prune_samples(KonzoData.P@sam_data$Status == "Konzo_Low_Prevelance_Zone", KonzoData.P)
 KLPZ.P.tr <- transform_sample_counts(KLPZ.P, function(x) x / sum(x))
-UHPZ.P <- prune_samples(KonzoData.P@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.P)
+UHPZ.P <- prune_samples(KonzoData.P@sam_data$Status == "Unaffected_High_Prevelance_Zone", KonzoData.P)
 UHPZ.P.tr <- transform_sample_counts(UHPZ.P, function(x) x / sum(x))
-KHPZ.P <- prune_samples(KonzoData.P@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.P)
+KHPZ.P <- prune_samples(KonzoData.P@sam_data$Status == "Konzo_High_Prevelance_Zone", KonzoData.P)
 KHPZ.P.tr <- transform_sample_counts(KHPZ.P, function(x) x / sum(x))
    
 
@@ -674,13 +674,13 @@ Kinshasa.C <- prune_samples(KonzoData.C@sam_data$Status == "Kinshasa", KonzoData
 Kinshasa.C.tr <- transform_sample_counts(Kinshasa.C, function(x) x / sum(x))
 Masimanimba.C <- prune_samples(KonzoData.C@sam_data$Status == "Masimanimba", KonzoData.C)
 Masimanimba.C.tr <- transform_sample_counts(Masimanimba.C, function(x) x / sum(x))                                        
-ULPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.C)
+ULPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Unaffected_Low_Prevelance_Zone", KonzoData.C)
 ULPZ.C.tr <- transform_sample_counts(ULPZ.C, function(x) x / sum(x))
-KLPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.C)
+KLPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Konzo_Low_Prevelance_Zone", KonzoData.C)
 KLPZ.C.tr <- transform_sample_counts(KLPZ.C, function(x) x / sum(x))
-UHPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.C)
+UHPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Unaffected_High_Prevelance_Zone", KonzoData.C)
 UHPZ.C.tr <- transform_sample_counts(UHPZ.C, function(x) x / sum(x))
-KHPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.C)
+KHPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Konzo_High_Prevelance_Zone", KonzoData.C)
 KHPZ.C.tr <- transform_sample_counts(KHPZ.C, function(x) x / sum(x))
 
 top1 = sort(taxa_sums(Kinshasa.C.tr), TRUE)[1:5]
@@ -706,13 +706,13 @@ Kinshasa.O <- prune_samples(KonzoData.O@sam_data$Status == "Kinshasa", KonzoData
 Kinshasa.O.tr <- transform_sample_counts(Kinshasa.O, function(x) x / sum(x))
 Masimanimba.O <- prune_samples(KonzoData.O@sam_data$Status == "Masimanimba", KonzoData.O)
 Masimanimba.O.tr <- transform_sample_counts(Masimanimba.O, function(x) x / sum(x))                                        
-ULPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Kahemba_Control_NonIntervention", KonzoData.O)
+ULPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Unaffected_Low_Prevelance_Zone", KonzoData.O)
 ULPZ.O.tr <- transform_sample_counts(ULPZ.O, function(x) x / sum(x))
-KLPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Kahemba_Konzo_NonIntervention", KonzoData.O)
+KLPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Unaffected_Konzo_Prevelance_Zone", KonzoData.O)
 KLPZ.O.tr <- transform_sample_counts(KLPZ.O, function(x) x / sum(x))
-UHPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Kahemba_Control_Intervention", KonzoData.O)
+UHPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Unaffected_High_Prevelance_Zone", KonzoData.O)
 UHPZ.O.tr <- transform_sample_counts(UHPZ.O, function(x) x / sum(x))
-KHPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Kahemba_Konzo_Intervention", KonzoData.O)
+KHPZ.O <- prune_samples(KonzoData.O@sam_data$Status == "Konzo_High_Prevelance_Zone", KonzoData.O)
 KHPZ.O.tr <- transform_sample_counts(KHPZ.O, function(x) x / sum(x))
 
 top1 = sort(taxa_sums(Kinshasa.O.tr), TRUE)[1:5]
