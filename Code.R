@@ -592,34 +592,36 @@ simpson.kru <- kruskal.test(Simpson ~ Status, data = diversity.S.0)#p-value = 0.
 
 observed.tukey <- TukeyHSD(observed.aov, data = diversity.S.0)
 fisher.tukey <- TukeyHSD(fisher.aov, data = diversity.S.0)
-                                                     
                            
-write("Observed ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
-capture.output(summary(observed.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
+shannon.wilcox <- pairwise.wilcox.test(diversity.S.0$Shannon, diversity.S.0$Status, data = diversity.S.0, p.adjust.method = "BH")
+shannon.wilcox <- pairwise.wilcox.test(diversity.S.0$Simpson, diversity.S.0$Status, data = diversity.S.0, p.adjust.method = "BH")                          
+                           
+write("Observed ~ Status ANOVA test", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(observed.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
 
-#write("Chao1 ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
-#capture.output(summary(chao1.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
+write("Shannon ~ Status Kruskal test", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(shannon.kru), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
 
-write("Shannon ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
-capture.output(summary(shannon.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
+write("Simpson ~ Status Kruskal test", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(simpson.kru), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
 
-#write("ACE ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
-#capture.output(summary(ACE.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
-
-write("Simpson ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
-capture.output(summary(simpson.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
-
-write("Fisher ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
-capture.output(summary(fisher.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
+write("Fisher ~ Status ANOVA test", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
+capture.output(summary(fisher.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
 
 #TukeyHSD test for anova tests that were sig. diff
                            
-write("TukeyHSA observed.aov", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_TukeyHSD_EstimateRichness.txt" ,append=TRUE)
-capture.output(observed.tukey, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_TukeyHSD_EstimateRichness.txt") 
+write("TukeyHSA observed.aov", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+capture.output(observed.tukey, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
                            
-write("TukeyHSA fisher.aov", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_TukeyHSD_EstimateRichness.txt" ,append=TRUE)
-capture.output(fisher.tukey, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_TukeyHSD_EstimateRichness.txt") 
+write("Pairewise MWW shannon.kru", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+capture.output(shannon.wilcox, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
+
+write("Pairewise MWW simpson.kru", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+capture.output(simpson.wilcox, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
                            
+write("TukeyHSA fisher.aov", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+capture.output(fisher.tukey, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt")
+                                                   
                            
 ###Figure 2 ------------------------------ 
                            
