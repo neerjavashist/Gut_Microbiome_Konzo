@@ -2739,15 +2739,14 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "MasUHPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
 MWW_species <- merge(MWW_species,WT,by="Bacteria Species", sort = FALSE)
 
-#KINSHASA KONZO LPZ
-#KINSHASA AND UNAFFECTED LPZ
+#KINSHASA AND KONZO LPZ
                                              
-KinULPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa" | KonzoData.S@sam_data$Status == "Unaffected_Low_Prevalence_Zone", KonzoData.S)
-KinULPZ.S.tr <-  transform_sample_counts(KinULPZ.S, function(x) x / sum(x))
-KinULPZ.S.tr.f <- prune_taxa(f_0.0001, KinULPZ.S.tr)  
+KinKLPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa" | KonzoData.S@sam_data$Status == "Konzo_Low_Prevalence_Zone", KonzoData.S)
+KinKLPZ.S.tr <-  transform_sample_counts(KinKLPZ.S, function(x) x / sum(x))
+KinKLPZ.S.tr.f <- prune_taxa(f_0.0001, KinKLPZ.S.tr)  
 
                                                
-S <- KinULPZ.S.tr.f
+S <- KinKLPZ.S.tr.f
                                                
 S.tr_META <- as.data.frame(S@sam_data)
 S.tr_OTU <- as.data.frame(t(S@otu_table))
@@ -2755,11 +2754,11 @@ S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
 
 colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
 for (i in 1:nrow(S.tr.DF))
-  {S.tr.DF[i,]$Status <- KinULPZ.S.tr.f@sam_data[rownames(S.tr.DF[i,]),]$Status
+  {S.tr.DF[i,]$Status <- KinKLPZ.S.tr.f@sam_data[rownames(S.tr.DF[i,]),]$Status
   }
     
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 3)
-colnames(WT) <- c("Bacteria Species", "Kinshasa vs. ULPZ p-value", "Kinshasa vs. ULPZ p-value adjusted")
+colnames(WT) <- c("Bacteria Species", "Kinshasa vs. KLPZ p-value", "Kinshasa vs. KLPZ p-value adjusted")
 
 for (i in 1:(ncol(S.tr.DF)-1))
 {
@@ -2768,18 +2767,18 @@ for (i in 1:(ncol(S.tr.DF)-1))
   WT[i,2] = as.numeric(wt$p.value)
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
-write.csv(WT, file = "KinULPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+write.csv(WT, file = "KinKLPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
 MWW_species <- merge(MWW_species,WT,by="Bacteria Species", sort = FALSE)
                                               
 
-#MASIMANIMBA AND UNAFFECTED LPZ                                        
-MasULPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba" | KonzoData.S@sam_data$Status == "Unaffected_Low_Prevalence_Zone", KonzoData.S)
-MasULPZ.S.tr <- transform_sample_counts(MasULPZ.S, function(x) x / sum(x)) 
-MasULPZ.S.tr.f <- prune_taxa(f_0.0001, MasULPZ.S.tr)  
+#MASIMANIMBA AND KONZO LPZ                                        
+MasKLPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba" | KonzoData.S@sam_data$Status == "Konzo_Low_Prevalence_Zone", KonzoData.S)
+MasKLPZ.S.tr <- transform_sample_counts(MasKLPZ.S, function(x) x / sum(x)) 
+MasKLPZ.S.tr.f <- prune_taxa(f_0.0001, MasKLPZ.S.tr)  
 
 #MWW 
                                                
-S <- MasULPZ.S.tr.f
+S <- MasKLPZ.S.tr.f
                                                
 S.tr_META <- as.data.frame(S@sam_data)
 S.tr_OTU <- as.data.frame(t(S@otu_table))
@@ -2787,11 +2786,11 @@ S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
 
 colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
 for (i in 1:nrow(S.tr.DF))
-  {S.tr.DF[i,]$Status <- MasULPZ.S.tr.f@sam_data[rownames(S.tr.DF[i,]),]$Status
+  {S.tr.DF[i,]$Status <- MasKLPZ.S.tr.f@sam_data[rownames(S.tr.DF[i,]),]$Status
   }
     
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 3)
-colnames(WT) <- c("Bacteria Species", "Masi-manimba vs. ULPZ p-value",  "Masi-manimba vs. ULPZ p-value adjusted")
+colnames(WT) <- c("Bacteria Species", "Masi-manimba vs. KLPZ p-value",  "Masi-manimba vs. KLPZ p-value adjusted")
 
 for (i in 1:(ncol(S.tr.DF)-1))
 {
@@ -2800,17 +2799,17 @@ for (i in 1:(ncol(S.tr.DF)-1))
   WT[i,2] = as.numeric(wt$p.value)
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
-write.csv(WT, file = "MasULPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+write.csv(WT, file = "MasKLPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
 MWW_species <- merge(MWW_species,WT,by="Bacteria Species", sort = FALSE)
 
-#KINSHASA vs UHPZ (Kin vs. CI)
-KinUHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa" | KonzoData.S@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData.S)
-KinUHPZ.S.tr <-  transform_sample_counts(KinUHPZ.S, function(x) x / sum(x))
-KinUHPZ.S.tr.f <- prune_taxa(f_0.0001, KinUHPZ.S.tr)  
+#KINSHASA vs KHPZ
+KinKHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa" | KonzoData.S@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData.S)
+KinKHPZ.S.tr <-  transform_sample_counts(KinKHPZ.S, function(x) x / sum(x))
+KinKHPZ.S.tr.f <- prune_taxa(f_0.0001, KinKHPZ.S.tr)  
 
 
 #MWW                                       
-S <- KinUHPZ.S.tr.f
+S <- KinKHPZ.S.tr.f
                                                
 S.tr_META <- as.data.frame(S@sam_data)
 S.tr_OTU <- as.data.frame(t(S@otu_table))
@@ -2818,11 +2817,11 @@ S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
 
 colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
 for (i in 1:nrow(S.tr.DF))
-  {S.tr.DF[i,]$Status <- KinUHPZ.S.tr.f@sam_data[rownames(S.tr.DF[i,]),]$Status
+  {S.tr.DF[i,]$Status <- KinKHPZ.S.tr.f@sam_data[rownames(S.tr.DF[i,]),]$Status
   }
     
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 3)
-colnames(WT) <- c("Bacteria Species", "Kinshasa vs. UHPZ p-value", "Kinshasa vs. UHPZ p-value adjusted")
+colnames(WT) <- c("Bacteria Species", "Kinshasa vs. KHPZ p-value", "Kinshasa vs. KHPZ p-value adjusted")
 
 for (i in 1:(ncol(S.tr.DF)-1))
 {
@@ -2831,18 +2830,18 @@ for (i in 1:(ncol(S.tr.DF)-1))
   WT[i,2] = as.numeric(wt$p.value)
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
-write.csv(WT, file = "KinUHPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+write.csv(WT, file = "KinKHPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
 MWW_species <- merge(MWW_species,WT,by="Bacteria Species", sort = FALSE)
 
                                          
-#MASIMANIMBA vs. UHPZ (Mas vs. CI)
-MasUHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba" | KonzoData.S@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData.S)
-MasUHPZ.S.tr <- transform_sample_counts(MasUHPZ.S, function(x) x / sum(x)) 
-MasUHPZ.S.tr.f <- prune_taxa(f_0.0001, MasUHPZ.S.tr)  
+#MASIMANIMBA vs. KHPZ
+MasKHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba" | KonzoData.S@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData.S)
+MasKHPZ.S.tr <- transform_sample_counts(MasKHPZ.S, function(x) x / sum(x)) 
+MasKHPZ.S.tr.f <- prune_taxa(f_0.0001, MasKHPZ.S.tr)  
                                        
 #MWW 
                                                
-S <- MasUHPZ.S.tr.f
+S <- MasKHPZ.S.tr.f
                                                
 S.tr_META <- as.data.frame(S@sam_data)
 S.tr_OTU <- as.data.frame(t(S@otu_table))
@@ -2850,12 +2849,12 @@ S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
 
 colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
 for (i in 1:nrow(S.tr.DF))
-  {S.tr.DF[i,]$Status <- MasUHPZ.S.tr.f@sam_data[rownames(S.tr.DF[i,]),]$Status
+  {S.tr.DF[i,]$Status <- MasKHPZ.S.tr.f@sam_data[rownames(S.tr.DF[i,]),]$Status
   }
     
 
 WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 3)
-colnames(WT) <- c("Bacteria Species", "Masi-manimba vs. UHPZ p-value",  "Masi-manimba vs. UHPZ p-value adjusted")
+colnames(WT) <- c("Bacteria Species", "Masi-manimba vs. KHPZ p-value",  "Masi-manimba vs. KHPZ p-value adjusted")
 
 for (i in 1:(ncol(S.tr.DF)-1))
 {
@@ -2864,7 +2863,7 @@ for (i in 1:(ncol(S.tr.DF)-1))
   WT[i,2] = as.numeric(wt$p.value)
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
-write.csv(WT, file = "MasUHPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+write.csv(WT, file = "MasKHPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
 MWW_species <- merge(MWW_species,WT,by="Bacteria Species", sort = FALSE)
 
                                             
