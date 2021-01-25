@@ -573,22 +573,26 @@ diversity.S.0 <- cbind(sample_data(KonzoData.S.0),diversity.S.0) #Check if corre
 diversity.S.0$Status <- as.factor(diversity.S.0$Status)
 diversity.S.0$Status <- factor(diversity.S.0$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
+#Shapiro-Wilk Normality Test
+shapiro.test(diversity.S.0$Observed) #p-value = 0.09588
+#shapiro.test(diversity.S.0$Chao1)                           
+shapiro.test(diversity.S.0$Shannon) # p-value = 1.345e-09                           
+#shapiro.test(diversity.S.0$ACE)
+shapiro.test(diversity.S.0$Simpson) #p-value < 2.2e-16
+shapiro.test(diversity.S.0$Fisher) #p-value = 0.3341
+                           
 #methods that are reliant on singletons such as ACE cannot be accurately calculated. Here only methods not reliant on singletons are assessed, so warning can be ignored                           
 #STATISTICS for Estimate Richness
-#One-way ANOVA to see if there is a statitically significant difference in the measure of alpha diversity and output saved in txt file
-observed.aov <- aov(Observed ~ Status, data = diversity.S.0)
-#chao1.aov <- aov(Chao1 ~ Status, data = diversity.S.0)
-shannon.aov <- aov(Shannon ~ Status, data = diversity.S.0)
-#ACE.aov <- aov(ACE ~ Status, data = diversity.S.0)
-simpson.aov <- aov(Simpson ~ Status, data = diversity.S.0)
-fisher.aov <- aov(Fisher ~ Status, data = diversity.S.0)
+#One-way ANOVA (or Kruskal) to see if there is a statitically significant difference in the measure of alpha diversity and output saved in txt file
+observed.aov <- aov(Observed ~ Status, data = diversity.S.0) #p-value = 0.00717
+fisher.aov <- aov(Fisher ~ Status, data = diversity.S.0) #p-value = 0.00762
+                           
+shannon.kru <- kruskal.test(Shannon ~ Status, data = diversity.S.0) #p-value = 0.02398515
+simpson.kru <- kruskal.test(Simpson ~ Status, data = diversity.S.0)#p-value = 0.01411952
 
 observed.tukey <- TukeyHSD(observed.aov, data = diversity.S.0)
-#chao1.tukey <- TukeyHSD(chao1.aov, data = diversity.S.0)
-#shannon.tukey <- TukeyHSD(shannon.aov, data = diversity.S.0)
-#ACE.tukey <- TukeyHSD(ACE.aov, data = diversity.S.0)
-#simpsom.tukey <- TukeyHSD(simpson.aov, data = diversity.S.0)
 fisher.tukey <- TukeyHSD(fisher.aov, data = diversity.S.0)
+                                                     
                            
 write("Observed ~ Status", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt" ,append=TRUE)
 capture.output(summary(observed.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_ANOVA_EstimateRichness.txt") 
