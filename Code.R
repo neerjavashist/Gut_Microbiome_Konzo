@@ -2357,17 +2357,16 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "KinKLPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
-
 MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)  
                                          
-#MASIMANIMBA AND UNAFFECTED LPZ                                        
+#MASIMANIMBA AND Konzo LPZ                                        
 MasKLPZ.G <- prune_samples((KonzoData.G@sam_data$Status == "Masimanimba") | (KonzoData.G@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.G)
 MasKLPZ.G.tr <- transform_sample_counts(MasKLPZ.G, function(x) x / sum(x)) 
 MasKLPZ.G.tr.f <- prune_taxa(f_0.0001, MasKLPZ.G.tr)  
 
 #MWW 
                                                
-G <- MasULPZ.G.tr.f
+G <- MasKLPZ.G.tr.f
                                                
 G.tr_META <- as.data.frame(G@sam_data)
 G.tr_OTU <- as.data.frame(t(G@otu_table))
@@ -2375,11 +2374,11 @@ G.tr.DF <- cbind(G.tr_OTU, G.tr_META$Status)
 
 colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
 for (i in 1:nrow(G.tr.DF))
-  {G.tr.DF[i,]$Status <- MasULPZ.G.tr.f@sam_data[rownames(G.tr.DF[i,]),]$Status
+  {G.tr.DF[i,]$Status <- MasKLPZ.G.tr.f@sam_data[rownames(G.tr.DF[i,]),]$Status
   }
     
 WT <- matrix(nrow = ncol(G.tr_OTU), ncol = 3)
-colnames(WT) <- c("Bacteria Genus", "Masimanimba vs. ULPZ p-value", "Masimanimba vs. ULPZ p-value adjusted")
+colnames(WT) <- c("Bacteria Genus", "Masimanimba vs. KLPZ p-value", "Masimanimba vs. KLPZ p-value adjusted")
 
 for (i in 1:(ncol(G.tr.DF)-1))
 {
@@ -2388,17 +2387,17 @@ for (i in 1:(ncol(G.tr.DF)-1))
   WT[i,2] = as.numeric(wt$p.value)
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
-write.csv(WT, file = "MasULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+write.csv(WT, file = "MasKLPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
 MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
                                         
-#KINSHASA AND UNAFFECTED HPZ               
-KinUHPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.G)
-KinUHPZ.G.tr <-  transform_sample_counts(KinUHPZ.G, function(x) x / sum(x))
-KinUHPZ.G.tr.f <- prune_taxa(f_0.0001, KinUHPZ.G.tr)  
+#KINSHASA AND Konzo HPZ               
+KinKHPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.G)
+KinKHPZ.G.tr <-  transform_sample_counts(KinKHPZ.G, function(x) x / sum(x))
+KinKHPZ.G.tr.f <- prune_taxa(f_0.0001, KinKHPZ.G.tr)  
 
 #MWW 
                                                
-G <- KinUHPZ.G.tr.f
+G <- KinKHPZ.G.tr.f
                                                
 G.tr_META <- as.data.frame(G@sam_data)
 G.tr_OTU <- as.data.frame(t(G@otu_table))
@@ -2406,11 +2405,11 @@ G.tr.DF <- cbind(G.tr_OTU, G.tr_META$Status)
 
 colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
 for (i in 1:nrow(G.tr.DF))
-  {G.tr.DF[i,]$Status <- KinUHPZ.G.tr.f@sam_data[rownames(G.tr.DF[i,]),]$Status
+  {G.tr.DF[i,]$Status <- KinKHPZ.G.tr.f@sam_data[rownames(G.tr.DF[i,]),]$Status
   }
     
 WT <- matrix(nrow = ncol(G.tr_OTU), ncol = 3)
-colnames(WT) <- c("Bacteria Genus", "Kinshasa vs. UHPZ p-value", "Kinshasa vs. UHPZ p-value adjusted")
+colnames(WT) <- c("Bacteria Genus", "Kinshasa vs. KHPZ p-value", "Kinshasa vs. KHPZ p-value adjusted")
 
 for (i in 1:(ncol(G.tr.DF)-1))
 {
@@ -2419,18 +2418,18 @@ for (i in 1:(ncol(G.tr.DF)-1))
   WT[i,2] = as.numeric(wt$p.value)
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
-write.csv(WT, file = "KinUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+write.csv(WT, file = "KinKHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
 MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
                                              
                                              
-#MASIMANIMBA AND UNAFFECTED HPZ                                        
-MasUHPZ.G <- prune_samples((KonzoData.G@sam_data$Status == "Masimanimba") | (KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.G)
-MasUHPZ.G.tr <- transform_sample_counts(MasUHPZ.G, function(x) x / sum(x)) 
-MasUHPZ.G.tr.f <- prune_taxa(f_0.0001, MasUHPZ.G.tr)  
+#MASIMANIMBA AND Konzo HPZ                                        
+MasKHPZ.G <- prune_samples((KonzoData.G@sam_data$Status == "Masimanimba") | (KonzoData.G@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.G)
+MasKHPZ.G.tr <- transform_sample_counts(MasKHPZ.G, function(x) x / sum(x)) 
+MasKHPZ.G.tr.f <- prune_taxa(f_0.0001, MasKHPZ.G.tr)  
                                         
 #MWW 
                                                
-G <- MasUHPZ.G.tr.f
+G <- MasKHPZ.G.tr.f
                                                
 G.tr_META <- as.data.frame(G@sam_data)
 G.tr_OTU <- as.data.frame(t(G@otu_table))
@@ -2438,12 +2437,12 @@ G.tr.DF <- cbind(G.tr_OTU, G.tr_META$Status)
 
 colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
 for (i in 1:nrow(G.tr.DF))
-  {G.tr.DF[i,]$Status <- MasUHPZ.G.tr.f@sam_data[rownames(G.tr.DF[i,]),]$Status
+  {G.tr.DF[i,]$Status <- MasKHPZ.G.tr.f@sam_data[rownames(G.tr.DF[i,]),]$Status
   }
     
                                        
 WT <- matrix(nrow = ncol(G.tr_OTU), ncol = 3)
-colnames(WT) <- c("Bacteria Genus", "Masi-manimba vs. UHPZ p-value", "Masi-manimba vs. UHPZ p-value adjusted")
+colnames(WT) <- c("Bacteria Genus", "Masi-manimba vs. KHPZ p-value", "Masi-manimba vs. KHPZ p-value adjusted")
 
 for (i in 1:(ncol(G.tr.DF)-1))
 {
@@ -2452,12 +2451,8 @@ for (i in 1:(ncol(G.tr.DF)-1))
   WT[i,2] = as.numeric(wt$p.value)
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
-write.csv(WT, file = "MasUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
-MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
-                                    
-                                        
-#Mas KHPZ
-                                        
+write.csv(WT, file = "MasKHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)                                      
                                         
 #CONTROL (UNAFFECTED)
 Control.G <- prune_samples((KonzoData.G@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.G)
