@@ -2719,7 +2719,7 @@ colnames(WT) <- c("Bacteria Species", "UHPZ vs. KHPZ p-value",  "UHPZ vs. KHPZ p
 
 for (i in 1:(ncol(S.tr.DF)-1))
 {
-  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF, p.adjust.method = "BH")
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF)
   WT[i,1] = colnames(S.tr.DF[i])
   WT[i,2] = as.numeric(wt$p.value)
 }
