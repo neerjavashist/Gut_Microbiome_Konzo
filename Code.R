@@ -2739,7 +2739,137 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "MasUHPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
 MWW_species <- merge(MWW_species,WT,by="Bacteria Species", sort = FALSE)
 
+#KINSHASA KONZO LPZ
+#KINSHASA AND UNAFFECTED LPZ
+                                             
+KinULPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa" | KonzoData.S@sam_data$Status == "Unaffected_Low_Prevalence_Zone", KonzoData.S)
+KinULPZ.S.tr <-  transform_sample_counts(KinULPZ.S, function(x) x / sum(x))
+KinULPZ.S.tr.f <- prune_taxa(f_0.0001, KinULPZ.S.tr)  
+
+                                               
+S <- KinULPZ.S.tr.f
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- KinULPZ.S.tr.f@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 3)
+colnames(WT) <- c("Bacteria Species", "Kinshasa vs. ULPZ p-value", "Kinshasa vs. ULPZ p-value adjusted")
+
+for (i in 1:(ncol(S.tr.DF)-1))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF)
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
+write.csv(WT, file = "KinULPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+MWW_species <- merge(MWW_species,WT,by="Bacteria Species", sort = FALSE)
+                                              
+
+#MASIMANIMBA AND UNAFFECTED LPZ                                        
+MasULPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba" | KonzoData.S@sam_data$Status == "Unaffected_Low_Prevalence_Zone", KonzoData.S)
+MasULPZ.S.tr <- transform_sample_counts(MasULPZ.S, function(x) x / sum(x)) 
+MasULPZ.S.tr.f <- prune_taxa(f_0.0001, MasULPZ.S.tr)  
+
+#MWW 
+                                               
+S <- MasULPZ.S.tr.f
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- MasULPZ.S.tr.f@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 3)
+colnames(WT) <- c("Bacteria Species", "Masi-manimba vs. ULPZ p-value",  "Masi-manimba vs. ULPZ p-value adjusted")
+
+for (i in 1:(ncol(S.tr.DF)-1))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF)
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
+write.csv(WT, file = "MasULPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+MWW_species <- merge(MWW_species,WT,by="Bacteria Species", sort = FALSE)
+
+#KINSHASA vs UHPZ (Kin vs. CI)
+KinUHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa" | KonzoData.S@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData.S)
+KinUHPZ.S.tr <-  transform_sample_counts(KinUHPZ.S, function(x) x / sum(x))
+KinUHPZ.S.tr.f <- prune_taxa(f_0.0001, KinUHPZ.S.tr)  
+
+
+#MWW                                       
+S <- KinUHPZ.S.tr.f
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- KinUHPZ.S.tr.f@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 3)
+colnames(WT) <- c("Bacteria Species", "Kinshasa vs. UHPZ p-value", "Kinshasa vs. UHPZ p-value adjusted")
+
+for (i in 1:(ncol(S.tr.DF)-1))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF)
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
+write.csv(WT, file = "KinUHPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+MWW_species <- merge(MWW_species,WT,by="Bacteria Species", sort = FALSE)
+
+                                         
+#MASIMANIMBA vs. UHPZ (Mas vs. CI)
+MasUHPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Masimanimba" | KonzoData.S@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData.S)
+MasUHPZ.S.tr <- transform_sample_counts(MasUHPZ.S, function(x) x / sum(x)) 
+MasUHPZ.S.tr.f <- prune_taxa(f_0.0001, MasUHPZ.S.tr)  
                                        
+#MWW 
+                                               
+S <- MasUHPZ.S.tr.f
+                                               
+S.tr_META <- as.data.frame(S@sam_data)
+S.tr_OTU <- as.data.frame(t(S@otu_table))
+S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
+
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
+for (i in 1:nrow(S.tr.DF))
+  {S.tr.DF[i,]$Status <- MasUHPZ.S.tr.f@sam_data[rownames(S.tr.DF[i,]),]$Status
+  }
+    
+
+WT <- matrix(nrow = ncol(S.tr_OTU), ncol = 3)
+colnames(WT) <- c("Bacteria Species", "Masi-manimba vs. UHPZ p-value",  "Masi-manimba vs. UHPZ p-value adjusted")
+
+for (i in 1:(ncol(S.tr.DF)-1))
+{
+  wt <- wilcox.test(S.tr.DF[,i] ~S.tr.DF$Status, data = S.tr.DF)
+  WT[i,1] = colnames(S.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
+write.csv(WT, file = "MasUHPZ_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+MWW_species <- merge(MWW_species,WT,by="Bacteria Species", sort = FALSE)
+
+                                            
+                                        
+#MAS KONZO HPZ                                       
 #CONTROL (UNAFFECTED)
 Control.S <- prune_samples(KonzoData.S@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData.S@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData.S)
 Control.S.tr <- transform_sample_counts(Control.S, function(x) x / sum(x)) 
