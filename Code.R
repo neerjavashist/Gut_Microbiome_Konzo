@@ -2196,7 +2196,7 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "KinMas_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
-                                              
+#WT.05 <- subset(WT, WT[,3] <= 0.05)                                          
 MWW_genus <- WT
                                         
 #KINSHASA AND UNAFFECTED LPZ
