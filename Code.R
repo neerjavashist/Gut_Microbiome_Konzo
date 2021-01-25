@@ -2201,7 +2201,26 @@ WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
 write.csv(WT, file = "KinMas_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
 write.csv(WT, file = "KinMas_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+
+ls_0.05 <- WT.05[,1]
+KinMas.G.tr.f.0.05 <- prune_taxa(ls_0.05,KinMas.G.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+KinMas.G.tr.f.0.01 <- prune_taxa(ls_0.01,KinMas.G.tr.f)                                        
                                         
+write.csv(KinMas.G.tr.f.0.05@otu_table, file = "./KinMas_Bacteria_Genus_f_0.0001_RelAbund_ByStatus__WilcoxTest_BH_FDR_0.05.csv")
+write.csv(KinMas.G.tr.f.0.01@otu_table, file = "./KinMas_Bacteria_Genus_f_0.0001_RelAbund_ByStatus__WilcoxTest_BH_FDR_0.01.csv")                                        
+                                        
+KinMas.G.tr.f.status <- merge_samples(KinMas.G.tr.f, KinMas.G.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+KinMas.G.tr.f.status <- transform_sample_counts(KinMas.G.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+KinMas.G.tr.f.status.0.05 <- prune_taxa(ls_0.05,KinMas.G.tr.f.status)                                        
+KinMas.G.tr.f.status.0.01 <- prune_taxa(ls_0.01,KinMas.G.tr.f.status)                                        
+                                                
+                                                
+write.csv(t(KinMas.G.tr.f.status.0.05@otu_table), file = "./KinMas_Bacteria_Genus_f_0.0001_AvgRelAbund_ByStatus__WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(KinMas.G.tr.f.status.0.01@otu_table), file = "./KinMas_Bacteria_Genus_f_0.0001_AvgRelAbund_ByStatus__WilcoxTest_BH_FDR_0.01.csv")
+
+                                                                               
 MWW_genus <- WT
                                         
                                         
