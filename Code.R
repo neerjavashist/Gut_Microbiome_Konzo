@@ -2484,7 +2484,7 @@ for (i in 1:(ncol(S.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "KinMas_Bacteria_Species_f_0.0001_ByStatus_WilcoxTest_BH.csv")
-MWw_species <- WT                                              
+MWW_species <- WT                                              
 
 #KINSHASA AND UNAFFECTED LPZ
                                              
