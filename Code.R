@@ -2224,7 +2224,7 @@ for (i in 1:(ncol(G.tr.DF)-1))
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "KinULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
 
-MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus")  
+MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)  
                                          
 #MASIMANIMBA AND UNAFFECTED LPZ                                        
 MasULPZ.G <- prune_samples((KonzoData.G@sam_data$Status == "Masimanimba") | (KonzoData.G@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.G)
@@ -2255,7 +2255,7 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "MasULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
-MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus")
+MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
                                         
 #KINSHASA AND UNAFFECTED HPZ               
 KinUHPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.G)
@@ -2286,7 +2286,7 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "KinUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
-MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus")
+MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
                                              
                                              
 #MASIMANIMBA AND UNAFFECTED HPZ                                        
@@ -2319,7 +2319,7 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "MasUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
-MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus")
+MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
                                              
                          
 #CONTROL (UNAFFECTED)
@@ -2349,7 +2349,7 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "Control_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
-MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus")
+MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
                                               
    
 #DISEASE (KONZO)
@@ -2380,7 +2380,7 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "Disease_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
-MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus")
+MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
 
 #NON-INTERVENTION (LPZ)
 
@@ -2411,7 +2411,7 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "LPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
-MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus")
+MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
 
                                                 
 #INTERVENTION (HPZ)
@@ -2442,7 +2442,7 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "HPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
-MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus")
+MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
 write.csv(MWW_genus, file = "Kinshasa_Konzo2_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                                        
 #Bacteria Species
