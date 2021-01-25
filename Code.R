@@ -471,7 +471,9 @@ write.csv(t(KonzoData.G.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_B
 #Needed later for Figure 3 (Geography excluded all konzo individuals)                           
 Geography.G <- prune_samples((KonzoData.G@sam_data$Status != "Konzo_Low_Prevalence_Zone") & (KonzoData.G@sam_data$Status != "Konzo_High_Prevalence_Zone"), KonzoData.G)                                              
 Geography.G.tr <-  transform_sample_counts(Geography.G, function(x) x / sum(x))
-Geography.G.tr.log10 <-  transform_sample_counts(Geography.G.tr, function(x) log10(x))                           
+Geography.G.tr.log10 <-  transform_sample_counts(Geography.G.tr, function(x) log10(x))    
+Geography.G.f <- prune_taxa(f_0.0001, Geography.G)                                                 
+Geography.G.tr.f <- prune_taxa(f_0.0001, Geography.G.tr)
                            
 #Bacteria Species
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Species")
