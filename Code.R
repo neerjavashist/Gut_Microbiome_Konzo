@@ -2705,6 +2705,29 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "Control_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+                                        
+WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
+write.csv(WT, file = "Control_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
+write.csv(WT, file = "Control_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+
+ls_0.05 <- WT.05[,1]
+Control.G.tr.f.0.05 <- prune_taxa(ls_0.05,Control.G.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+Control.G.tr.f.0.01 <- prune_taxa(ls_0.01,Control.G.tr.f)                                        
+
+write.csv(Control.G.tr.f.0.05@otu_table, file = "./Control_Bacteria_Genus_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(Control.G.tr.f.0.01@otu_table, file = "./Control_Bacteria_Genus_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+
+Control.G.tr.f.status <- merge_samples(Control.G.tr.f, Control.G.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+Control.G.tr.f.status <- transform_sample_counts(Control.G.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+Control.G.tr.f.status.0.05 <- prune_taxa(ls_0.05,Control.G.tr.f.status)                                        
+Control.G.tr.f.status.0.01 <- prune_taxa(ls_0.01,Control.G.tr.f.status)                                        
+
+write.csv(t(Control.G.tr.f.status.0.05@otu_table), file = "./Control_Bacteria_Genus_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(Control.G.tr.f.status.0.01@otu_table), file = "./Control_Bacteria_Genus_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+                                        
 MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
                                               
    
@@ -2736,6 +2759,29 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "Disease_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+                                        
+WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
+write.csv(WT, file = "Disease_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
+write.csv(WT, file = "Disease_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+
+ls_0.05 <- WT.05[,1]
+Disease.G.tr.f.0.05 <- prune_taxa(ls_0.05,Disease.G.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+Disease.G.tr.f.0.01 <- prune_taxa(ls_0.01,Disease.G.tr.f)                                        
+
+write.csv(Disease.G.tr.f.0.05@otu_table, file = "./Disease_Bacteria_Genus_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(Disease.G.tr.f.0.01@otu_table, file = "./Disease_Bacteria_Genus_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+
+Disease.G.tr.f.status <- merge_samples(Disease.G.tr.f, Disease.G.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+Disease.G.tr.f.status <- transform_sample_counts(Disease.G.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+Disease.G.tr.f.status.0.05 <- prune_taxa(ls_0.05,Disease.G.tr.f.status)                                        
+Disease.G.tr.f.status.0.01 <- prune_taxa(ls_0.01,Disease.G.tr.f.status)                                        
+
+write.csv(t(Disease.G.tr.f.status.0.05@otu_table), file = "./Disease_Bacteria_Genus_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(Disease.G.tr.f.status.0.01@otu_table), file = "./Disease_Bacteria_Genus_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+                                        
 MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
 
 #NON-INTERVENTION (LPZ)
@@ -2767,6 +2813,29 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "LPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+
+WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
+write.csv(WT, file = "LPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
+write.csv(WT, file = "LPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+
+ls_0.05 <- WT.05[,1]
+LPZ.G.tr.f.0.05 <- prune_taxa(ls_0.05,LPZ.G.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+LPZ.G.tr.f.0.01 <- prune_taxa(ls_0.01,LPZ.G.tr.f)                                        
+
+write.csv(LPZ.G.tr.f.0.05@otu_table, file = "./LPZ_Bacteria_Genus_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(LPZ.G.tr.f.0.01@otu_table, file = "./LPZ_Bacteria_Genus_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+
+LPZ.G.tr.f.status <- merge_samples(LPZ.G.tr.f, LPZ.G.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+LPZ.G.tr.f.status <- transform_sample_counts(LPZ.G.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+LPZ.G.tr.f.status.0.05 <- prune_taxa(ls_0.05,LPZ.G.tr.f.status)                                        
+LPZ.G.tr.f.status.0.01 <- prune_taxa(ls_0.01,LPZ.G.tr.f.status)                                        
+
+write.csv(t(LPZ.G.tr.f.status.0.05@otu_table), file = "./LPZ_Bacteria_Genus_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(LPZ.G.tr.f.status.0.01@otu_table), file = "./LPZ_Bacteria_Genus_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                    
+                                    
 MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
 
                                                 
@@ -2798,6 +2867,29 @@ for (i in 1:(ncol(G.tr.DF)-1))
 }
 WT[,3] <- p.adjust(WT[,2], method = "BH")                                          
 write.csv(WT, file = "HPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+                                    
+WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
+write.csv(WT, file = "HPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
+write.csv(WT, file = "HPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+
+ls_0.05 <- WT.05[,1]
+HPZ.G.tr.f.0.05 <- prune_taxa(ls_0.05,HPZ.G.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+HPZ.G.tr.f.0.01 <- prune_taxa(ls_0.01,HPZ.G.tr.f)                                        
+
+write.csv(HPZ.G.tr.f.0.05@otu_table, file = "./HPZ_Bacteria_Genus_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(HPZ.G.tr.f.0.01@otu_table, file = "./HPZ_Bacteria_Genus_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+
+HPZ.G.tr.f.status <- merge_samples(HPZ.G.tr.f, HPZ.G.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+HPZ.G.tr.f.status <- transform_sample_counts(HPZ.G.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+HPZ.G.tr.f.status.0.05 <- prune_taxa(ls_0.05,HPZ.G.tr.f.status)                                        
+HPZ.G.tr.f.status.0.01 <- prune_taxa(ls_0.01,HPZ.G.tr.f.status)                                        
+
+write.csv(t(HPZ.G.tr.f.status.0.05@otu_table), file = "./HPZ_Bacteria_Genus_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(HPZ.G.tr.f.status.0.01@otu_table), file = "./HPZ_Bacteria_Genus_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                    
+                                    
 MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
 write.csv(MWW_genus, file = "Kinshasa_Konzo3_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                                        
