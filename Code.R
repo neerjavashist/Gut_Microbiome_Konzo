@@ -2257,9 +2257,9 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "KinULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                            
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT, file = "KinULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(WT.05, file = "KinULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT, file = "KinULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+write.csv(WT.01, file = "KinULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
 ls_0.05 <- WT.05[,1]
 KinULPZ.G.tr.f.0.05 <- prune_taxa(ls_0.05,KinULPZ.G.tr.f)                                        
@@ -2312,9 +2312,9 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "MasULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                         
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT, file = "MasULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(WT.05, file = "MasULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT, file = "MasULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+write.csv(WT.01, file = "MasULPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
 ls_0.05 <- WT.05[,1]
 MasULPZ.G.tr.f.0.05 <- prune_taxa(ls_0.05,MasULPZ.G.tr.f)                                        
@@ -2368,9 +2368,9 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "KinUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                          
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT, file = "KinUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(WT.05, file = "KinUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT, file = "KinUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+write.csv(WT.01, file = "KinUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
 ls_0.05 <- WT.05[,1]
 KinUHPZ.G.tr.f.0.05 <- prune_taxa(ls_0.05,KinUHPZ.G.tr.f)                                        
@@ -2426,9 +2426,9 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "MasUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                         
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT, file = "MasUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(WT.05, file = "MasUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT, file = "MasUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+write.csv(WT.01, file = "MasUHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
 ls_0.05 <- WT.05[,1]
 MasUHPZ.G.tr.f.0.05 <- prune_taxa(ls_0.05,MasUHPZ.G.tr.f)                                        
@@ -2483,9 +2483,9 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "KinKLPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                          
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT, file = "KinKLPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(WT.05, file = "KinKLPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT, file = "KinKLPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+write.csv(WT.01, file = "KinKLPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
 ls_0.05 <- WT.05[,1]
 KinKLPZ.G.tr.f.0.05 <- prune_taxa(ls_0.05,KinKLPZ.G.tr.f)                                        
@@ -2539,9 +2539,9 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "MasKLPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                         
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT, file = "MasKLPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(WT.05, file = "MasKLPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT, file = "MasKLPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+write.csv(WT.01, file = "MasKLPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
 ls_0.05 <- WT.05[,1]
 MasKLPZ.G.tr.f.0.05 <- prune_taxa(ls_0.05,MasKLPZ.G.tr.f)                                        
@@ -2595,9 +2595,9 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "KinKHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                          
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT, file = "KinKHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(WT.05, file = "KinKHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT, file = "KinKHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+write.csv(WT.01, file = "KinKHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
 ls_0.05 <- WT.05[,1]
 KinKHPZ.G.tr.f.0.05 <- prune_taxa(ls_0.05,KinKHPZ.G.tr.f)                                        
@@ -2653,9 +2653,9 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "MasKHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                         
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT, file = "MasKHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(WT.05, file = "MasKHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT, file = "MasKHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+write.csv(WT.01, file = "MasKHPZ_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
 ls_0.05 <- WT.05[,1]
 MasKHPZ.G.tr.f.0.05 <- prune_taxa(ls_0.05,MasKHPZ.G.tr.f)                                        
