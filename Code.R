@@ -2198,9 +2198,9 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "KinMas_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                         
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT, file = "KinMas_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(WT.05, file = "KinMas_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT, file = "KinMas_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+write.csv(WT.01, file = "KinMas_Bacteria_Genus_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
 ls_0.05 <- WT.05[,1]
 KinMas.G.tr.f.0.05 <- prune_taxa(ls_0.05,KinMas.G.tr.f)                                        
