@@ -1452,15 +1452,13 @@ write.csv(t(MasKHPZ.P.tr.f.status.0.01@otu_table), file = "./MasKHPZ_Bacteria_Ph
 MWW_phylum <- merge(MWW_phylum,WT,by="Bacteria Phylum", sort = FALSE)   
                                                  
 #CONTROL (UNAFFECTED)
-Control.P <- prune_samples(KonzoData.P@sam_data$Status != "Kinshasa", KonzoData.P)
-Control.P <- prune_samples(Control.P@sam_data$Status != "Masimanimba", Control.P)
-Control.P <- prune_samples(Control.P@sam_data$Status != "Kahemba_Konzo_NonIntervention", Control.P)
-Control.P <- prune_samples(Control.P@sam_data$Status != "Kahemba_Konzo_Intervention", Control.P)
-                                             
-Control.P.tr <- transform_sample_counts(Control.P, function(x) x / sum(x))
-                                        
+Control.P <-  prune_samples(KonzoData.P@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData.P@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData.P)
+Control.P.tr <-  transform_sample_counts(Control.P, function(x) x / sum(x))
+Control.P.tr.f <-  prune_taxa(f_0.0001, Control.P.tr)
+                                         
+#MWW 
                                                
-P <- Control.P.tr
+P <- Control.P.tr.f
                                                
 P.tr_META <- as.data.frame(P@sam_data)
 P.tr_OTU <- as.data.frame(t(P@otu_table))
@@ -1468,125 +1466,52 @@ P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
 
 colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
 for (i in 1:nrow(P.tr.DF))
-  {P.tr.DF[i,]$Status <- Control.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
+  {P.tr.DF[i,]$Status <- Control.P.tr.f@sam_data[rownames(P.tr.DF[i,]),]$Status
   }
                                             
-WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
-colnames(WT) <- c("Bacteria Phylum", "ULPZ vs. UHPZ p-value")
+WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 3)
+colnames(WT) <- c("Bacteria Phylum", "ULPZ vs. UHPZ p-value",  "ULPZ vs. UHPZ p-value adjusted")
 
 for (i in 1:(ncol(P.tr.DF)-1))
 {
-  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
+  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF)
   WT[i,1] = colnames(P.tr.DF[i])
   WT[i,2] = as.numeric(wt$p.value)
 }
-write.csv(WT, file = "Control_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
-WT <- data.frame(WT, row.names = TRUE)
-WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
-write.csv(WT.f, file = "Control_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
+WT[,3] <- p.adjust(WT[,2], method = "BH")   
+write.csv(WT, file = "Control_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+                                      
+WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
+write.csv(WT.05, file = "Control_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
+write.csv(WT.01, file = "Control_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
-                                             
+ls_0.05 <- WT.05[,1]
+Control.P.tr.f.0.05 <- prune_taxa(ls_0.05,Control.P.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+Control.P.tr.f.0.01 <- prune_taxa(ls_0.01,Control.P.tr.f)                                        
+                                        
+write.csv(Control.P.tr.f.0.05@otu_table, file = "./Control_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(Control.P.tr.f.0.01@otu_table, file = "./Control_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+                                        
+Control.P.tr.f.status <- merge_samples(Control.P.tr.f, Control.P.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+Control.P.tr.f.status <- transform_sample_counts(Control.P.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+Control.P.tr.f.status.0.05 <- prune_taxa(ls_0.05,Control.P.tr.f.status)                                        
+Control.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,Control.P.tr.f.status)                                        
+                                                                                                
+write.csv(t(Control.P.tr.f.status.0.05@otu_table), file = "./Control_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(Control.P.tr.f.status.0.01@otu_table), file = "./Control_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+                                                
+MWW_phylum <- merge(MWW_phylum,WT,by="Bacteria Phylum", sort = FALSE)
+                                                 
 #DISEASE (KONZO)
-Disease.P <- prune_samples(KonzoData.P@sam_data$Status != "Kinshasa", KonzoData.P)
-Disease.P <- prune_samples(Disease.P@sam_data$Status != "Masimanimba", Disease.P)
-Disease.P <- prune_samples(Disease.P@sam_data$Status != "Kahemba_Control_NonIntervention", Disease.P)
-Disease.P <- prune_samples(Disease.P@sam_data$Status != "Kahemba_Control_Intervention", Disease.P)
-Disease.P.tr <- transform_sample_counts(Disease.P, function(x) x / sum(x))                                             
 
-P <- Disease.P.tr
-                                               
-P.tr_META <- as.data.frame(P@sam_data)
-P.tr_OTU <- as.data.frame(t(P@otu_table))
-P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
+#LPZ
+                                                 
+#HPZ
 
-colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
-for (i in 1:nrow(P.tr.DF))
-  {P.tr.DF[i,]$Status <- Disease.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
-  }
-    
-WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
-colnames(WT) <- c("Bacteria Phylum", "KLPZ vs. KHPZ p-value")
-
-for (i in 1:(ncol(P.tr.DF)-1))
-{
-  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
-  WT[i,1] = colnames(P.tr.DF[i])
-  WT[i,2] = as.numeric(wt$p.value)
-}
-write.csv(WT, file = "Disease_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
-WT <- data.frame(WT, row.names = TRUE)
-WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
-write.csv(WT.f, file = "Disease_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
-
-#NON-INTERVENTION (LPZ)
-
-NonIntervention.P <- prune_samples(KonzoData.P@sam_data$Status != "Kinshasa", KonzoData.P)
-NonIntervention.P <- prune_samples(NonIntervention.P@sam_data$Status != "Masimanimba", NonIntervention.P)
-NonIntervention.P <- prune_samples(NonIntervention.P@sam_data$Status != "Kahemba_Control_Intervention", NonIntervention.P)
-NonIntervention.P <- prune_samples(NonIntervention.P@sam_data$Status != "Kahemba_Konzo_Intervention", NonIntervention.P)
-NonIntervention.P.tr <- transform_sample_counts(NonIntervention.P, function(x) x / sum(x))
-                                                
-                                                
-#LPZ Control vs. Konzo
-P <- NonIntervention.P.tr
-                                               
-P.tr_META <- as.data.frame(P@sam_data)
-P.tr_OTU <- as.data.frame(t(P@otu_table))
-P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
-
-colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
-for (i in 1:nrow(P.tr.DF))
-  {P.tr.DF[i,]$Status <- NonIntervention.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
-  }
-    
-WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
-colnames(WT) <- c("Bacteria Phylum", "ULPZ vs. KLPZ p-value")
-
-for (i in 1:(ncol(P.tr.DF)-1))
-{
-  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
-  WT[i,1] = colnames(P.tr.DF[i])
-  WT[i,2] = as.numeric(wt$p.value)
-}
-write.csv(WT, file = "NonIntervention_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
-WT <- data.frame(WT, row.names = TRUE)
-WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
-write.csv(WT.f, file = "NonIntervention_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
-                                                
-#INTERVENTION (HPZ)
-Intervention.P <- prune_samples(KonzoData.P@sam_data$Status != "Kinshasa", KonzoData.P)
-Intervention.P <- prune_samples(Intervention.P@sam_data$Status != "Masimanimba", Intervention.P)
-Intervention.P <- prune_samples(Intervention.P@sam_data$Status != "Kahemba_Control_NonIntervention", Intervention.P)
-Intervention.P <- prune_samples(Intervention.P@sam_data$Status != "Kahemba_Konzo_NonIntervention", Intervention.P)
-Intervention.P.tr <- transform_sample_counts(Intervention.P, function(x) x / sum(x))
-
-# HPZ Control vs. Konzo
-P <- Intervention.P.tr
-                                               
-P.tr_META <- as.data.frame(P@sam_data)
-P.tr_OTU <- as.data.frame(t(P@otu_table))
-P.tr.DF <- cbind(P.tr_OTU, P.tr_META$Status)
-
-colnames(P.tr.DF)[colnames(P.tr.DF)=="P.tr_META$Status"] <- "Status"
-for (i in 1:nrow(P.tr.DF))
-  {P.tr.DF[i,]$Status <- Intervention.P.tr@sam_data[rownames(P.tr.DF[i,]),]$Status
-  }
-    
-WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 2)
-colnames(WT) <- c("Bacteria Phylum", "UHPZ vs. KHPZ p-value")
-
-for (i in 1:(ncol(P.tr.DF)-1))
-{
-  wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF, p.adjust.method = "BH")
-  WT[i,1] = colnames(P.tr.DF[i])
-  WT[i,2] = as.numeric(wt$p.value)
-}
-write.csv(WT, file = "Intervention_Bacteria_Phylum_ByStatus_WilcoxTest.csv")
-WT <- data.frame(WT, row.names = TRUE)
-WT.f <- subset(WT, rownames(WT) %in% f_0.0001)                                       
-write.csv(WT.f, file = "Intervention_Bacteria_Phylum_0.0001_ByStatus_WilcoxTest.csv")
-
-                           
+                     
 #Bacteria Class
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
 x <- read.csv("Kinshasa_Konzo3_Class_f_0.0001.csv", row.names = 1, colClasses = "character")
