@@ -5329,5 +5329,155 @@ d10 <- d10 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
 
 tiff(filename = "KinshasaKonzo3_Genus_RF_KLPZ_KHPZ_Boxplots.tiff", width = 7, height = 7, units = "in", res = 600)
 ggarrange(s,s, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, labels = c("","","A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), ncol = 4, nrow = 3, common.legend = TRUE, legend = "bottom")
-dev.off()                                              
+dev.off()   
+                                              
+                                              
+                                              
                                              
+#------------------------FUNTIONAL---------------------------------
+                                              
+                                              
+                                              
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken")
+
+#META
+Konzo_meta <- read.csv("./KinshasaControl_Konzo3_Meta_Mod.csv")
+names(Konzo_meta)<-c("Sample","Name","Run","ID","Region","Status","Disease","Sample_ID","Collection_date","DNA_Concentration","Isolation_date","Elution","Age","Sex","Disease_Old","Geography")
+rownames(Konzo_meta)<-as.character(Konzo_meta[,1])
+META<-sample_data(Konzo_meta)
+
+
+#Konzo Functional KO 
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostAlbanFunctional")
+
+#KO count
+Konzo_ko_count <- read.csv("./KinshasaKonzo3_KO_Count.csv")
+Konzo_ko <- read.csv("./KinshasaKonzo3_KO.csv")
+
+Konzo_KO_count <-as.matrix(unname(Konzo_ko_count[1:nrow(Konzo_ko_count),2:(ncol(Konzo_ko_count))]))
+rownames(Konzo_KO_count)<-as.character( Konzo_ko_count[,1])
+nam <-names(Konzo_ko_count)
+colnames(Konzo_KO_count)<-c(as.character(nam[2:length(nam)]))
+KO_count = otu_table(Konzo_KO_count, taxa_are_rows = TRUE)
+
+#TAX (KO)
+Konzo_KO<-as.matrix(unname(Konzo_ko[,2]))
+rownames(Konzo_KO)<-as.character(unname(Konzo_KO[,1]))
+colnames(Konzo_KO)<-"KO"
+KO = tax_table(Konzo_KO)
+
+#Create the PhyloseqObject
+KonzoData_KO_count <-phyloseq(KO_count, KO, META)
+
+#Set NAs to 0
+KonzoData_KO_count@otu_table[is.na(KonzoData_KO_count@otu_table)] <- 0
+KonzoData_KO_count@sam_data$Status <- factor(KonzoData_KO_count@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
+#write.csv(t(KonzoData_KO_count@otu_table), file = "./KinshasaKonzo3_KO_Count_BySample.csv")
+
+#Merge samples by group/status                                         
+KonzoData_KO_count_status <- merge_samples(KonzoData_KO_count, KonzoData_KO_count@sam_data$Status) #merge_smaples by default sums the values for otu
+KonzoData_KO_count_status <- transform_sample_counts(KonzoData_KO_count_status, function(x) x / 30) #average the sum of relabund in each group                                                                                                                                    
+#write.csv(t(KonzoData_KO_count_status@otu_table), file = "./KinshasaKonzo3_KO_AvgCount_ByStatus.csv")
+                                                  
+#Read Counts to Relative Abundance
+KonzoData_KO_tr <- transform_sample_counts(KonzoData_KO_count, function(x) x / sum(x))                                  
+#write.csv(KonzoData_KO_tr@otu_table, file = "./KinshasaKonzo3_KO_RelAbund.csv")  
+
+#Merge samples by group/status                                         
+KonzoData_KO_tr_status <- merge_samples(KonzoData_KO_tr, KonzoData_KO_tr@sam_data$Status) #merge_smaples by default sums the values for otu
+KonzoData_KO_tr_status <- transform_sample_counts(KonzoData_KO_tr_status, function(x) x / 30) #average the sum of relabund in each group                                                                                                                                    
+#write.csv(t(KonzoData_KO_tr_status@otu_table), file = "./KinshasaKonzo3_KO_AvgRelAbund_ByStatus.csv")
+
+#Geography_KO                                                  
+Geography.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status != "Konzo_Low_Prevalence_Zone") & (KonzoData_KO_tr@sam_data$Status != "Konzo_High_Prevalence_Zone"), KonzoData_KO_tr)                                              
+                                                                                                                                                                                                                                                                
+Geography.KO.tr.sam <- as.data.frame(as.matrix(sample_data(Geography.KO.tr)))
+Geography.KO.tr.sam$Status <- as.factor(Geography.KO.tr.sam$Status)
+Geography.KO.tr.sam$Status <- factor(Geography.KO.tr.sam$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
+
+brayd <- phyloseq::distance(Geography.KO.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ Geography.KO.tr.sam$Status, perm=10000); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Geography.Ko.tr.txt")
+
+#KinMas                                                   
+KinMas.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Kinshasa" | KonzoData_KO_tr@sam_data$Status == "Masimanimba"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
+KinMas.KO.tr.sam <- as.data.frame(as.matrix(sample_data(KinMas.KO.tr)))
+KinMas.KO.tr.sam$Status <- as.factor(KinMas.KO.tr.sam$Status)
+KinMas.KO.tr.sam$Status <- factor(KinMas.KO.tr.sam$Status, levels = c("Kinshasa", "Masimanimba"))
+
+brayd <- phyloseq::distance(KinMas.KO.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ KinMas.KO.tr.sam$Status, perm=10000); bdiv_bray
+
+#KinULPZ
+KinULPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Kinshasa" | KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
+KinULPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(KinULPZ.KO.tr)))
+KinULPZ.KO.tr.sam$Status <- as.factor(KinULPZ.KO.tr.sam$Status)
+KinULPZ.KO.tr.sam$Status <- factor(KinULPZ.KO.tr.sam$Status, levels = c("Kinshasa", "Unaffected_Low_Prevalence_Zone"))
+
+brayd <- phyloseq::distance(KinULPZ.KO.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ KinULPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+                                                  
+#KinUHPZ  
+KinUHPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Kinshasa" | KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
+KinUHPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(KinUHPZ.KO.tr)))
+KinUHPZ.KO.tr.sam$Status <- as.factor(KinUHPZ.KO.tr.sam$Status)
+KinUHPZ.KO.tr.sam$Status <- factor(KinUHPZ.KO.tr.sam$Status, levels = c("Kinshasa", "Unaffected_High_Prevalence_Zone"))
+
+brayd <- phyloseq::distance(KinUHPZ.KO.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ KinUHPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+                                                  
+#MasULPZ
+MasULPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Masimanimba" | KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
+MasULPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(MasULPZ.KO.tr)))
+MasULPZ.KO.tr.sam$Status <- as.factor(MasULPZ.KO.tr.sam$Status)
+MasULPZ.KO.tr.sam$Status <- factor(MasULPZ.KO.tr.sam$Status, levels = c("Masimanimba", "Unaffected_Low_Prevalence_Zone"))
+
+brayd <- phyloseq::distance(MasULPZ.KO.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ MasULPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+                                                  
+#MasUHPZ  
+MasUHPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Masimanimba" | KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
+MasUHPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(MasUHPZ.KO.tr)))
+MasUHPZ.KO.tr.sam$Status <- as.factor(MasUHPZ.KO.tr.sam$Status)
+MasUHPZ.KO.tr.sam$Status <- factor(MasUHPZ.KO.tr.sam$Status, levels = c("Masimanimba", "Unaffected_High_Prevalence_Zone"))
+
+brayd <- phyloseq::distance(MasUHPZ.KO.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ MasUHPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+                                                 
+#Control                                                  
+Control.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData_KO_tr)
+Control.KO.tr.sam <- as.data.frame(as.matrix(sample_data(Control.KO.tr)))
+Control.KO.tr.sam$Status <- as.factor(Control.KO.tr.sam$Status)
+Control.KO.tr.sam$Status <- factor(Control.KO.tr.sam$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
+
+brayd <- phyloseq::distance(Control.KO.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ Control.KO.tr.sam$Status, perm=10000); bdiv_bray
+                                            
+#Disease                                                  
+Disease.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData_KO_tr)
+Disease.KO.tr.sam <- as.data.frame(as.matrix(sample_data(Disease.KO.tr)))
+Disease.KO.tr.sam$Status <- as.factor(Disease.KO.tr.sam$Status)
+Disease.KO.tr.sam$Status <- factor(Disease.KO.tr.sam$Status, levels = c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
+
+brayd <- phyloseq::distance(Disease.KO.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ Disease.KO.tr.sam$Status, perm=10000); bdiv_bray
+
+                                                  
+#LPZ                                                  
+LPZ.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone", KonzoData_KO_tr)
+LPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(LPZ.KO.tr)))
+LPZ.KO.tr.sam$Status <- as.factor(LPZ.KO.tr.sam$Status)
+LPZ.KO.tr.sam$Status <- factor(LPZ.KO.tr.sam$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"))
+
+brayd <- phyloseq::distance(LPZ.KO.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ LPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+
+                                                  
+#HPZ                                                 
+HPZ.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData_KO_tr)
+HPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(HPZ.KO.tr)))
+HPZ.KO.tr.sam$Status <- as.factor(HPZ.KO.tr.sam$Status)
+HPZ.KO.tr.sam$Status <- factor(HPZ.KO.tr.sam$Status, levels = c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
+
+brayd <- phyloseq::distance(HPZ.KO.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ HPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
