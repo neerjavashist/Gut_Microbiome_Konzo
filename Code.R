@@ -5406,7 +5406,7 @@ p1$layers <- p1$layers[-1]
 ko_PGB <- p1 + 
   labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
                                 axis.line = element_line(colour = "black")) + scale_color_manual(values = geography_color, labels = SSSL)+
-  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA), legend.margin=margin(c(0,0,0,0))) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA), legend.margin=margin(c(-8,0,0,0))) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
 
 
@@ -5414,10 +5414,7 @@ ko_PGBt <- ko_PGB + stat_ellipse(type = "t") + scale_x_continuous(position = "to
 ko_PGBt <- ko_PGBt + theme(legend.position="bottom")
 ko_PGBt <- ko_PGBt + annotate("text", x = -0.25, y = -0.35, label = expression(paste("p = 9.999x",10^-5)), size = 2.5)
 ko_PGBt <- ggarrange(ko_PGBt,labels = c("A"),font.label = list(size = 7))
-
-tiff(filename = "Overall_Geography_KO_PCoA.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
-ko_PGBt
-dev.off()                                                  
+                                                 
 
 #KinMas                                                   
 KinMas.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Kinshasa" | KonzoData_KO_tr@sam_data$Status == "Masimanimba"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
@@ -5491,7 +5488,7 @@ ko_PKUHB <- p1 +
 
 ko_PKUHBt <- ko_PKUHB + stat_ellipse(type = "t") +  scale_y_continuous(position = "right")+ theme(plot.margin=unit(c(0.15,0.15,0.15,0.6), "lines"))
 ko_PKUHBt <- ko_PKUHBt + theme(legend.position="none")                                                                                                   
-ko_PKUHBt <- ko_PKUHBt + annotate("text", x = -0.15, y = -0.23, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+ko_PKUHBt <- ko_PKUHBt + annotate("text", x = -0.16, y = -0.24, label = expression(paste("p = 9.999x",10^-5)), size = 2)
 ko_PKUHBt <- ggarrange(ko_PKUHBt,labels = c("D"),font.label = list(size = 7))
                                                  
 #MasULPZ
@@ -5537,9 +5534,9 @@ ko_PMUHB <- p1 +
   theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
 
-ko_PMUHBt <- ko_PMUHB + stat_ellipse(type = "t") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.6,0.15,0.15,0.15), "lines"))
+ko_PMUHBt <- ko_PMUHB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.6,0.15,0.15,0.15), "lines"))
 ko_PMUHBt <- ko_PMUHBt + theme(legend.position="none")
-ko_PMUHBt <- ko_PMUHBt + annotate("text", x = -0.25, y = -0.27, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+ko_PMUHBt <- ko_PMUHBt + annotate("text", x = -0.22, y = -0.27, label = expression(paste("p = 9.999x",10^-5)), size = 2)
 ko_PMUHBt <- ggarrange(ko_PMUHBt,labels = c("F"),font.label = list(size = 7))
                                                   
 Geo <- arrangeGrob(ko_PGBt, ko_PMUBt, ko_PMUHBt, ko_PKMBt, ko_PKUBt, ko_PKUHBt,                             
