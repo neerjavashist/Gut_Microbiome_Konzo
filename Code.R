@@ -5441,8 +5441,8 @@ ko_PKMB <- p1 +
 
 ko_PKMBt <- ko_PKMB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 ko_PKMBt <- ko_PKMBt + theme(legend.position="none")
-ko_PKMBt <- ko_PKMBt + annotate("text", x = -0.35, y = -0.3, label = expression(paste("p = 0.002")), size = 2)
-ko_PKMBt <- ggarrange(PKMBt,labels = c("B"),font.label = list(size = 7))                                                  
+ko_PKMBt <- ko_PKMBt + annotate("text", x = -0.45, y = -0.3, label = expression(paste("p = 0.002")), size = 2)
+ko_PKMBt <- ggarrange(ko_PKMBt,labels = c("B"),font.label = list(size = 7))                                                  
                                                   
 
 #KinULPZ
