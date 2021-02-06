@@ -5453,6 +5453,22 @@ KinULPZ.KO.tr.sam$Status <- factor(KinULPZ.KO.tr.sam$Status, levels = c("Kinshas
 
 brayd <- phyloseq::distance(KinULPZ.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ KinULPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+
+p1 = plot_ordination(KinULPZ.KO.tr, ordinate(KinULPZ.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+
+ko_PKUB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = kinulpz_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
+
+ko_PKUBt <- ko_PKUB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+ko_PKUBt <- ko_PKUBt + theme(legend.position="none")
+ko_PKUBt <- ko_PKUBt + annotate("text", x = -0.25, y = -0.2, label = expression(paste("p = 5X",10^-4)), size = 2)
+ko_PKUBt <- ggarrange(ko_PKUBt,labels = c("C"),font.label = list(size = 7))                                                  
+                                                  
                                                   
 #KinUHPZ  
 KinUHPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Kinshasa" | KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
@@ -5462,7 +5478,22 @@ KinUHPZ.KO.tr.sam$Status <- factor(KinUHPZ.KO.tr.sam$Status, levels = c("Kinshas
 
 brayd <- phyloseq::distance(KinUHPZ.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ KinUHPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
-                                                  
+
+p1 = plot_ordination(KinUHPZ.KO.tr, ordinate(KinUHPZ.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+#p1 <- as_ggplot(p1)
+ko_PKUHB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = kinuhpz_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
+
+ko_PKUHBt <- ko_PKUHB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+ko_PKUHBt <- ko_PKUHBt + theme(legend.position="none")
+ko_PKUHBt <- ko_PKUHBt + annotate("text", x = -0.25, y = -0.43, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+ko_PKUHBt <- ggarrange(ko_PKUHBt,labels = c("C"),font.label = list(size = 7))
+                                                 
 #MasULPZ
 MasULPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Masimanimba" | KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
 MasULPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(MasULPZ.KO.tr)))
@@ -5471,6 +5502,21 @@ MasULPZ.KO.tr.sam$Status <- factor(MasULPZ.KO.tr.sam$Status, levels = c("Masiman
 
 brayd <- phyloseq::distance(MasULPZ.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ MasULPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+
+p1 = plot_ordination(MasULPZ.KO.tr, ordinate(MasULPZ.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+#p1 <- as_ggplot(p1)
+ko_PMUB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = masulpz_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
+
+ko_PMUBt <- ko_PMUB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+ko_PMUBt <- ko_PMUBt + theme(legend.position="none")
+ko_PMUBt <- ko_PMUBt + annotate("text", x = 0.45, y = -0.27, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+ko_PMUBt <- ggarrange(ko_PMUBt,labels = c("E"),font.label = list(size = 7))
                                                   
 #MasUHPZ  
 MasUHPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Masimanimba" | KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
@@ -5480,7 +5526,31 @@ MasUHPZ.KO.tr.sam$Status <- factor(MasUHPZ.KO.tr.sam$Status, levels = c("Masiman
 
 brayd <- phyloseq::distance(MasUHPZ.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ MasUHPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
-                                                 
+
+p1 = plot_ordination(MasUHPZ.KO.tr, ordinate(MasUHPZ.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+#p1 <- as_ggplot(p1)
+ko_PMUHB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = masuhpz_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
+
+ko_PMUHBt <- ko_PMUHB + stat_ellipse(type = "t") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.6,0.15,0.15,0.15), "lines"))
+ko_PMUHBt <- ko_PMUHBt + theme(legend.position="none")
+ko_PMUHBt <- ko_PMUHBt + annotate("text", x = 0.45, y = -0.33, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+ko_PMUHBt <- ggarrange(ko_PMUHBt,labels = c("F"),font.label = list(size = 7))
+                                                  
+Geo <- arrangeGrob(ko_PGBt, ko_PMUBt, ko_PMUHBt, ko_PKMBt, ko_PKUBt, ko_PKUHBt,                             
+             ncol = 6, nrow = 6,
+             layout_matrix = rbind(c(1,1,1,1,2,2), c(1,1,1,1,2,2), c(1,1,1,1,3,3), c(1,1,1,1,3,3), c(4,4,5,5,6,6), c(4,4,5,5,6,6)))
+
+tiff(filename = "Geography_AllUnaffected_KO_PCoA.tiff", width = 5.5, height = 5.5, units = "in", res = 600)
+ggarrange(as_ggplot(Geo))
+dev.off()
+                                                  
+                                                  
 #Control                                                  
 Control.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData_KO_tr)
 Control.KO.tr.sam <- as.data.frame(as.matrix(sample_data(Control.KO.tr)))
