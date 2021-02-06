@@ -650,6 +650,12 @@ shan4 <- shan3 + guides(fill=guide_legend(ncol=6))
 shan4 <- shan4 + scale_fill_manual(values = konzo_color, labels = SSSL)
 
 #To get Top taxa
+                           
+                           
+                           
+                           
+                           
+                           
 #Phylum
                            
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Phylum")
@@ -839,7 +845,76 @@ top_S <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 
 write.csv(top_S, file = "Kinshasa_Konzo3_Species_Top20.csv")                           
                            
-#Stacked Bar plots                           
+#Stacked Bar plots
+#Genus
+#Perhaps a rearrangement of the colorscheme for this                                     
+#t3_cols = c("#00B9E3","#D39200","#00C19F","#F8766D","#619CFF","#93AA00", "#DB72FB", "#00BA38", "#FF61C3")
+                                     
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
+                                     
+top_G <- read.csv("Kinshasa_Konzo3_Genus_Top7.csv", row.names = 1, colClasses = "character")
+top_G <- unlist(top_G)
+
+KonzoData.G.tr.top = prune_taxa(top_G, KonzoData.G.tr)
+physeqdf <- psmelt(KonzoData.G.tr.top)
+p <- ggplot(physeqdf, aes(x=Abundance, y=reorder(Sample, -Abundance), fill = reorder(genus, Abundance)))
+p <- p + geom_bar(stat="identity", width = 1)  
+p$data$Status <- factor(p$data$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))                               
+#p$data$genus <- factor(p$data$genus, levels = c("Prevotella","Bacteroides","Faecalibacterium","Escherichia","Alistipes", "Eubacterium", "Bifidobacterium","Butyricimonas","Anaerostipes") )
+p <- p + labs(y = element_blank(), x = "Relative Abundance") +  scale_fill_discrete(name = "Genus")
+top_genus_plot <- p + theme(legend.position="rigth") + theme(legend.key.size = unit(.2, "cm"), legend.text = element_text(face="italic"))
+
+top_genus_plot <- top_genus_plot + facet_grid(rows = vars(Status), scales = "free_y", space = "free", switch = "y", labeller = as_labeller(SSSL)) +
+  theme(strip.background = element_blank(), strip.placement = "outside", strip.text.y.left = element_text(angle = 0, vjust=0.5, hjust=0, size = 7))
+
+top_genus_plot<- top_genus_plot + theme(panel.spacing=unit(0, "lines"), panel.border = element_rect(color = "black", fill = NA, size = 0.5))
+
+top_genus_plot <- top_genus_plot + 
+  theme(legend.position="bottom", legend.margin=margin(0,0,0,0),
+        legend.box.margin=margin(0,0,0,0)) + 
+  scale_x_continuous(expand = c(0,0), limits = c(0,0.9)) +
+  theme(plot.title = element_blank(), legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7), legend.title = element_text(size = 7)) + 
+  guides(fill=guide_legend(ncol=3,byrow=TRUE)) + # scale_fill_manual(values = t3_cols) +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(size = 7), axis.title.x = element_text(size = 7)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"))
+top_genus_plot
+
+ad <- ggarrange(observed4, shan4, labels = c("A", "B"), font.label = list(size = 7), ncol = 2, nrow = 1, common.legend = TRUE, legend = "bottom", align = "hv") 
+
+Gen <-  ggarrange(top_genus_plot, labels = c("C"), font.label = list(size = 7), ncol = 1, nrow = 1) 
+
+s <- plot_spacer() + theme_minimal()
+
+placeholder <-  ggarrange(s, labels = c("D"), font.label = list(size = 7), ncol = 1, nrow = 1)    
+
+Gen_ph <- ggarrange(Gen,placeholder, widths = c(1, 1), ncol = 2, nrow = 1)
+
+F1 <- arrangeGrob(ad, Gen_ph, ncol = 1, nrow = 2,
+             layout_matrix = rbind(c(1), c(2), c(2), c(2)))
+#Figure 2
+tiff(filename = "KinshasaKonzo3_TaxaFigure_WithoutHeatMap.tiff", width = 7, height = 7, units = "in", res = 600)
+as_ggplot(F1)
+dev.off()
+                                     
+                                     
+#When adding heat map in gimp to full figure, make sure Image > Print Size has correct inches and ppi (set to >=300))
+o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))                                                 
+tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap_V1.tiff", width = 3.5, height = 2.8, units = "in", res = 600)
+heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,2), lwid = c(0.1,1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3,0),c(2,1,1,0),c(2,1,1,0),c(2,1,1,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
+dev.off() 
+                                     
+#When adding heat map in gimp to full figure, make sure Image > Print Size has correct inches and ppi (set to >=300))
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Species")
+
+o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))                                                 
+tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap_V2.tiff", width = 2.5, height = 3.25, units = "in", res = 600)
+heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,1.25), lwid = c(0.1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3),c(2,1,1),c(2,1,1),c(0,0,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
+dev.off()                                        
+                                     
+                                     
+                                     
+                                     
+                                     
 #Phylum
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Phylum")
                                      
@@ -892,73 +967,7 @@ top_family_plot <- top_family_plot +
 top_family_plot <- top_family_plot + geom_bar(stat = "identity") + coord_flip()
 top_family_plot
 
-#Genus
-#Perhaps a rearrangement of the colorscheme for this                                     
-#t3_cols = c("#00B9E3","#D39200","#00C19F","#F8766D","#619CFF","#93AA00", "#DB72FB", "#00BA38", "#FF61C3")
-                                     
-setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
-                                     
-top_G <- read.csv("Kinshasa_Konzo3_Genus_Top7.csv", row.names = 1, colClasses = "character")
-top_G <- unlist(top_G)
-
-KonzoData.G.tr.top = prune_taxa(top_G, KonzoData.G.tr)
-physeqdf <- psmelt(KonzoData.G.tr.top)
-p <- ggplot(physeqdf, aes(x=Abundance, y=reorder(Sample, -Abundance), fill = reorder(genus, Abundance)))
-p <- p + geom_bar(stat="identity", width = 1)  
-p$data$Status <- factor(p$data$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))                               
-#p$data$genus <- factor(p$data$genus, levels = c("Prevotella","Bacteroides","Faecalibacterium","Escherichia","Alistipes", "Eubacterium", "Bifidobacterium","Butyricimonas","Anaerostipes") )
-p <- p + labs(y = element_blank(), x = "Relative Abundance") +  scale_fill_discrete(name = "Genus")
-top_genus_plot <- p + theme(legend.position="rigth") + theme(legend.key.size = unit(.2, "cm"), legend.text = element_text(face="italic"))
-
-top_genus_plot <- top_genus_plot + facet_grid(rows = vars(Status), scales = "free_y", space = "free", switch = "y", labeller = as_labeller(SSSL)) +
-  theme(strip.background = element_blank(), strip.placement = "outside", strip.text.y.left = element_text(angle = 0, vjust=0.5, hjust=0, size = 7))
-
-top_genus_plot<- top_genus_plot + theme(panel.spacing=unit(0, "lines"), panel.border = element_rect(color = "black", fill = NA, size = 0.5))
-
-top_genus_plot <- top_genus_plot + 
-  theme(legend.position="right", legend.margin=margin(0,0,0,0),
-        legend.box.margin=margin(-8,0,-8,-8)) + 
-  scale_x_continuous(expand = c(0,0), limits = c(0,0.9)) +
-  theme(plot.title = element_blank(), legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7), legend.title = element_text(size = 7)) + 
-  guides(fill=guide_legend(ncol=1,byrow=TRUE)) + # scale_fill_manual(values = t3_cols) +
-  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(size = 7), axis.title.x = element_text(size = 7)) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"))
-top_genus_plot
-
-ad <- ggarrange(observed4, shan4, labels = c("A", "B"), font.label = list(size = 7), ncol = 2, nrow = 1, common.legend = TRUE, legend = "bottom", align = "hv") 
-PF <- ggarrange(top_phylum_plot, top_family_plot, labels = c("C", "D"), font.label = list(size = 7), ncol = 1, nrow = 2, align = "hv")
-
-ad_PF <- grid.arrange(ad, PF, ncol = 1, nrow =2, layout_matrix = rbind(c(1), c(2), c(2)))
-
-Gen <-  ggarrange(top_genus_plot, labels = c("E"), font.label = list(size = 7), ncol = 1, nrow = 1) 
-
-s <- plot_spacer() + theme_minimal()
-
-placeholder <-  ggarrange(s, labels = c("F"), font.label = list(size = 7), ncol = 1, nrow = 1)    
-
-Gen_ph <- ggarrange(Gen,placeholder, heights = c(1, 1), ncol = 1, nrow = 2)
-
-F1 <- arrangeGrob(ad_PF, Gen_ph, ncol = 2, nrow = 1,
-             layout_matrix = cbind(c(1), c(2)))
-#Figure 2
-tiff(filename = "KinshasaKonzo3_TaxaFigure_WithoutHeatMap.tiff", width = 7, height = 7, units = "in", res = 600)
-as_ggplot(F1)
-dev.off()
-                                     
-#When adding heat map in gimp to full figure, make sure Image > Print Size has correct inches and ppi (set to >=300))
-o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))                                                 
-tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap_V1.tiff", width = 3.5, height = 2.8, units = "in", res = 600)
-heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,2), lwid = c(0.1,1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3,0),c(2,1,1,0),c(2,1,1,0),c(2,1,1,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
-dev.off() 
-                                     
-#When adding heat map in gimp to full figure, make sure Image > Print Size has correct inches and ppi (set to >=300))
-setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Species")
-
-o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))                                                 
-tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap_V2.tiff", width = 2.5, height = 3.25, units = "in", res = 600)
-heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,1.25), lwid = c(0.1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3),c(2,1,1),c(2,1,1),c(0,0,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
-dev.off()                          
-
+                                                          
 #------------------------------------------------
                                      
 ### MANN WHITNEY_WILCOX TEST (with BH correction)
