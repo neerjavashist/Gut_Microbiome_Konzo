@@ -5491,7 +5491,7 @@ ko_PKUHB <- p1 +
 
 ko_PKUHBt <- ko_PKUHB + stat_ellipse(type = "t") +  scale_y_continuous(position = "right")+ theme(plot.margin=unit(c(0.15,0.15,0.15,0.6), "lines"))
 ko_PKUHBt <- ko_PKUHBt + theme(legend.position="none")                                                                                                   
-ko_PKUHBt <- ko_PKUHBt + annotate("text", x = -0.18, y = -0.22, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+ko_PKUHBt <- ko_PKUHBt + annotate("text", x = -0.15, y = -0.23, label = expression(paste("p = 9.999x",10^-5)), size = 2)
 ko_PKUHBt <- ggarrange(ko_PKUHBt,labels = c("D"),font.label = list(size = 7))
                                                  
 #MasULPZ
@@ -5539,7 +5539,7 @@ ko_PMUHB <- p1 +
 
 ko_PMUHBt <- ko_PMUHB + stat_ellipse(type = "t") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.6,0.15,0.15,0.15), "lines"))
 ko_PMUHBt <- ko_PMUHBt + theme(legend.position="none")
-ko_PMUHBt <- ko_PMUHBt + annotate("text", x = -0.3, y = -0.27, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+ko_PMUHBt <- ko_PMUHBt + annotate("text", x = -0.25, y = -0.27, label = expression(paste("p = 9.999x",10^-5)), size = 2)
 ko_PMUHBt <- ggarrange(ko_PMUHBt,labels = c("F"),font.label = list(size = 7))
                                                   
 Geo <- arrangeGrob(ko_PGBt, ko_PMUBt, ko_PMUHBt, ko_PKMBt, ko_PKUBt, ko_PKUHBt,                             
