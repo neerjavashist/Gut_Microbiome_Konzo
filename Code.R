@@ -5398,6 +5398,26 @@ Geography.KO.tr.sam$Status <- factor(Geography.KO.tr.sam$Status, levels = c("Kin
 brayd <- phyloseq::distance(Geography.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ Geography.KO.tr.sam$Status, perm=10000); bdiv_bray
 #capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Geography.Ko.tr.txt")
+                                                  
+                                                  
+p1 = plot_ordination(Geography.KO.tr, ordinate(Geography.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 2, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+ko_PGB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = geography_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA), legend.margin=margin(c(0,0,0,0))) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
+
+
+ko_PGBt <- ko_PGB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+ko_PGBt <- ko_PGBt + theme(legend.position="bottom")
+ko_PGBt <- ko_PGBt + annotate("text", x = -0.25, y = -0.35, label = expression(paste("p = 9.999x",10^-5)), size = 2.5)
+ko_PGBt <- ggarrange(PGBt,labels = c("A"),font.label = list(size = 7))
+
+tiff(filename = "Overall_Geography_KO_PCoA.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
+ko_PGBt
+dev.off()                                                  
 
 #KinMas                                                   
 KinMas.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Kinshasa" | KonzoData_KO_tr@sam_data$Status == "Masimanimba"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
@@ -5407,6 +5427,23 @@ KinMas.KO.tr.sam$Status <- factor(KinMas.KO.tr.sam$Status, levels = c("Kinshasa"
 
 brayd <- phyloseq::distance(KinMas.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ KinMas.KO.tr.sam$Status, perm=10000); bdiv_bray
+                                                  
+                                                  
+p1 = plot_ordination(KinMas.KO.tr, ordinate(KinMas.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+                                                  
+ko_PKMB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = kinmas_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
+
+ko_PKMBt <- ko_PKMB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+ko_PKMBt <- ko_PKMBt + theme(legend.position="none")
+ko_PKMBt <- ko_PKMBt + annotate("text", x = -0.35, y = -0.3, label = expression(paste("p = 0.002")), size = 2)
+ko_PKMBt <- ko_ggarrange(PKMBt,labels = c("B"),font.label = list(size = 7))                                                  
+                                                  
 
 #KinULPZ
 KinULPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Kinshasa" | KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
