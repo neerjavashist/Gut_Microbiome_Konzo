@@ -650,11 +650,7 @@ shan4 <- shan3 + guides(fill=guide_legend(ncol=6))
 shan4 <- shan4 + scale_fill_manual(values = konzo_color, labels = SSSL)
 
 #To get Top taxa
-                           
-                           
-                           
-                           
-                           
+                                                    
                            
 #Phylum
                            
