@@ -5506,7 +5506,7 @@ ko_PMUB <- p1 +
   theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
 
-ko_PMUBt <- ko_PMUB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+ko_PMUBt <- ko_PMUB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.25,0.25), "lines"))
 ko_PMUBt <- ko_PMUBt + theme(legend.position="none")
 ko_PMUBt <- ko_PMUBt + annotate("text", x = -0.21, y = -0.26, label = expression(paste("p = 9.999x",10^-5)), size = 2)
 ko_PMUBt <- ggarrange(ko_PMUBt,labels = c("E"),font.label = list(size = 7))
@@ -5530,7 +5530,7 @@ ko_PMUHB <- p1 +
   theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=7)) +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7))
 
-ko_PMUHBt <- ko_PMUHB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.6,0.15,0.15,0.15), "lines"))
+ko_PMUHBt <- ko_PMUHB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.85,0.25), "lines"))
 ko_PMUHBt <- ko_PMUHBt + theme(legend.position="none")
 ko_PMUHBt <- ko_PMUHBt + annotate("text", x = -0.22, y = -0.27, label = expression(paste("p = 9.999x",10^-5)), size = 2)
 ko_PMUHBt <- ggarrange(ko_PMUHBt,labels = c("F"),font.label = list(size = 7))
