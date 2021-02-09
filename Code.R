@@ -5392,8 +5392,8 @@ Geography.KO.tr.sam$Status <- as.factor(Geography.KO.tr.sam$Status)
 Geography.KO.tr.sam$Status <- factor(Geography.KO.tr.sam$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(Geography.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ Geography.KO.tr.sam$Status, perm=10000); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Geography.Ko.tr.txt")
+bdiv_bray <- adonis(brayd ~ Geography.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_Geography_KO.tr.txt")
                                                   
                                                   
 p1 = plot_ordination(Geography.KO.tr, ordinate(Geography.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
@@ -5408,7 +5408,7 @@ ko_PGB <- p1 +
 
 ko_PGBt <- ko_PGB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 ko_PGBt <- ko_PGBt + theme(legend.position="bottom")
-ko_PGBt <- ko_PGBt + annotate("text", x = -0.25, y = -0.35, label = expression(paste("p = 9.999x",10^-5)), size = 2.5)
+ko_PGBt <- ko_PGBt + annotate("text", x = -0.25, y = -0.35, label = expression(paste("p = 1x",10^-5)), size = 2.5)
 ko_PGBt <- ggarrange(ko_PGBt,labels = c("A"),font.label = list(size = 7))
                                                  
 
@@ -5419,8 +5419,8 @@ KinMas.KO.tr.sam$Status <- as.factor(KinMas.KO.tr.sam$Status)
 KinMas.KO.tr.sam$Status <- factor(KinMas.KO.tr.sam$Status, levels = c("Kinshasa", "Masimanimba"))
 
 brayd <- phyloseq::distance(KinMas.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ KinMas.KO.tr.sam$Status, perm=10000); bdiv_bray
-                                                  
+bdiv_bray <- adonis(brayd ~ KinMas.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_KinMas_KO.tr.txt")                                                  
                                                   
 p1 = plot_ordination(KinMas.KO.tr, ordinate(KinMas.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
@@ -5434,7 +5434,7 @@ ko_PKMB <- p1 +
 
 ko_PKMBt <- ko_PKMB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 ko_PKMBt <- ko_PKMBt + theme(legend.position="none")
-ko_PKMBt <- ko_PKMBt + annotate("text", x = -0.4, y = -0.3, label = expression(paste("p = 0.002")), size = 2)
+ko_PKMBt <- ko_PKMBt + annotate("text", x = -0.4, y = -0.3, label = expression(paste("p = 0.0017")), size = 2)
 ko_PKMBt <- ggarrange(ko_PKMBt,labels = c("B"),font.label = list(size = 7))                                                  
                                                   
 
@@ -5445,7 +5445,8 @@ KinULPZ.KO.tr.sam$Status <- as.factor(KinULPZ.KO.tr.sam$Status)
 KinULPZ.KO.tr.sam$Status <- factor(KinULPZ.KO.tr.sam$Status, levels = c("Kinshasa", "Unaffected_Low_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(KinULPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ KinULPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ KinULPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_KinULPZ_KO.tr.txt")                                                  
 
 p1 = plot_ordination(KinULPZ.KO.tr, ordinate(KinULPZ.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
@@ -5459,7 +5460,7 @@ ko_PKUB <- p1 +
 
 ko_PKUBt <- ko_PKUB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 ko_PKUBt <- ko_PKUBt + theme(legend.position="none")
-ko_PKUBt <- ko_PKUBt + annotate("text", x = -0.2, y = -0.22, label = expression(paste("p = 5X",10^-4)), size = 2)
+ko_PKUBt <- ko_PKUBt + annotate("text", x = -0.2, y = -0.22, label = expression(paste("p = 0.00045")), size = 2)
 ko_PKUBt <- ggarrange(ko_PKUBt,labels = c("C"),font.label = list(size = 7))                                                  
                                                   
                                                   
@@ -5470,7 +5471,8 @@ KinUHPZ.KO.tr.sam$Status <- as.factor(KinUHPZ.KO.tr.sam$Status)
 KinUHPZ.KO.tr.sam$Status <- factor(KinUHPZ.KO.tr.sam$Status, levels = c("Kinshasa", "Unaffected_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(KinUHPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ KinUHPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ KinUHPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_KinUHPZ_KO.tr.txt")                                                  
 
 p1 = plot_ordination(KinUHPZ.KO.tr, ordinate(KinUHPZ.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
@@ -5484,7 +5486,7 @@ ko_PKUHB <- p1 +
 
 ko_PKUHBt <- ko_PKUHB + stat_ellipse(type = "t") +  scale_y_continuous(position = "right")+ theme(plot.margin=unit(c(0.15,0.15,0.15,0.6), "lines"))
 ko_PKUHBt <- ko_PKUHBt + theme(legend.position="none")                                                                                                   
-ko_PKUHBt <- ko_PKUHBt + annotate("text", x = -0.16, y = -0.24, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+ko_PKUHBt <- ko_PKUHBt + annotate("text", x = -0.16, y = -0.24, label = expression(paste("p = 1x",10^-5)), size = 2)
 ko_PKUHBt <- ggarrange(ko_PKUHBt,labels = c("D"),font.label = list(size = 7))
                                                  
 #MasULPZ
@@ -5494,7 +5496,8 @@ MasULPZ.KO.tr.sam$Status <- as.factor(MasULPZ.KO.tr.sam$Status)
 MasULPZ.KO.tr.sam$Status <- factor(MasULPZ.KO.tr.sam$Status, levels = c("Masimanimba", "Unaffected_Low_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(MasULPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ MasULPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ MasULPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_MasULPZ_KO.tr.txt")                                                  
 
 p1 = plot_ordination(MasULPZ.KO.tr, ordinate(MasULPZ.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
@@ -5508,7 +5511,7 @@ ko_PMUB <- p1 +
 
 ko_PMUBt <- ko_PMUB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.25,0.25), "lines"))
 ko_PMUBt <- ko_PMUBt + theme(legend.position="none")
-ko_PMUBt <- ko_PMUBt + annotate("text", x = -0.21, y = -0.26, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+ko_PMUBt <- ko_PMUBt + annotate("text", x = -0.21, y = -0.26, label = expression(paste("p = 7x",10^-5)), size = 2)
 ko_PMUBt <- ggarrange(ko_PMUBt,labels = c("E"),font.label = list(size = 7))
                                                   
 #MasUHPZ  
@@ -5518,7 +5521,8 @@ MasUHPZ.KO.tr.sam$Status <- as.factor(MasUHPZ.KO.tr.sam$Status)
 MasUHPZ.KO.tr.sam$Status <- factor(MasUHPZ.KO.tr.sam$Status, levels = c("Masimanimba", "Unaffected_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(MasUHPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ MasUHPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ MasUHPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_MasUHPZ_KO.tr.txt")                                                  
 
 p1 = plot_ordination(MasUHPZ.KO.tr, ordinate(MasUHPZ.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
@@ -5532,7 +5536,7 @@ ko_PMUHB <- p1 +
 
 ko_PMUHBt <- ko_PMUHB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.85,0.25), "lines"))
 ko_PMUHBt <- ko_PMUHBt + theme(legend.position="none")
-ko_PMUHBt <- ko_PMUHBt + annotate("text", x = -0.22, y = -0.27, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+ko_PMUHBt <- ko_PMUHBt + annotate("text", x = -0.22, y = -0.27, label = expression(paste("p = 0.00021x")), size = 2)
 ko_PMUHBt <- ggarrange(ko_PMUHBt,labels = c("F"),font.label = list(size = 7))
                                                   
 Geo <- arrangeGrob(ko_PGBt, ko_PMUBt, ko_PMUHBt, ko_PKMBt, ko_PKUBt, ko_PKUHBt,                             
@@ -5550,7 +5554,8 @@ KinKLPZ.KO.tr.sam$Status <- as.factor(KinKLPZ.KO.tr.sam$Status)
 KinKLPZ.KO.tr.sam$Status <- factor(KinKLPZ.KO.tr.sam$Status, levels = c("Kinshasa", "Konzo_Low_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(KinKLPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ KinKLPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ KinKLPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_KinKLPZ_KO.tr.txt") #0.00287                                                 
 
 #KinKHPZ
 KinKHPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Kinshasa" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
@@ -5559,7 +5564,8 @@ KinKHPZ.KO.tr.sam$Status <- as.factor(KinKHPZ.KO.tr.sam$Status)
 KinKHPZ.KO.tr.sam$Status <- factor(KinKHPZ.KO.tr.sam$Status, levels = c("Kinshasa", "Konzo_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(KinKHPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ KinKHPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ KinKHPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_KinKHPZ_KO.tr.txt")    #1e-05                                              
                                                   
 #MasKLPZ
 MasKLPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Masimanimba" | KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
@@ -5568,7 +5574,8 @@ MasKLPZ.KO.tr.sam$Status <- as.factor(MasKLPZ.KO.tr.sam$Status)
 MasKLPZ.KO.tr.sam$Status <- factor(MasKLPZ.KO.tr.sam$Status, levels = c("Masimanimba", "Konzo_Low_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(MasKLPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ MasKLPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ MasKLPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_MasKLPZ_KO.tr.txt")    #7e-04                                              
 
 #MasKLPZ
 MasKHPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Masimanimba" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
@@ -5577,7 +5584,8 @@ MasKHPZ.KO.tr.sam$Status <- as.factor(MasKHPZ.KO.tr.sam$Status)
 MasKHPZ.KO.tr.sam$Status <- factor(MasKHPZ.KO.tr.sam$Status, levels = c("Masimanimba", "Konzo_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(MasKHPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ MasKHPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ MasKHPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_MasKHPZ_KO.tr.txt")   #3e-05                                               
                                                   
 #Control                                                  
 Control.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData_KO_tr)
@@ -5586,7 +5594,8 @@ Control.KO.tr.sam$Status <- as.factor(Control.KO.tr.sam$Status)
 Control.KO.tr.sam$Status <- factor(Control.KO.tr.sam$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(Control.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ Control.KO.tr.sam$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ Control.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_Control_KO.tr.txt")                                                  
                                             
 #Disease                                                  
 Disease.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData_KO_tr)
@@ -5595,7 +5604,8 @@ Disease.KO.tr.sam$Status <- as.factor(Disease.KO.tr.sam$Status)
 Disease.KO.tr.sam$Status <- factor(Disease.KO.tr.sam$Status, levels = c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(Disease.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ Disease.KO.tr.sam$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ Disease.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_Disease_KO.tr.txt")                                                  
 
                                                   
 #LPZ                                                  
@@ -5605,7 +5615,8 @@ LPZ.KO.tr.sam$Status <- as.factor(LPZ.KO.tr.sam$Status)
 LPZ.KO.tr.sam$Status <- factor(LPZ.KO.tr.sam$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(LPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ LPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ LPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_LPZ_KO.tr.txt")                                                  
 
                                                   
 #HPZ                                                 
@@ -5615,4 +5626,5 @@ HPZ.KO.tr.sam$Status <- as.factor(HPZ.KO.tr.sam$Status)
 HPZ.KO.tr.sam$Status <- factor(HPZ.KO.tr.sam$Status, levels = c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(HPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ HPZ.KO.tr.sam$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ HPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_HPZ_KO.tr.txt")                                                  
