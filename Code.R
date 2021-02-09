@@ -5595,7 +5595,7 @@ Control.KO.tr.sam$Status <- factor(Control.KO.tr.sam$Status, levels = c("Unaffec
 
 brayd <- phyloseq::distance(Control.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ Control.KO.tr.sam$Status, perm=99999); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_adonis_Control_KO.tr.txt")                                                  
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_Control_KO.tr.txt")  #0.08225                                                
                                             
 #Disease                                                  
 Disease.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData_KO_tr)
@@ -5605,7 +5605,7 @@ Disease.KO.tr.sam$Status <- factor(Disease.KO.tr.sam$Status, levels = c("Konzo_L
 
 brayd <- phyloseq::distance(Disease.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ Disease.KO.tr.sam$Status, perm=99999); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_adonis_Disease_KO.tr.txt")                                                  
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_Disease_KO.tr.txt")     #0.05258                                             
 
                                                   
 #LPZ                                                  
@@ -5616,7 +5616,7 @@ LPZ.KO.tr.sam$Status <- factor(LPZ.KO.tr.sam$Status, levels = c("Unaffected_Low_
 
 brayd <- phyloseq::distance(LPZ.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ LPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_adonis_LPZ_KO.tr.txt")                                                  
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_LPZ_KO.tr.txt")    #0.8878                                              
 
                                                   
 #HPZ                                                 
@@ -5627,4 +5627,4 @@ HPZ.KO.tr.sam$Status <- factor(HPZ.KO.tr.sam$Status, levels = c("Unaffected_High
 
 brayd <- phyloseq::distance(HPZ.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ HPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_adonis_HPZ_KO.tr.txt")                                                  
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_HPZ_KO.tr.txt")  #0.7856                                                
