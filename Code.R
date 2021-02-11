@@ -4549,28 +4549,28 @@ S <- KonzoData.S.tr
 S.tr_META <- as.data.frame(S@sam_data)
 S.tr_OTU <- as.data.frame(t(S@otu_table))
 S.tr.DF <- cbind(S.tr_OTU, S.tr_META$Status)
-S.tr.DF <- cbind(S.tr.DF, S.tr_META$Intervention)
+S.tr.DF <- cbind(S.tr.DF, S.tr_META$Geography)
 
 colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Status"] <- "Status"
-colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Intervention"] <- "Intervention"
+colnames(S.tr.DF)[colnames(S.tr.DF)=="S.tr_META$Geography"] <- "Geography"
 
 for (i in nrow(S.tr.DF))
 {S.tr.DF[i,]$Status <- KonzoData.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Status
 }
-S.tr.DF$Status <- factor(S.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+S.tr.DF$Status <- factor(S.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
 for (i in nrow(S.tr.DF))
-{S.tr.DF[i,]$Intervention <- KonzoData.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Intervention
+{S.tr.DF[i,]$Geography <- KonzoData.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Geography
 }
-S.tr.DF$Intervention <- factor(S.tr.DF$Intervention, levels = c("Kinshasa_Control", "Masimanimba_Control", "Kahemba_NonIntervention", "Kahemba_Intervention"))
+S.tr.DF$Geography <- factor(S.tr.DF$Geogarphy, levels = c("Kinshasa", "Masimanimba", "Low_Prevalence_Zone", "High_Prevalence_Zone"))
 
-#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention" ), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"), c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) 
+#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone), c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"), c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"), c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"), c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone")) 
 
 
 colnames(S.tr.DF)<- gsub( " ", ".", colnames(S.tr.DF)) 
 
 S.tr.DF.status <- melt(S.tr.DF[,c('Status', 'Leuconostoc.mesenteroides', 'Lactobacillus.plantarum', 'Lactococcus.lactis')],id.vars = 1)
-S.tr.DF.intervention <- melt(S.tr.DF[,c('Intervention','Leuconostoc.mesenteroides', 'Lactobacillus.plantarum', 'Lactococcus.lactis')],id.vars = 1)
+S.tr.DF.geography <- melt(S.tr.DF[,c('Geography','Leuconostoc.mesenteroides', 'Lactobacillus.plantarum', 'Lactococcus.lactis')],id.vars = 1)
 
 # for box plot: facet_zoom(ylim = c(0, 0.0015))
 
