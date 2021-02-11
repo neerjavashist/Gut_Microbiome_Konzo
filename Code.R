@@ -4592,7 +4592,7 @@ t6 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) +
 t6 <- t6 + theme(legend.position="top", legend.margin=margin(0,-10,-10,-10)) + scale_x_discrete(labels= SSSL) + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t6 <- t6 + scale_fill_discrete(labels = temp)
-t6 <- t6 + coord_cartesian(ylim = c(0, 0.0026)) + scale_y_continuous(breaks= seq(0.0005, 0.0026, by = 0.0015), expand = c(0,0))
+t6 <- t6 + coord_cartesian(ylim = c(0, 0.0026)) + scale_y_continuous(breaks= seq(0.0005, 0.0026, by = 0.001), expand = c(0,0))
 t6 <- t6 + theme(legend.position = "NA")
                                     
 t7 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
@@ -4600,67 +4600,64 @@ t7 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) +
 t7 <- t7 + theme(legend.position="top", legend.margin=margin(0,-10,-10,-10)) + scale_x_discrete(labels= SSSL, position = "top") + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t7 <- t7 + scale_fill_discrete(labels = temp) 
-t7 <- t7 + coord_cartesian(ylim = c(0.0013, 0.037), expand = FALSE) #+ scale_y_continuous(breaks= seq(0.0013, 0.037, by = 0.013), expand = c(0,0))   
-
-lab <- ggarrange(t7, t6, ncol = 1 ,heights = c(1.5,2), align = "v")
+t7 <- t7 + coord_cartesian(ylim = c(0.003, 0.037), expand = FALSE) + scale_y_continuous(breaks= seq(0.003, 0.037, by = 0.009), expand = c(0,0))  
                                     
-                                    
-lab <- arrangeGrob(t6, t7, ncol = 1, nrow = 5, layout_matrix = cbind(c(2,1,1,1,1)))
-lab <- as_ggplot(lab)                                   
+lab <- ggarrange(t7, t6, ncol = 1 ,heights = c(1,2), align = "v")                                
  
-tiff(filename = "Kinshasa_Konzo3_LAB_Species_BoxPlot_Zoomed.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
-t6
+tiff(filename = "Kinshasa_Konzo3_LAB_Species_BoxPlot_split.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
+lab                                    
 dev.off()
 
 ###
+#Beta-Glucosidase
+                                    
+K <- KonzoData_KO_tr.f
 
+K.tr_META <- as.data.frame(K@sam_data)
+K.tr_OTU <- as.data.frame(t(K@otu_table))
+K.tr.DF <- cbind(K.tr_OTU, K.tr_META$Status)
+K.tr.DF <- cbind(K.tr.DF, K.tr_META$Geography)
 
-G <- KonzoData.G.tr.log10
+colnames(K.tr.DF)[colnames(K.tr.DF)=="K.tr_META$Status"] <- "Status"
+colnames(K.tr.DF)[colnames(K.tr.DF)=="K.tr_META$Geography"] <- "Geography"
 
-G.tr_META <- as.data.frame(G@sam_data)
-G.tr_OTU <- as.data.frame(t(G@otu_table))
-G.tr.DF <- cbind(G.tr_OTU, G.tr_META$Status)
-G.tr.DF <- cbind(G.tr.DF, G.tr_META$Intervention)
-
-colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
-colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Intervention"] <- "Intervention"
-
-for (i in nrow(G.tr.DF))
-{G.tr.DF[i,]$Status <- KonzoData.G.tr.log10@sam_data[rownames(G.tr.DF[i,]),]$Status
+for (i in nrow(K.tr.DF))
+{K.tr.DF[i,]$Status <- KonzoData_KO_tr.f@sam_data[rownames(K.tr.DF[i,]),]$Status
 }
-G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+K.tr.DF$Status <- factor(K.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
-for (i in nrow(G.tr.DF))
-{G.tr.DF[i,]$Intervention <- KonzoData.G.tr.log10@sam_data[rownames(G.tr.DF[i,]),]$Intervention
+for (i in nrow(K.tr.DF))
+{K.tr.DF[i,]$Geography <- KonzoData_KO_tr.f@sam_data[rownames(K.tr.DF[i,]),]$Geography
 }
-G.tr.DF$Intervention <- factor(G.tr.DF$Intervention, levels = c("Kinshasa_Control", "Masimanimba_Control", "Kahemba_NonIntervention", "Kahemba_Intervention"))
+K.tr.DF$Geography <- factor(K.tr.DF$Geography, levels = c("Kinshasa", "Masimanimba", "Low_Prevalence_Zone", "High_Prevalence_Zone"))
 
-#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), 
-                        #c("Masimanimba", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), 
-                       #c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"), 
-                        #c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) #Turcibacter
+#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
+                        #c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone"), 
+                       #c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"), c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"), 
+                        #c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"), c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
+my_comparisons <- list(c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone")) #KO5350
+#ns: p > 0.05
+#*: p <= 0.05
+#**: p <= 0.01
+#***: p <= 0.001
+#****: p <= 0.0001
 
-my_comparisons <- list(c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), 
-                         c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), 
-                       c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"), 
-                        c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) #Turcibacter
-
-t <- ggplot(G.tr.DF,aes(x = Status,y = Turicibacter)) + 
-    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("log(rel. abund.) of ", italic("Turicibacter")))) + stat_boxplot(geom ='errorbar')
+t <- ggplot(K.tr.DF,aes(x = Status,y = K05350)) + 
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab("rel. abund. of K05350: beta-glucosidase [EC:3.2.1.21]") + stat_boxplot(geom ='errorbar')
 t <- t + geom_jitter(position=position_jitter(0.2), size = 0.3)
-t <- t + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
+t <- t + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t <- t + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
 
 
-tiff(filename = "Kinshasa_Konzo3_Genus_Turicibacter_BoxPlot_Log10.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
+tiff(filename = "Kinshasa_Konzo3_KO_K05350_betaglucosidase_BoxPlot.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
 t
 dev.off()
 
 ###
-tiff(filename = "Kinshasa_Konzo3_Turicibacter_LAB_BoxPlot.tiff", width = 5.5, height = 3.5, units = "in", res = 600)
-ggarrange(t,t6,labels = c("A","B"), widths = c(2.5, 3), ncol = 2, nrow = 1, font.label = list(size = 7), align = "hv")
+tiff(filename = "Kinshasa_Konzo3_LAB_K05350_BoxPlot.tiff", width = 5.5, height = 4, units = "in", res = 600)
+ggarrange(lab,t,labels = c("A","B"), widths = c(3, 2.5), ncol = 2, nrow = 1, font.label = list(size = 7), align = "hv")
 dev.off()
 
 ##### Supplemental Figures
