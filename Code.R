@@ -4590,20 +4590,21 @@ means = aggregate(. ~ Status + variable,
 t6 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
     geom_boxplot(aes(fill = variable), outlier.size = 0.5, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.")
 #t6 <- t6 + geom_jitter(position=position_jitter(0.2), size = 0.5)
-t6 <- t6 + theme(legend.position="bottom", legend.margin=margin(-10,0,0,0)) + scale_x_discrete(labels= SSSL) + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
+t6 <- t6 + theme(legend.position="top", legend.margin=margin(0,-10,-10,-10)) + scale_x_discrete(labels= SSSL) + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t6 <- t6 + scale_fill_discrete(labels = temp)
 #some extreme values are not shown in the plot (above 0.0017) and the full figure will be added in supplemental  
-t6 <- t6 + coord_cartesian(ylim = c(0, 0.00124)) + scale_y_continuous(breaks= seq(0, 0.00124, by = 0.0004))
+t6 <- t6 + coord_cartesian(ylim = c(0, 0.002)) + scale_y_continuous(breaks= seq(0, 0.002, by = 0.002))
+t6 <- t6 + theme(legend.position = "NA")
                                     
 t7 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
     geom_boxplot(aes(fill = variable), outlier.size = 0.5, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.") #  scale_x_discrete(labels= SSSL, position = "top")
 t7 <- t7 + theme(legend.position="top", legend.margin=margin(0,-10,-10,-10)) + scale_x_discrete(labels= SSSL, position = "top") + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t7 <- t7 + scale_fill_discrete(labels = temp)                                   
-t7 <- t7 + coord_cartesian(ylim = c(0.00121, 0.04), expand = FALSE) + scale_y_continuous(breaks= seq(0.00121, 0.04, by = 0.02))   
+t7 <- t7 + coord_cartesian(ylim = c(0.002, 0.04), expand = FALSE) + scale_y_continuous(breaks= seq(0.002, 0.04, by = 0.01))   
 
-lab <- ggarrange(t7, t6, ncol = 1 ,heights = c(2.5,3), align = "v")
+lab <- ggarrange(t7, t6, ncol = 1 ,heights = c(2,2), align = "hv")
                                     
                                     
 lab <- arrangeGrob(t6, t7, ncol = 1, nrow = 5, layout_matrix = cbind(c(2,1,1,1,1)))
