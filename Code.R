@@ -4542,7 +4542,7 @@ tiff(filename = "Kahemba_Genus_NonInt_Int_PCoA.tiff", width = 3.5, height = 1.75
 ggarrange(PNIBt, PIBt, labels = c("A","B"), ncol = 2, nrow = 1, font.label = list(size = 7))
 dev.off()
 
-#Figure 7: Turicibacter and LAB
+#Figure 7:LAB and Beta-glucosidase
 
 S <- KonzoData.S.tr
 
@@ -4562,7 +4562,7 @@ S.tr.DF$Status <- factor(S.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "
 for (i in nrow(S.tr.DF))
 {S.tr.DF[i,]$Geography <- KonzoData.S.tr@sam_data[rownames(S.tr.DF[i,]),]$Geography
 }
-S.tr.DF$Geography <- factor(S.tr.DF$Geogarphy, levels = c("Kinshasa", "Masimanimba", "Low_Prevalence_Zone", "High_Prevalence_Zone"))
+S.tr.DF$Geography <- factor(S.tr.DF$Geography, levels = c("Kinshasa", "Masimanimba", "Low_Prevalence_Zone", "High_Prevalence_Zone"))
 
 #my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone), c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"), c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"), c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"), c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone")) 
 
@@ -4593,9 +4593,13 @@ t6 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) +
 t6 <- t6 + theme(legend.position="top", legend.margin=margin(0,-10,-10,-10)) + scale_x_discrete(labels= SSSL) + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t6 <- t6 + scale_fill_discrete(labels = temp)
-#some extreme values are not shown in the plot (above 0.0017) and the full figure will be added in supplemental                                             
-t6 <- t6 + scale_y_continuous(expand = c(0,0), limits = c(0,0.0017))
+#some extreme values are not shown in the plot (above 0.0017) and the full figure will be added in supplemental   
+t7 <- t6 + coord_cartesian(ylim = c(0.0017, 0.04), expand = FALSE)  #scale_y_continuous(expand = c(0.0017,0.0017), limits = c(0.0017, 0.04))                                
+t6 <- t6 + coord_cartesian(ylim = c(0, 0.0017)) #scale_y_continuous(expand = c(0,0), limits = c(0,0.0017))
 
+lab <- ggarrange(t7, t6, ncol = 1,heights = c(1,4), align = "hv")
+lab <- arrangeGrob(t6, t7, ncol = 1, nrow = 5, layout_matrix = cbind(c(2,1,1,1,1)))
+lab <- as_ggplot(lab)                                   
  
 tiff(filename = "Kinshasa_Konzo3_LAB_Species_BoxPlot_Zoomed.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
 t6
