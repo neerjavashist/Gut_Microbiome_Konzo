@@ -4657,7 +4657,7 @@ dev.off()
 
 ###
 tiff(filename = "Kinshasa_Konzo3_LAB_K05350_BoxPlot.tiff", width = 6, height = 4, units = "in", res = 600)
-ggarrange(lab,t,labels = c("A","B"), widths = c(3.5, 2.5), ncol = 2, nrow = 1, font.label = list(size = 7), align = "h")
+ggarrange(lab,t,labels = c("A","B"), widths = c(3.5, 2.5), ncol = 2, nrow = 1, font.label = list(size = 7))
 dev.off()
 
 ##### Supplemental Figures
