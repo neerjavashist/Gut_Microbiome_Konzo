@@ -4636,7 +4636,7 @@ K.tr.DF$Geography <- factor(K.tr.DF$Geography, levels = c("Kinshasa", "Masimanim
                        #c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"), c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"), 
                         #c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"), c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
-my_comparisons <- list(c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone")) #KO5350
+my_comparisons <- list(c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone")) #KO5350
 #ns: p > 0.05
 #*: p <= 0.05
 #**: p <= 0.01
@@ -4644,11 +4644,11 @@ my_comparisons <- list(c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Ma
 #****: p <= 0.0001
 
 t <- ggplot(K.tr.DF,aes(x = Status,y = K05350)) + 
-    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab("rel. abund. of K05350: beta-glucosidase [EC:3.2.1.21]") + stat_boxplot(geom ='errorbar')
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab("Rel. Abund. of K05350: beta-glucosidase [EC:3.2.1.21]") + stat_boxplot(geom ='errorbar')
 t <- t + geom_jitter(position=position_jitter(0.2), size = 0.3)
 t <- t + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
-t <- t + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+t <- t + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
 
 
 tiff(filename = "Kinshasa_Konzo3_KO_K05350_betaglucosidase_BoxPlot.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
