@@ -4588,7 +4588,7 @@ means = aggregate(. ~ Status + variable,
                   data = S.tr.DF.status, FUN = mean)
 
 t6 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
-    geom_boxplot(aes(fill = variable), outlier.size = 0.5, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.")
+    geom_boxplot(aes(fill = variable), outlier.size = 0.3, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.")
 t6 <- t6 + theme(legend.position="bottom", legend.margin=margin(0,0,0,0)) + scale_x_discrete(labels= SSSL) + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t6 <- t6 + scale_fill_discrete(labels = temp)
@@ -4596,7 +4596,7 @@ t6 <- t6 + coord_cartesian(ylim = c(0, 0.0026)) + scale_y_continuous(breaks= seq
 
                                     
 t7 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
-    geom_boxplot(aes(fill = variable), outlier.size = 0.5, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.") #  scale_x_discrete(labels= SSSL, position = "top")
+    geom_boxplot(aes(fill = variable), outlier.size = 0.3, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.") #  scale_x_discrete(labels= SSSL, position = "top")
 t7 <- t7 + theme(legend.position="bottom", legend.margin=margin(0,0,0,0)) + scale_x_discrete(labels= SSSL, position = "top") + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t7 <- t7 + scale_fill_discrete(labels = temp) 
@@ -4646,9 +4646,9 @@ my_comparisons <- list(c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Ma
 
 t <- ggplot(K.tr.DF,aes(x = Status,y = K05350)) + 
     geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab("Rel. Abund. of K05350: beta-glucosidase [EC:3.2.1.21]") + stat_boxplot(geom ='errorbar')
-t <- t + geom_jitter(position=position_jitter(0.2), size = 0.3)
+t <- t + geom_jitter(position=position_jitter(0.2), size = 0.2)
 t <- t + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 5), axis.title.x = element_blank())
 t <- t + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
 
 
@@ -4664,7 +4664,7 @@ dev.off()
                                     
 #E. coli
 ec <- ggplot(S.tr.DF,aes(x = Status, y = S.tr.DF$Escherichia.coli)) + 
-    geom_boxplot(aes(fill = Status), outlier.size = 0.5, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Escherichia coli"))))
+    geom_boxplot(aes(fill = Status), outlier.size = 0.2, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Escherichia coli"))))
 ec <- ec + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 ec <- ec + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
@@ -4719,7 +4719,7 @@ ggarrange(ec,r,labels = c("C","D"), ncol = 2, nrow = 1, font.label = list(size =
 dev.off() 
                                     
                                     
-tiff(filename = "Kinshasa_Konzo3_Lab_Ecoli_Functional_BoxPlot.tiff", width = 7, height = 5, units = "in", res = 600)
+tiff(filename = "Kinshasa_Konzo3_Lab_Ecoli_Functional_BoxPlot.tiff", width = 7, height = 4, units = "in", res = 600)
 ggarrange(lab, ec, t ,r,labels = c("A", "C","B","D"), heights = c(3,2), ncol = 2, nrow = 2, font.label = list(size = 7))
 dev.off()                                     
                                     
