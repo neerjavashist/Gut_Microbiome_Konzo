@@ -4589,18 +4589,19 @@ means = aggregate(. ~ Status + variable,
 
 t6 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
     geom_boxplot(aes(fill = variable), outlier.size = 0.5, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.")
-t6 <- t6 + theme(legend.position="top", legend.margin=margin(0,-10,-10,-10)) + scale_x_discrete(labels= SSSL) + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
+t6 <- t6 + theme(legend.position="bottom", legend.margin=margin(0,0,0,0)) + scale_x_discrete(labels= SSSL) + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t6 <- t6 + scale_fill_discrete(labels = temp)
 t6 <- t6 + coord_cartesian(ylim = c(0, 0.0026)) + scale_y_continuous(breaks= seq(0.0005, 0.0026, by = 0.001), expand = c(0,0))
-t6 <- t6 + theme(legend.position = "NA")
+
                                     
 t7 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
     geom_boxplot(aes(fill = variable), outlier.size = 0.5, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.") #  scale_x_discrete(labels= SSSL, position = "top")
-t7 <- t7 + theme(legend.position="top", legend.margin=margin(0,-10,-10,-10)) + scale_x_discrete(labels= SSSL, position = "top") + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
+t7 <- t7 + theme(legend.position="bottom", legend.margin=margin(0,0,0,0)) + scale_x_discrete(labels= SSSL, position = "top") + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t7 <- t7 + scale_fill_discrete(labels = temp) 
-t7 <- t7 + coord_cartesian(ylim = c(0.003, 0.037), expand = FALSE) + scale_y_continuous(breaks= seq(0.003, 0.037, by = 0.009), expand = c(0,0))  
+t7 <- t7 + coord_cartesian(ylim = c(0.0035, 0.037)) + scale_y_continuous(breaks= seq(0.0035, 0.037, by = 0.01), expand = c(0,0))  
+t7 <- t7 + theme(legend.position = "NA")
                                     
 lab <- ggarrange(t7, t6, ncol = 1 ,heights = c(1,2), align = "v")                                
  
@@ -4668,9 +4669,60 @@ ec <- ec + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 ec <- ec + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
                                     
-                                    
-                                    
 
+#Rhodanase (K01011)
+#thiosulfate/3-mercaptopyruvate sulfurtransferase [EC:2.8.1.1, 2.8.1.2]                                    
+                                    
+K <- KonzoData_KO_tr
+
+K.tr_META <- as.data.frame(K@sam_data)
+K.tr_OTU <- as.data.frame(t(K@otu_table))
+K.tr.DF <- cbind(K.tr_OTU, K.tr_META$Status)
+K.tr.DF <- cbind(K.tr.DF, K.tr_META$Geography)
+
+colnames(K.tr.DF)[colnames(K.tr.DF)=="K.tr_META$Status"] <- "Status"
+colnames(K.tr.DF)[colnames(K.tr.DF)=="K.tr_META$Geography"] <- "Geography"
+
+for (i in nrow(K.tr.DF))
+{K.tr.DF[i,]$Status <- KonzoData_KO_tr@sam_data[rownames(K.tr.DF[i,]),]$Status
+}
+K.tr.DF$Status <- factor(K.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
+
+for (i in nrow(K.tr.DF))
+{K.tr.DF[i,]$Geography <- KonzoData_KO_tr@sam_data[rownames(K.tr.DF[i,]),]$Geography
+}
+K.tr.DF$Geography <- factor(K.tr.DF$Geography, levels = c("Kinshasa", "Masimanimba", "Low_Prevalence_Zone", "High_Prevalence_Zone"))
+                                    
+#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
+                        #c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone"), 
+                       #c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"), c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"), 
+                        #c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"), c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
+
+my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone")) #K01011
+
+#ns: p > 0.05
+#*: p <= 0.05
+#**: p <= 0.01
+#***: p <= 0.001
+#****: p <= 0.0001
+
+r <- ggplot(K.tr.DF,aes(x = Status,y = K01011)) + 
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of K01011: \nthiosulfate/3-mercaptopyruvate sulfurtransferase \n[EC:2.8.1.1, 2.8.1.2]"))) + stat_boxplot(geom ='errorbar')
+r <- r + geom_jitter(position=position_jitter(0.2), size = 0.3)
+r <- r + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+r <- r + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
+
+                                    
+tiff(filename = "Kinshasa_Konzo3_Ecoli_K01011_BoxPlot.tiff", width = 6, height = 4, units = "in", res = 600)
+ggarrange(ec,r,labels = c("C","D"), ncol = 2, nrow = 1, font.label = list(size = 7))
+dev.off() 
+                                    
+                                    
+tiff(filename = "Kinshasa_Konzo3_Lab_Ecoli_Functional_BoxPlot.tiff", width = 7, height = 5, units = "in", res = 600)
+ggarrange(lab, ec, t ,r,labels = c("A", "C","B","D"), heights = c(3,2), ncol = 2, nrow = 2, font.label = list(size = 7))
+dev.off()                                     
+                                    
 ##### Supplemental Figures
                                              
 ## Supplementary Figure 1:
