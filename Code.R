@@ -4659,6 +4659,17 @@ dev.off()
 tiff(filename = "Kinshasa_Konzo3_LAB_K05350_BoxPlot.tiff", width = 6, height = 4, units = "in", res = 600)
 ggarrange(lab,t,labels = c("A","B"), widths = c(3.5, 2.5), ncol = 2, nrow = 1, font.label = list(size = 7))
 dev.off()
+                                    
+                                    
+#E. coli
+ec <- ggplot(S.tr.DF,aes(x = Status, y = S.tr.DF$Escherichia.coli)) + 
+    geom_boxplot(aes(fill = Status), outlier.size = 0.5, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Escherichia coli"))))
+ec <- ec + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+ec <- ec + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
+                                    
+                                    
+                                    
 
 ##### Supplemental Figures
                                              
