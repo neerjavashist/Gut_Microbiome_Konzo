@@ -4710,7 +4710,7 @@ r <- ggplot(K.tr.DF,aes(x = Status,y = K01011)) +
     geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of K01011: \nthiosulfate/3-mercaptopyruvate sulfurtransferase \n[EC:2.8.1.1, 2.8.1.2]"))) + stat_boxplot(geom ='errorbar')
 r <- r + geom_jitter(position=position_jitter(0.2), size = 0.3)
 r <- r + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 4), axis.title.x = element_blank())
 r <- r + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
 
                                     
@@ -4719,7 +4719,7 @@ ggarrange(ec,r,labels = c("C","D"), ncol = 2, nrow = 1, font.label = list(size =
 dev.off() 
                                     
                                     
-tiff(filename = "Kinshasa_Konzo3_Lab_Ecoli_Functional_BoxPlot.tiff", width = 7, height = 4, units = "in", res = 600)
+tiff(filename = "Kinshasa_Konzo3_Lab_Ecoli_Functional_BoxPlot.tiff", width = 7, height = 5, units = "in", res = 600)
 ggarrange(lab, ec, t ,r,labels = c("A", "C","B","D"), heights = c(3,2), ncol = 2, nrow = 2, font.label = list(size = 7))
 dev.off()                                     
                                     
