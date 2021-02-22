@@ -1676,7 +1676,7 @@ x <- read.csv("Kinshasa_Konzo3_Class_f_0.0001.csv", row.names = 1, colClasses = 
 f_0.0001 <- unlist(x)
                                              
 #KINSHASA AND MASIMANIMBA
-KinMas.C <- prune_samples(KonzoData.C@sam_data$Status == "Kinshasa" | KonzoData.C@sam_data$Status == "Unaffected_Low_Prevalence_Zone", KonzoData.C)                                        
+KinMas.C <- prune_samples(KonzoData.C@sam_data$Status == "Kinshasa" | KonzoData.C@sam_data$Status == "Masimanimba", KonzoData.C)                                        
 KinMas.C.tr <- transform_sample_counts(KinMas.C, function(x) x / sum(x))                                             
 KinMas.C.tr.f <- prune_taxa(f_0.0001, KinMas.C.tr)  
 
@@ -1729,6 +1729,56 @@ write.csv(t(KinMas.C.tr.f.status.0.01@otu_table), file = "./KinMas_Bacteria_Clas
 MWW_class <- WT
                                         
 #KINSHASA AND UNAFFECTED LPZ
+KinULPZ.C <- prune_samples(KonzoData.C@sam_data$Status == "Kinshasa" | KonzoData.C@sam_data$Status == "Unaffected_Low_Prevalence_Zone", KonzoData.C)                                        
+KinULPZ.C.tr <- transform_sample_counts(KinULPZ.C, function(x) x / sum(x))                                             
+KinULPZ.C.tr.f <- prune_taxa(f_0.0001, KinULPZ.C.tr)  
+
+C <- KinULPZ.C.tr.f
+                                               
+C.tr_META <- as.data.frame(C@sam_data)
+C.tr_OTU <- as.data.frame(t(C@otu_table))
+C.tr.DF <- cbind(C.tr_OTU, C.tr_META$Status)
+
+colnames(C.tr.DF)[colnames(C.tr.DF)=="C.tr_META$Status"] <- "Status"
+for (i in 1:nrow(C.tr.DF))
+  {C.tr.DF[i,]$Status <- KinULPZ.C.tr.f@sam_data[rownames(C.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 3)
+colnames(WT) <- c("Bacteria Class", "Kinshasa vs. ULPZ p-value", "Kinshasa vs. ULPZ p-value adjusted")
+
+for (i in 1:(ncol(C.tr.DF)-1))
+{
+  wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF)
+  WT[i,1] = colnames(C.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+                                       
+WT[,3] <- p.adjust(WT[,2], method = "BH")   
+write.csv(WT, file = "KinULPZ_Bacteria_Class_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+                                      
+WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
+write.csv(WT.05, file = "KinULPZ_Bacteria_Class_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
+write.csv(WT.01, file = "KinULPZ_Bacteria_Class_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+
+ls_0.05 <- WT.05[,1]
+KinULPZ.C.tr.f.0.05 <- prune_taxa(ls_0.05,KinULPZ.C.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+KinULPZ.C.tr.f.0.01 <- prune_taxa(ls_0.01,KinULPZ.C.tr.f)                                        
+                                        
+write.csv(KinULPZ.C.tr.f.0.05@otu_table, file = "./KinULPZ_Bacteria_Class_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(KinULPZ.C.tr.f.0.01@otu_table, file = "./KinULPZ_Bacteria_Class_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+                                        
+KinULPZ.C.tr.f.status <- merge_samples(KinULPZ.C.tr.f, KinULPZ.C.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+KinULPZ.C.tr.f.status <- transform_sample_counts(KinULPZ.C.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+KinULPZ.C.tr.f.status.0.05 <- prune_taxa(ls_0.05,KinULPZ.C.tr.f.status)                                        
+KinULPZ.C.tr.f.status.0.01 <- prune_taxa(ls_0.01,KinULPZ.C.tr.f.status)                                        
+                                                                                                
+write.csv(t(KinULPZ.C.tr.f.status.0.05@otu_table), file = "./KinULPZ_Bacteria_Class_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(KinULPZ.C.tr.f.status.0.01@otu_table), file = "./KinULPZ_Bacteria_Class_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                                                                                                                                                                                                                  
+                                                
 MWW_class <- merge(MWW_class,WT,by="Bacteria Class", sort = FALSE)
                                                 
                                                 
