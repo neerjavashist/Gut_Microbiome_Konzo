@@ -1729,7 +1729,9 @@ write.csv(t(KinMas.C.tr.f.status.0.01@otu_table), file = "./KinMas_Bacteria_Clas
 MWW_class <- WT
                                         
 #KINSHASA AND UNAFFECTED LPZ
-                                      
+MWW_class <- merge(MWW_class,WT,by="Bacteria Class", sort = FALSE)
+                                                
+                                                
 #MASIMANIMBA AND UNAFFECTED LPZ
 
 #KINSHASA AND UNAFFECTED HPZ 
