@@ -4008,7 +4008,7 @@ ec <- ec + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_
 ec <- ec + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
                                     
 
-#Rhodanase (K01011)
+#Rhodanese (K01011)
 #thiosulfate/3-mercaptopyruvate sulfurtransferase [EC:2.8.1.1, 2.8.1.2]                                    
                                     
 K <- KonzoData_KO_tr
@@ -4030,6 +4030,11 @@ for (i in nrow(K.tr.DF))
 {K.tr.DF[i,]$Geography <- KonzoData_KO_tr@sam_data[rownames(K.tr.DF[i,]),]$Geography
 }
 K.tr.DF$Geography <- factor(K.tr.DF$Geography, levels = c("Kinshasa", "Masimanimba", "Low_Prevalence_Zone", "High_Prevalence_Zone"))
+                                    
+                                    
+pw_wt <-  pairwise.wilcox.test(K.tr.DF$K01011, K.tr.DF$Status, p.adj = "none")
+capture.output(pw_wt, file="KinshasaKonzo3_pairwiseMWW_K01011_rhodanese.txt")                                                
+                                    
                                     
 #my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
                         #c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone"), 
