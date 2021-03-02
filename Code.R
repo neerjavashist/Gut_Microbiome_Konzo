@@ -5042,3 +5042,41 @@ HPZ.KO.tr.sam$Status <- factor(HPZ.KO.tr.sam$Status, levels = c("Unaffected_High
 brayd <- phyloseq::distance(HPZ.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ HPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
 #capture.output(bdiv_bray, file="relabund_bdiv_adonis_HPZ_KO.tr.txt")  #0.7856                                                
+
+                                                  
+                                                  
+                                                  
+                                                  
+#HEAT MAP for FUNCTIONAL 
+Geography_KO_otu <- (t(as.data.frame(Geography.KO.tr.f.status@otu_table)))
+Geography_spec_otu <- spec
+Geography_spec_otu[3:6] <- NA
+colnames(Geography_spec_otu) <- c("KO", "Pathway", "Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone")
+for (i in 1:nrow(spec))
+{
+  Geography_spec_otu[i,3:6] <- Geography_KO_otu[spec[i,1],]
+}
+Geography_spec_otu <- data.frame(Geography_spec_otu[,-1], row.names=make.names(Geography_spec_otu[,1], unique=TRUE))
+nlevels(factor(Geography_spec_otu$Pathway))
+
+o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))                                                 
+tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap_V1.tiff", width = 3.5, height = 2.8, units = "in", res = 600)
+heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,2), lwid = c(0.1,1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3,0),c(2,1,1,0),c(2,1,1,0),c(2,1,1,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
+dev.off() 
+
+col1=rainbow(25)
+Geography_spec_otu$Pathway <-factor(Geography_spec_otu$Pathway)
+col2= col1[as.numeric(Geography_spec_otu$Pathway)] 
+
+#sideCols=brewer.pal(24, "Set3")[as.integer(Geography_spec_otu[colnames(as.matrix(Geography_spec_otu)) ,"Pathway"]) ]
+heatmap.2(as.matrix(Geography_spec_otu[2:5]), scale = "row", trace = "none", labCol = c("Kin", "Mas", "ULPZ", "UHPZ"), dendrogram = "column", Rowv=FALSE, RowSideColors = col2, srtCol = 0)#, srtRow = 90 )
+legend("bottomright",      
+       legend = unique(Geography_spec_otu$Pathway),
+       col = col1[unique(as.numeric(Geography_spec_otu$Pathway))], 
+       lty= 1,             
+       lwd = 3,           
+       cex=.4
+)                                                  
+                                                  
+                                                  
+                                                  
