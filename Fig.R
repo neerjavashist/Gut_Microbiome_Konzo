@@ -231,8 +231,17 @@ tiff(filename = "Overall_Geography_KO_PCoA_Corr.tiff", width = 2.5, height = 2.5
 ggarrange(as_ggplot(G2))
 dev.off()
 
-tiff(filename = "Overall_Geography_Genus_KO_PCoA_Corr.tiff", width = 2.5, height = 5, units = "in", res = 600)
-ggarrange(as_ggplot(G), as_ggplot(G2), ncol = 1, nrow = 2)
+
+s <- plot_spacer() + theme_minimal()
+
+placeholder <-  ggarrange(s, labels = c("C"), font.label = list(size = 5), ncol = 1, nrow = 1)    
+
+geo <- ggarrange(as_ggplot(G), as_ggplot(G2), ncol = 1, nrow = 2)
+
+geo_ph <- ggarrange(geo,placeholder, widths = c(2.5, 4.5), ncol = 2, nrow = 1)
+
+tiff(filename = "Overall_Geography_Genus_KO_PCoA_Corr_WithoutKOHeatMap.tiff", width = 7, height = 5, units = "in", res = 600)
+geo_ph
 dev.off()
 
 
