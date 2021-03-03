@@ -114,7 +114,7 @@ G <- arrangeGrob(PGBt, a1,                               # bar plot spaning two 
              ncol = 2, nrow = 2,
              layout_matrix = rbind(c(1,1,1,3), c(1,1,1,3), c(1,1,1,3), c(2, 2, 2, 4)))
 
-tiff(filename = "Overall_Geography_Genus_PCoA_Corr.tiff", width = 2.5, height = 2.5, units = "in", res = 600)
+tiff(filename = "Overall_Geography_Genus_PCoA_Corr.tiff", width = 3, height = 2.5, units = "in", res = 600)
 ggarrange(as_ggplot(G))
 dev.off()
 
@@ -227,7 +227,7 @@ G2 <- arrangeGrob(PGBt, a1,                               # bar plot spaning two
              ncol = 2, nrow = 2,
              layout_matrix = rbind(c(1,1,1,3), c(1,1,1,3), c(1,1,1,3), c(2, 2, 2, 4)))
 
-tiff(filename = "Overall_Geography_KO_PCoA_Corr.tiff", width = 2.5, height = 2.5, units = "in", res = 600)
+tiff(filename = "Overall_Geography_KO_PCoA_Corr.tiff", width = 3, height = 2.5, units = "in", res = 600)
 ggarrange(as_ggplot(G2))
 dev.off()
 
@@ -238,7 +238,7 @@ placeholder <-  ggarrange(s, labels = c("C"), font.label = list(size = 5), ncol 
 
 geo <- ggarrange(as_ggplot(G), as_ggplot(G2), ncol = 1, nrow = 2)
 
-geo_ph <- ggarrange(geo,placeholder, widths = c(2.5, 4.5), ncol = 2, nrow = 1)
+geo_ph <- ggarrange(geo,placeholder, widths = c(3, 4), ncol = 2, nrow = 1)
 
 tiff(filename = "Overall_Geography_Genus_KO_PCoA_Corr_WithoutKOHeatMap.tiff", width = 7, height = 5, units = "in", res = 600)
 geo_ph
