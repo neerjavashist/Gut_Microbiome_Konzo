@@ -1892,7 +1892,59 @@ x <- read.csv("Kinshasa_Konzo3_Family_f_0.0001.csv", row.names = 1, colClasses =
 f_0.0001 <- unlist(x)
                                              
 #KINSHASA AND MASIMANIMBA
+KinMas.F <- prune_samples(KonzoData.F@sam_data$Status == "Kinshasa" | KonzoData.F@sam_data$Status == "Masimanimba", KonzoData.F)                                        
+KinMas.F.tr <- transform_sample_counts(KinMas.F, function(x) x / sum(x))                                             
+KinMas.F.tr.f <- prune_taxa(f_0.0001, KinMas.F.tr)  
 
+F <- KinMas.F.tr.f
+                                               
+F.tr_META <- as.data.frame(F@sam_data)
+F.tr_OTU <- as.data.frame(t(F@otu_table))
+F.tr.DF <- cbind(F.tr_OTU, F.tr_META$Status)
+
+colnames(F.tr.DF)[colnames(F.tr.DF)=="F.tr_META$Status"] <- "Status"
+for (i in 1:nrow(F.tr.DF))
+  {F.tr.DF[i,]$Status <- KinMas.F.tr.f@sam_data[rownames(F.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 3)
+colnames(WT) <- c("Bacteria Family", "Kinshasa vs. Masi-manimba p-value", "Kinshasa vs. Masi-manimba p-value adjusted")
+
+for (i in 1:(ncol(F.tr.DF)-1))
+{
+  wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF)
+  WT[i,1] = colnames(F.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+                                       
+WT[,3] <- p.adjust(WT[,2], method = "BH")   
+write.csv(WT, file = "KinMas_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+                                      
+WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
+write.csv(WT.05, file = "KinMas_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
+write.csv(WT.01, file = "KinMas_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+
+ls_0.05 <- WT.05[,1]
+KinMas.F.tr.f.0.05 <- prune_taxa(ls_0.05,KinMas.F.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+KinMas.F.tr.f.0.01 <- prune_taxa(ls_0.01,KinMas.F.tr.f)                                        
+                                        
+write.csv(KinMas.F.tr.f.0.05@otu_table, file = "./KinMas_Bacteria_Family_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(KinMas.F.tr.f.0.01@otu_table, file = "./KinMas_Bacteria_Family_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+                                        
+KinMas.F.tr.f.status <- merge_samples(KinMas.F.tr.f, KinMas.F.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+KinMas.F.tr.f.status <- transform_sample_counts(KinMas.F.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+KinMas.F.tr.f.status.0.05 <- prune_taxa(ls_0.05,KinMas.F.tr.f.status)                                        
+KinMas.F.tr.f.status.0.01 <- prune_taxa(ls_0.01,KinMas.F.tr.f.status)                                        
+                                                                                               
+write.csv(t(KinMas.F.tr.f.status.0.05@otu_table), file = "./KinMas_Bacteria_Family_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(KinMas.F.tr.f.status.0.01@otu_table), file = "./KinMas_Bacteria_Family_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+                                                                                       
+MWW_family <- WT
+                                                
+                                                
 #KINSHASA AND UNAFFECTED LPZ
                                         
 #MASIMANIMBA AND UNAFFECTED LPZ                                        
