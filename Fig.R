@@ -197,7 +197,7 @@ a1 <- a1 + geom_smooth(method=lm, color = "black", size = 0.5) + theme(plot.marg
 a2 <- ggplot(K.tr.DF, aes(x = K01190, y = Axis.2)) +
     geom_point(aes(color = factor(Status)), size = 0.75, stroke = 0, shape = 16) + theme_classic() + xlab("K01190") + theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 5))
 a2 <- a2 + scale_color_manual(labels = SL, values = geography_color) + theme(legend.position="none", panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme (axis.title.x = element_text(size = 5), axis.text.x = element_text(size = 5))  
-a2 <- a2 + scale_y_continuous(position = "right") + scale_x_continuous(position = "top", breaks = seq(0.008, 0.016, by = 0.016))
+a2 <- a2 + scale_y_continuous(position = "right") + scale_x_continuous(position = "top", breaks = seq(0.004, 0.016, by = 0.008))
 a2 <- a2 + geom_smooth(method=lm, color = "black", size = 0.5) + theme(plot.margin=unit(c(0.1,0,0.1,0.025), "lines"))
 
 p1 = plot_ordination(Geography.KO.tr, ordinate(Geography.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
