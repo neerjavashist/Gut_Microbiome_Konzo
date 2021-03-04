@@ -250,6 +250,9 @@ dev.off()
 
 #Edit for Heatmap
 
+heatmap.2(as.matrix(Geography_spec_otu[2:5]), scale = "row", trace = "none", col = brewer.pal(9, "YlOrBr"), labCol = c("Kin", "Mas", "ULPZ", "UHPZ"), labRow = "Kegg Orthology IDs", margins = c(1,1), dendrogram = "column", Rowv=FALSE, RowSideColors = col2, srtCol = 0, srtRow = 90,  cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,2), lwid = c(0.1,1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3,0),c(2,1,1,0),c(2,1,1,0),c(2,1,1,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
+
+
 o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))                                                 
 tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap_V1.tiff", width = 3.5, height = 2.8, units = "in", res = 600)
 heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,2), lwid = c(0.1,1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3,0),c(2,1,1,0),c(2,1,1,0),c(2,1,1,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
