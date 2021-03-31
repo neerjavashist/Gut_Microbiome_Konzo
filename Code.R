@@ -3610,7 +3610,7 @@ for(i in 1:sum100)
           }
 }
 
-G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kinshasa", "Masimanimba","Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention"))
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kinshasa", "Masimanimba","Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
 #G.tr.DF now has the rel abund data, with eigen values for each axis as additional columns so correlation can be done between genus relative abundance and PCoA Axis values to see which genus correlated the best with each Axis values
                                              
@@ -3700,8 +3700,9 @@ PKMBt <- PKMB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.
 PKMBt <- PKMBt + theme(legend.position="none")
 PKMBt <- PKMBt + annotate("text", x = 0.4, y = -0.43, label = expression(paste("p = 2x",10^-4)), size = 2)
 PKMBt <- ggarrange(PKMBt,labels = c("B"),font.label = list(size = 7))
+                                    
 #KinULPZ
-p1 = plot_ordination(KinCNI.G.tr, ordinate(KinCNI.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(KinULPZ.G.tr, ordinate(KinULPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 #p1 <- as_ggplot(p1)
@@ -3715,8 +3716,9 @@ PKUBt <- PKUB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.
 PKUBt <- PKUBt + theme(legend.position="none")
 PKUBt <- PKUBt + annotate("text", x = 0.4, y = -0.43, label = expression(paste("p = 0.0014")), size = 2)
 PKUBt <- ggarrange(PKUBt,labels = c("C"),font.label = list(size = 7))
+                                    
 #MasULPZ
-p1 = plot_ordination(MasCNI.G.tr, ordinate(MasCNI.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(MasULPZ.G.tr, ordinate(MasULPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 #p1 <- as_ggplot(p1)
@@ -3732,7 +3734,7 @@ PMUBt <- PMUBt + annotate("text", x = 0.34, y = -0.27, label = expression(paste(
 PMUBt <- ggarrange(PMUBt,labels = c("E"),font.label = list(size = 7))
 
 #KinUHPZ
-p1 = plot_ordination(KinCI.G.tr, ordinate(KinCI.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(KinUHPZ.G.tr, ordinate(KinUHPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 #p1 <- as_ggplot(p1)
@@ -3747,8 +3749,8 @@ PKUHBt <- PKUHBt + theme(legend.position="none")
 PKUHBt <- PKUHBt + annotate("text", x = 0.35, y = -0.43, label = expression(paste("p = 9.999x",10^-5)), size = 2)
 PKUHBt <- ggarrange(PKUHBt,labels = c("D"),font.label = list(size = 7))
 
-#MasULPZ
-p1 = plot_ordination(MasCI.G.tr, ordinate(MasCI.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+#MasUHPZ
+p1 = plot_ordination(MasUHPZ.G.tr, ordinate(MasUHPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 #p1 <- as_ggplot(p1)
@@ -3793,7 +3795,7 @@ G.tr.DF["Status"] <- NA
 G.tr.DF["Axis.1"] <- NA
 G.tr.DF["Axis.2"] <- NA
 
-G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention"))
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
 for (i in 1:nrow(G.tr.DF))
   {G.tr.DF[i,]$Status <- Control.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Status
