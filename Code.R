@@ -3898,11 +3898,10 @@ for (i in nrow(G.tr.DF))
 }
 G.tr.DF$Intervention <- factor(G.tr.DF$Intervention, levels = c("Low_Prevalence_Zone", "High_Prevalence_Zone"))
 
-#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), 
-                        #c("Masimanimba", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), 
-                       #c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"), 
-                        #c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) #Turcibacter
-
+#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
+                        #c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone"), 
+                       #c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"), c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"), 
+                        #c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"), c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
 my_comparisons <- list(c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
@@ -3960,7 +3959,7 @@ p1 = plot_ordination(LPZ.G.tr, ordinate(LPZ.G.tr, method="PCoA", dist="bray"), t
 p1$layers <- p1$layers[-1]
 PNIB <- p1 + 
   labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
-                                axis.line = element_line(colour = "black")) + scale_color_manual(values = nonintervention_color, labels = SSSL)+
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = lpz_color, labels = SSSL)+
   theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom", legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
@@ -3968,12 +3967,12 @@ PNIBt <- PNIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
 PNIBt <- PNIBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.9161")), size = 2)
 
 #UHPZ vs. KHPZ
-p1 = plot_ordination(Intervention.G.tr, ordinate(Intervention.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(HPZ.G.tr, ordinate(HPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 PIB <- p1 + 
   labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
-                                axis.line = element_line(colour = "black")) + scale_color_manual(values = intervention_color, labels = SSSL)+
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = hpz_color, labels = SSSL)+
   theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom", legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
@@ -3981,7 +3980,7 @@ PIB <- p1 +
 PIBt <- PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
 PIBt <- PIBt + annotate("text", x = 0.45, y = -0.4, label = expression(paste("p = 0.5784")), size = 2)
 
-tiff(filename = "Kahemba_Genus_NonInt_Int_PCoA.tiff", width = 3.5, height = 1.75, units = "in", res = 600)
+tiff(filename = "Kahemba_Genus_LPZ_HPZ_PCoA.tiff", width = 3.5, height = 1.75, units = "in", res = 600)
 ggarrange(PNIBt, PIBt, labels = c("A","B"), ncol = 2, nrow = 1, font.label = list(size = 7))
 dev.off()
 
@@ -4172,7 +4171,9 @@ ggarrange(lab, ec, t ,r,labels = c("A", "C","B","D"), heights = c(3,2), ncol = 2
 dev.off()                                     
                                     
 ##### Supplemental Figures
-                                             
+
+####    ------>   NEEDS UPDATING ASAP                                    
+                                    
 ## Supplementary Figure 1:
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken")                                             
 diet <- read.csv("./Kinshasa_Konzo3_Diet.csv")
@@ -4279,7 +4280,7 @@ top_O <- unlist(top_O)
 KonzoData.O.tr.status.top = prune_taxa(top_O, KonzoData.O.tr.status)
 
 p <- plot_bar(KonzoData.O.tr.status.top, "Sample", "Abundance", fill = 'order')
-p$data$Sample <- factor(p$data$Sample, levels = c("Kahemba_Konzo_Intervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_NonIntervention", "Masimanimba", "Kinshasa"))
+p$data$Sample <- factor(p$data$Sample, levels = c("Konzo_High_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_Low_Prevalence_Zone", "Masimanimba", "Kinshasa"))
 
 p <- p + labs(x = element_blank(), y = "Relative Abundance") +  scale_fill_discrete(name = "Order")
 top_order_plot <- p + theme(legend.position="bottom") + theme(legend.key.size = unit(.4, "cm"))
@@ -4298,6 +4299,11 @@ top_order_plot
 
 #Box Plot for Ratio of Prevotella / Bacteroides (Genus)
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
+                                    
+#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
+                        #c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone"), 
+                       #c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"), c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"), 
+                        #c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"), c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
 #my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention" ), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"), c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) 
 
