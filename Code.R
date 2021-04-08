@@ -3883,20 +3883,20 @@ G <- Control.G.tr
 G.tr_META <- as.data.frame(G@sam_data)
 G.tr_OTU <- as.data.frame(t(G@otu_table))
 G.tr.DF <- cbind(G.tr_OTU, G.tr_META$Status)
-G.tr.DF <- cbind(G.tr.DF, G.tr_META$Intervention)
+G.tr.DF <- cbind(G.tr.DF, G.tr_META$Geography)
 
 colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
-colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Intervention"] <- "Intervention"
+colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Geography"] <- "Geography"
 
 for (i in nrow(G.tr.DF))
 {G.tr.DF[i,]$Status <- Control.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Status
 }
-G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kahemba_Control_NonIntervention" ,"Kahemba_Control_Intervention"))
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Unaffected_Low_Prevalence_Zone" ,"Unaffected_High_Prevalence_Zone"))
 
 for (i in nrow(G.tr.DF))
-{G.tr.DF[i,]$Intervention <- Control.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Intervention
+{G.tr.DF[i,]$Geography <- Control.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Geography
 }
-G.tr.DF$Intervention <- factor(G.tr.DF$Intervention, levels = c("Kahemba_NonIntervention", "Kahemba_Intervention"))
+G.tr.DF$Intervention <- factor(G.tr.DF$Intervention, levels = c("Low_Prevalence_Zone", "High_Prevalence_Zone"))
 
 #my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), 
                         #c("Masimanimba", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), 
@@ -3904,7 +3904,7 @@ G.tr.DF$Intervention <- factor(G.tr.DF$Intervention, levels = c("Kahemba_NonInte
                         #c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) #Turcibacter
 
 
-my_comparisons <- list(c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention"))
+my_comparisons <- list(c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
 #remove outlier.shape = NA and add outlier.size if you don't want jitter
 p <- ggplot(G.tr.DF,aes(x = Status,y = Prevotella)) + 
@@ -3955,7 +3955,7 @@ dev.off()
 #Figure 6: Kahemba Disease Genus PCoA
 #PCoA for Kahemba
 #ULPZ vs. KLPZ
-p1 = plot_ordination(NonIntervention.G.tr, ordinate(NonIntervention.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(LPZ.G.tr, ordinate(LPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 PNIB <- p1 + 
