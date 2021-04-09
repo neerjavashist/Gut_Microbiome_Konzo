@@ -4253,7 +4253,7 @@ top_C <- unlist(top_C)
 KonzoData.C.tr.status.top = prune_taxa(top_C, KonzoData.C.tr.status)
 
 p <- plot_bar(KonzoData.C.tr.status.top, "Sample", "Abundance", fill = 'class')
-p$data$Sample <- factor(p$data$Sample, levels = c("Kahemba_Konzo_Intervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_NonIntervention", "Masimanimba", "Kinshasa"))
+p$data$Sample <- factor(p$data$Sample, levels = c("Konzo_High_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_Low_Prevalence_Zone", "Masimanimba", "Kinshasa"))
 #p <- p + geom_bar(stat = "identity") + coord_flip()
 p <- p + labs(x = element_blank(), y = "Relative Abundance") +  scale_fill_discrete(name = "Class")
 top_class_plot <- p + theme(legend.position="bottom") + theme(legend.key.size = unit(.4, "cm"))
@@ -4307,7 +4307,7 @@ setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/Kinshas
 
 #my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention" ), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"), c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) 
 
-my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention")) 
+my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone")) 
 
 
 temp <- as.data.frame(t(otu_table(KonzoData.G.tr)))
@@ -4316,7 +4316,7 @@ BP <- temp[,400:401, drop = FALSE]
 
 BP$Status <- "Mis"
 BP$Ratio <- 0
-BP$Status <- factor(BP$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention","Kahemba_Konzo_NonIntervention","Kahemba_Control_Intervention","Kahemba_Konzo_Intervention"))
+BP$Status <- factor(BP$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone","Konzo_Low_Prevalence_Zone","Unaffected_High_Prevalence_Zone","Konzo_High_Prevalence_Zone"))
 
 for (i in 1:nrow(BP))
 {BP[i,]$Status <- KonzoData.G.tr@sam_data[rownames(BP[i,]),]$Status
