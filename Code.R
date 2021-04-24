@@ -4174,12 +4174,12 @@ dev.off()
 
 ####    ------>   NEEDS UPDATING ASAP                                    
                                     
-## Supplementary Figure 1:
+#Supplementary Figure 1
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken")                                             
-diet <- read.csv("./Kinshasa_Konzo3_Diet.csv")
-                                             
-diet$Status <- factor(diet$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba"))
+diet <- read.csv("./Kinshasa_Konzo3_Diet_3.csv")
 
+diet$Status <- factor(diet$Status, levels = c("Kinshasa", "Masimanimba", "Low_Prevalence_Zone", "High_Prevalence_Zone"))
+diet$Food <- factor(diet$Food, levels = c("Maize/Rice", "Other Cereals", "Bread/Wheat", "Tubers and Other Roots", "Pulses", "Meat", "Oil Crops", "Milk/Dairy Products", "Vegetables", "Other Greens", "Fruits", "Sweets", "Red Palm Oil", "Vegetable Oil"))
 
 empty_bar <- 2
 to_add <- data.frame( matrix(NA, empty_bar*nlevels(diet$Status), ncol(diet)) )
@@ -4209,7 +4209,7 @@ grid_diet <- grid_diet[-1,]
 
 
 p <- ggplot(diet, aes(x=as.factor(id), y=Frequency, fill=Food)) +       # Note that id is a factor. If x is numeric, there is some space between the first bar
-  geom_bar(aes(x=as.factor(id), y=Frequency, fill=Food), stat="identity", width = 1) +
+  geom_bar(aes(x=as.factor(id), y=Frequency, fill=Food), colour = "black", stat="identity", width = 1) +
   
   # Add a val=100/75/50/25 lines. I do it at the beginning to make sur barplots are OVER it.
   geom_segment(data=grid_diet, aes(x = end, y = 7, xend = start, yend = 7), colour = "black", alpha=1, size=0.2 , inherit.aes = FALSE ) +
@@ -4229,18 +4229,18 @@ p <- ggplot(diet, aes(x=as.factor(id), y=Frequency, fill=Food)) +       # Note t
     panel.grid = element_blank(),
     plot.margin = unit(rep(-1,4), "cm"), 
     legend.text = element_text(size = 5),
-    legend.key.size = unit(.2, "cm"),
+    legend.key.size = unit(.25, "cm"),
     legend.title = element_blank()
   ) + 
   guides(fill=guide_legend(ncol=2,byrow=TRUE)) +
   coord_polar() +
-  geom_segment(data=base_diet, aes(x = start, y = -1, xend = end, yend = -1), colour = "black", size=0.3 , inherit.aes = FALSE ) + geom_text(data=base_diet, aes(x = title, y = -2.5, label=Status), hjust=c(1,0.5,1), angle=c(-45, 0, 75), colour = "black", size=2.5, inherit.aes = FALSE)
+  geom_segment(data=base_diet, aes(x = start, y = -1, xend = end, yend = -1), colour = "black", size=0.3 , inherit.aes = FALSE ) + geom_text(data=base_diet, aes(x = title, y = -2.5, label=c("Kinshasa", "Masimanimba","LPZ", "HPZ")), hjust=c(0.5,0.5, 0.5,0.5), angle=c(-45, 45, -45, 45), colour = "black", size=2.5, inherit.aes = FALSE)
 
 p
 
-tiff(filename = "KinshasaKonzo3_Diet.tiff", width =6, height = 6, units = "in", res = 600)
+tiff(filename = "KinshasaKonzo3_Diet.tiff", width = 5.5, height = 5.5, units = "in", res = 600)
 p
-dev.off()                                             
+dev.off()                                     
                                              
 ## Supplementary Figure 2:
 
