@@ -69,6 +69,11 @@ kinulpz_color <- c("royalblue1",    "turquoise3")
 masulpz_color <- c("springgreen3",     "turquoise3")
 kinuhpz_color <- c("royalblue1",  "slateblue1")
 masuhpz_color <- c("springgreen3","slateblue1")
+kinklpz_color <- c("royalblue1",    "tomato" )
+masklpz_color <- c("springgreen3",    "tomato" )
+kinkhpz_color <- c("royalblue1",    "gold")
+maskhpz_color <- c("springgreen3",     "gold")
+
 
 lpz_color <- c("turquoise3",        "tomato" )
 hpz_color <- c( "slateblue1",        "gold")
