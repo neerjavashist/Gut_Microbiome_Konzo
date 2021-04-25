@@ -998,7 +998,7 @@ for (i in 1:nrow(P.tr.DF))
   }
                                           
 WT <- matrix(nrow = ncol(P.tr_OTU), ncol = 3)
-colnames(WT) <- c("Bacteria Phylum", "Kinshasa vs. Masi-manimba p-value" "Kinshasa vs. Masi-manimba p-value adjusted")
+colnames(WT) <- c("Bacteria Phylum", "Kinshasa vs. Masi-manimba p-value" ,"Kinshasa vs. Masi-manimba p-value adjusted")
 for (i in 1:(ncol(P.tr.DF)-1)) #ncol - 1 because the last column is Status, so need to run test on that
 {
   wt <- wilcox.test(P.tr.DF[,i] ~P.tr.DF$Status, data = P.tr.DF)
@@ -1063,26 +1063,26 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "KinULPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                       
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT.05, file = "KinULPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+#write.csv(WT.05, file = "KinULPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT.01, file = "KinULPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+#write.csv(WT.01, file = "KinULPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
-ls_0.05 <- WT.05[,1]
-KinULPZ.P.tr.f.0.05 <- prune_taxa(ls_0.05,KinULPZ.P.tr.f)                                        
-ls_0.01 <- WT.01[,1] 
-KinULPZ.P.tr.f.0.01 <- prune_taxa(ls_0.01,KinULPZ.P.tr.f)                                        
+#ls_0.05 <- WT.05[,1]
+#KinULPZ.P.tr.f.0.05 <- prune_taxa(ls_0.05,KinULPZ.P.tr.f)                                        
+#ls_0.01 <- WT.01[,1] 
+#KinULPZ.P.tr.f.0.01 <- prune_taxa(ls_0.01,KinULPZ.P.tr.f)                                        
                                         
-write.csv(KinULPZ.P.tr.f.0.05@otu_table, file = "./KinULPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
-write.csv(KinULPZ.P.tr.f.0.01@otu_table, file = "./KinULPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+#write.csv(KinULPZ.P.tr.f.0.05@otu_table, file = "./KinULPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+#write.csv(KinULPZ.P.tr.f.0.01@otu_table, file = "./KinULPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
                                         
 KinULPZ.P.tr.f.status <- merge_samples(KinULPZ.P.tr.f, KinULPZ.P.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
 KinULPZ.P.tr.f.status <- transform_sample_counts(KinULPZ.P.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
 
-KinULPZ.P.tr.f.status.0.05 <- prune_taxa(ls_0.05,KinULPZ.P.tr.f.status)                                        
-KinULPZ.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,KinULPZ.P.tr.f.status)                                        
+#KinULPZ.P.tr.f.status.0.05 <- prune_taxa(ls_0.05,KinULPZ.P.tr.f.status)                                        
+#KinULPZ.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,KinULPZ.P.tr.f.status)                                        
                                                                                                 
-write.csv(t(KinULPZ.P.tr.f.status.0.05@otu_table), file = "./KinULPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
-write.csv(t(KinULPZ.P.tr.f.status.0.01@otu_table), file = "./KinULPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+#write.csv(t(KinULPZ.P.tr.f.status.0.05@otu_table), file = "./KinULPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+#write.csv(t(KinULPZ.P.tr.f.status.0.01@otu_table), file = "./KinULPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
                                                 
 MWW_phylum <- merge(MWW_phylum,WT,by="Bacteria Phylum", sort = FALSE)
  
@@ -1225,24 +1225,24 @@ write.csv(WT, file = "MasUHPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH.cs
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
 write.csv(WT.05, file = "MasUHPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT.01, file = "MasUHPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+#write.csv(WT.01, file = "MasUHPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
 ls_0.05 <- WT.05[,1]
 MasUHPZ.P.tr.f.0.05 <- prune_taxa(ls_0.05,MasUHPZ.P.tr.f)                                        
-ls_0.01 <- WT.01[,1] 
-MasUHPZ.P.tr.f.0.01 <- prune_taxa(ls_0.01,MasUHPZ.P.tr.f)                                        
+#ls_0.01 <- WT.01[,1] 
+#MasUHPZ.P.tr.f.0.01 <- prune_taxa(ls_0.01,MasUHPZ.P.tr.f)                                        
 
 write.csv(MasUHPZ.P.tr.f.0.05@otu_table, file = "./MasUHPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
-write.csv(MasUHPZ.P.tr.f.0.01@otu_table, file = "./MasUHPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+#write.csv(MasUHPZ.P.tr.f.0.01@otu_table, file = "./MasUHPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
 
 MasUHPZ.P.tr.f.status <- merge_samples(MasUHPZ.P.tr.f, MasUHPZ.P.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
 MasUHPZ.P.tr.f.status <- transform_sample_counts(MasUHPZ.P.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
 
 MasUHPZ.P.tr.f.status.0.05 <- prune_taxa(ls_0.05,MasUHPZ.P.tr.f.status)                                        
-MasUHPZ.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,MasUHPZ.P.tr.f.status)                                        
+#MasUHPZ.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,MasUHPZ.P.tr.f.status)                                        
 
 write.csv(t(MasUHPZ.P.tr.f.status.0.05@otu_table), file = "./MasUHPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
-write.csv(t(MasUHPZ.P.tr.f.status.0.01@otu_table), file = "./MasUHPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+#write.csv(t(MasUHPZ.P.tr.f.status.0.01@otu_table), file = "./MasUHPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
 MWW_phylum <- merge(MWW_phylum,WT,by="Bacteria Phylum", sort = FALSE)                                                 
                                                  
@@ -1278,26 +1278,26 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "KinKLPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                       
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT.05, file = "KinKLPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+#write.csv(WT.05, file = "KinKLPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT.01, file = "KinKLPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+#write.csv(WT.01, file = "KinKLPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
-ls_0.05 <- WT.05[,1]
-KinKLPZ.P.tr.f.0.05 <- prune_taxa(ls_0.05,KinKLPZ.P.tr.f)                                        
-ls_0.01 <- WT.01[,1] 
-KinKLPZ.P.tr.f.0.01 <- prune_taxa(ls_0.01,KinKLPZ.P.tr.f)                                        
+#ls_0.05 <- WT.05[,1]
+#KinKLPZ.P.tr.f.0.05 <- prune_taxa(ls_0.05,KinKLPZ.P.tr.f)                                        
+#ls_0.01 <- WT.01[,1] 
+#KinKLPZ.P.tr.f.0.01 <- prune_taxa(ls_0.01,KinKLPZ.P.tr.f)                                        
                                         
-write.csv(KinKLPZ.P.tr.f.0.05@otu_table, file = "./KinKLPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
-write.csv(KinKLPZ.P.tr.f.0.01@otu_table, file = "./KinKLPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+#write.csv(KinKLPZ.P.tr.f.0.05@otu_table, file = "./KinKLPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+#write.csv(KinKLPZ.P.tr.f.0.01@otu_table, file = "./KinKLPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
                                         
 KinKLPZ.P.tr.f.status <- merge_samples(KinKLPZ.P.tr.f, KinKLPZ.P.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
 KinKLPZ.P.tr.f.status <- transform_sample_counts(KinKLPZ.P.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
 
-KinKLPZ.P.tr.f.status.0.05 <- prune_taxa(ls_0.05,KinKLPZ.P.tr.f.status)                                        
-KinKLPZ.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,KinKLPZ.P.tr.f.status)                                        
+#KinKLPZ.P.tr.f.status.0.05 <- prune_taxa(ls_0.05,KinKLPZ.P.tr.f.status)                                        
+#KinKLPZ.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,KinKLPZ.P.tr.f.status)                                        
                                                                                                 
-write.csv(t(KinKLPZ.P.tr.f.status.0.05@otu_table), file = "./KinKLPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
-write.csv(t(KinKLPZ.P.tr.f.status.0.01@otu_table), file = "./KinKLPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+#write.csv(t(KinKLPZ.P.tr.f.status.0.05@otu_table), file = "./KinKLPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+#write.csv(t(KinKLPZ.P.tr.f.status.0.01@otu_table), file = "./KinKLPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
                                                 
 MWW_phylum <- merge(MWW_phylum,WT,by="Bacteria Phylum", sort = FALSE)                                                 
                                                  
@@ -1546,26 +1546,26 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "Disease_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                       
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT.05, file = "Disease_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+#write.csv(WT.05, file = "Disease_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT.01, file = "Disease_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+#write.csv(WT.01, file = "Disease_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
-ls_0.05 <- WT.05[,1]
-Disease.P.tr.f.0.05 <- prune_taxa(ls_0.05,Disease.P.tr.f)                                        
-ls_0.01 <- WT.01[,1] 
-Disease.P.tr.f.0.01 <- prune_taxa(ls_0.01,Disease.P.tr.f)                                        
+#ls_0.05 <- WT.05[,1]
+#Disease.P.tr.f.0.05 <- prune_taxa(ls_0.05,Disease.P.tr.f)                                        
+#ls_0.01 <- WT.01[,1] 
+#Disease.P.tr.f.0.01 <- prune_taxa(ls_0.01,Disease.P.tr.f)                                        
                                         
-write.csv(Disease.P.tr.f.0.05@otu_table, file = "./Disease_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
-write.csv(Disease.P.tr.f.0.01@otu_table, file = "./Disease_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+#write.csv(Disease.P.tr.f.0.05@otu_table, file = "./Disease_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+#write.csv(Disease.P.tr.f.0.01@otu_table, file = "./Disease_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
                                         
 Disease.P.tr.f.status <- merge_samples(Disease.P.tr.f, Disease.P.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
 Disease.P.tr.f.status <- transform_sample_counts(Disease.P.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
 
-Disease.P.tr.f.status.0.05 <- prune_taxa(ls_0.05,Disease.P.tr.f.status)                                        
-Disease.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,Disease.P.tr.f.status)                                        
+#Disease.P.tr.f.status.0.05 <- prune_taxa(ls_0.05,Disease.P.tr.f.status)                                        
+#Disease.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,Disease.P.tr.f.status)                                        
                                                                                                 
-write.csv(t(Disease.P.tr.f.status.0.05@otu_table), file = "./Disease_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
-write.csv(t(Disease.P.tr.f.status.0.01@otu_table), file = "./Disease_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+#write.csv(t(Disease.P.tr.f.status.0.05@otu_table), file = "./Disease_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+#write.csv(t(Disease.P.tr.f.status.0.01@otu_table), file = "./Disease_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
                                                 
 MWW_phylum <- merge(MWW_phylum,WT,by="Bacteria Phylum", sort = FALSE)
 
@@ -1600,26 +1600,26 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "LPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                       
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT.05, file = "LPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+#write.csv(WT.05, file = "LPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT.01, file = "LPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+#write.csv(WT.01, file = "LPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
-ls_0.05 <- WT.05[,1]
-LPZ.P.tr.f.0.05 <- prune_taxa(ls_0.05,LPZ.P.tr.f)                                        
-ls_0.01 <- WT.01[,1] 
-LPZ.P.tr.f.0.01 <- prune_taxa(ls_0.01,LPZ.P.tr.f)                                        
+#ls_0.05 <- WT.05[,1]
+#LPZ.P.tr.f.0.05 <- prune_taxa(ls_0.05,LPZ.P.tr.f)                                        
+#ls_0.01 <- WT.01[,1] 
+#LPZ.P.tr.f.0.01 <- prune_taxa(ls_0.01,LPZ.P.tr.f)                                        
                                         
-write.csv(LPZ.P.tr.f.0.05@otu_table, file = "./LPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
-write.csv(LPZ.P.tr.f.0.01@otu_table, file = "./LPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+#write.csv(LPZ.P.tr.f.0.05@otu_table, file = "./LPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+#write.csv(LPZ.P.tr.f.0.01@otu_table, file = "./LPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
                                         
 LPZ.P.tr.f.status <- merge_samples(LPZ.P.tr.f, LPZ.P.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
 LPZ.P.tr.f.status <- transform_sample_counts(LPZ.P.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
 
-LPZ.P.tr.f.status.0.05 <- prune_taxa(ls_0.05,LPZ.P.tr.f.status)                                        
-LPZ.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,LPZ.P.tr.f.status)                                        
+#LPZ.P.tr.f.status.0.05 <- prune_taxa(ls_0.05,LPZ.P.tr.f.status)                                        
+#LPZ.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,LPZ.P.tr.f.status)                                        
                                                                                                 
-write.csv(t(LPZ.P.tr.f.status.0.05@otu_table), file = "./LPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
-write.csv(t(LPZ.P.tr.f.status.0.01@otu_table), file = "./LPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+#write.csv(t(LPZ.P.tr.f.status.0.05@otu_table), file = "./LPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+#write.csv(t(LPZ.P.tr.f.status.0.01@otu_table), file = "./LPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
                                                 
 MWW_phylum <- merge(MWW_phylum,WT,by="Bacteria Phylum", sort = FALSE)  
                                              
@@ -1654,27 +1654,30 @@ WT[,3] <- p.adjust(WT[,2], method = "BH")
 write.csv(WT, file = "HPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH.csv")
                                       
 WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
-write.csv(WT.05, file = "HPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+#write.csv(WT.05, file = "HPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
 WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
-write.csv(WT.01, file = "HPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+#write.csv(WT.01, file = "HPZ_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
 
-ls_0.05 <- WT.05[,1]
-HPZ.P.tr.f.0.05 <- prune_taxa(ls_0.05,HPZ.P.tr.f)                                        
-ls_0.01 <- WT.01[,1] 
-HPZ.P.tr.f.0.01 <- prune_taxa(ls_0.01,HPZ.P.tr.f)                                        
+#ls_0.05 <- WT.05[,1]
+#HPZ.P.tr.f.0.05 <- prune_taxa(ls_0.05,HPZ.P.tr.f)                                        
+#ls_0.01 <- WT.01[,1] 
+#HPZ.P.tr.f.0.01 <- prune_taxa(ls_0.01,HPZ.P.tr.f)                                        
                                         
-write.csv(HPZ.P.tr.f.0.05@otu_table, file = "./HPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
-write.csv(HPZ.P.tr.f.0.01@otu_table, file = "./HPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+#write.csv(HPZ.P.tr.f.0.05@otu_table, file = "./HPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+#write.csv(HPZ.P.tr.f.0.01@otu_table, file = "./HPZ_Bacteria_Phylum_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
                                         
 HPZ.P.tr.f.status <- merge_samples(HPZ.P.tr.f, HPZ.P.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
 HPZ.P.tr.f.status <- transform_sample_counts(HPZ.P.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
 
-HPZ.P.tr.f.status.0.05 <- prune_taxa(ls_0.05,HPZ.P.tr.f.status)                                        
-HPZ.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,HPZ.P.tr.f.status)                                        
+#HPZ.P.tr.f.status.0.05 <- prune_taxa(ls_0.05,HPZ.P.tr.f.status)                                        
+#HPZ.P.tr.f.status.0.01 <- prune_taxa(ls_0.01,HPZ.P.tr.f.status)                                        
                                                                                                 
-write.csv(t(HPZ.P.tr.f.status.0.05@otu_table), file = "./HPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
-write.csv(t(HPZ.P.tr.f.status.0.01@otu_table), file = "./HPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
-                     
+#write.csv(t(HPZ.P.tr.f.status.0.05@otu_table), file = "./HPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+#write.csv(t(HPZ.P.tr.f.status.0.01@otu_table), file = "./HPZ_Bacteria_Phylum_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+                                             
+MWW_phylum <- merge(MWW_phylum,WT,by="Bacteria Phylum", sort = FALSE)  
+write.csv(MWW_phylum, file = "Kinshasa_Konzo3_Bacteria_Phylum_f_0.0001_ByStatus_WilcoxTest_BH.csv")                                            
+                                             
 #Bacteria Class
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
 x <- read.csv("Kinshasa_Konzo3_Class_f_0.0001.csv", row.names = 1, colClasses = "character")
