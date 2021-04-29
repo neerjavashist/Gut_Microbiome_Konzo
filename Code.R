@@ -2163,8 +2163,59 @@ write.csv(t(MasKHPZ.C.tr.f.status.0.01@otu_table), file = "./MasKHPZ_Bacteria_Cl
                                                 
 MWW_class <- merge(MWW_class,WT,by="Bacteria Class", sort = FALSE)  
                                                  
-#UNAFFECTED LPZ vs. HPZ
-                                             
+#CONTROL (UNAFFECTED LPZ vs. HPZ)
+Control.C <- prune_samples(KonzoData.C@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData.C@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData.C)                                        
+Control.C.tr <- transform_sample_counts(Control.C, function(x) x / sum(x))                                             
+Control.C.tr.f <- prune_taxa(f_0.0001, Control.C.tr)  
+
+C <- Control.C.tr.f
+                                               
+C.tr_META <- as.data.frame(C@sam_data)
+C.tr_OTU <- as.data.frame(t(C@otu_table))
+C.tr.DF <- cbind(C.tr_OTU, C.tr_META$Status)
+
+colnames(C.tr.DF)[colnames(C.tr.DF)=="C.tr_META$Status"] <- "Status"
+for (i in 1:nrow(C.tr.DF))
+  {C.tr.DF[i,]$Status <- Control.C.tr.f@sam_data[rownames(C.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(C.tr_OTU), ncol = 3)
+colnames(WT) <- c("Bacteria Class", "ULPZ vs. UHPZ p-value", "ULPZ vs. UHPZ p-value adjusted")
+
+for (i in 1:(ncol(C.tr.DF)-1))
+{
+  wt <- wilcox.test(C.tr.DF[,i] ~C.tr.DF$Status, data = C.tr.DF)
+  WT[i,1] = colnames(C.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+                                       
+WT[,3] <- p.adjust(WT[,2], method = "BH")   
+write.csv(WT, file = "Control_Bacteria_Class_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+                                      
+WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
+write.csv(WT.05, file = "Control_Bacteria_Class_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
+write.csv(WT.01, file = "Control_Bacteria_Class_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+
+ls_0.05 <- WT.05[,1]
+Control.C.tr.f.0.05 <- prune_taxa(ls_0.05,Control.C.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+Control.C.tr.f.0.01 <- prune_taxa(ls_0.01,Control.C.tr.f)                                        
+                                        
+write.csv(Control.C.tr.f.0.05@otu_table, file = "./Control_Bacteria_Class_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(Control.C.tr.f.0.01@otu_table, file = "./Control_Bacteria_Class_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+                                        
+Control.C.tr.f.status <- merge_samples(Control.C.tr.f, Control.C.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+Control.C.tr.f.status <- transform_sample_counts(Control.C.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+Control.C.tr.f.status.0.05 <- prune_taxa(ls_0.05,Control.C.tr.f.status)                                        
+Control.C.tr.f.status.0.01 <- prune_taxa(ls_0.01,Control.C.tr.f.status)                                        
+                                                                                                
+write.csv(t(Control.C.tr.f.status.0.05@otu_table), file = "./Control_Bacteria_Class_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(Control.C.tr.f.status.0.01@otu_table), file = "./Control_Bacteria_Class_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                                                                                                                                                                                                                  
+                                                
+MWW_class <- merge(MWW_class,WT,by="Bacteria Class", sort = FALSE)   
+                                                 
 #DISEASE (KONZO LPZ vs. HPZ)
                                           
 #LPZ (UNAFFECTED LPZ vs. KONZO LPZ)
