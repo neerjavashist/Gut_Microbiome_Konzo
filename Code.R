@@ -2373,7 +2373,7 @@ HPZ.C.tr.f.status <- transform_sample_counts(HPZ.C.tr.f.status, function(x) x / 
 #write.csv(t(HPZ.C.tr.f.status.0.05@otu_table), file = "./HPZ_Bacteria_Class_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
 #write.csv(t(HPZ.C.tr.f.status.0.01@otu_table), file = "./HPZ_Bacteria_Class_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                                                                                                                                                                                                                                                                                                               
                        
-MWW_class <- merge(MWW_phylum,WT,by="Bacteria Class", sort = FALSE)  
+MWW_class <- merge(MWW_class,WT,by="Bacteria Class", sort = FALSE)  
 write.csv(MWW_class, file = "Kinshasa_Konzo3_Bacteria_Class_f_0.0001_ByStatus_WilcoxTest_BH.csv")                                            
                                                  
 #Bacteria Order
