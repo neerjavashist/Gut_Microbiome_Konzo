@@ -3555,12 +3555,215 @@ write.csv(t(MasKHPZ.F.tr.f.status.0.01@otu_table), file = "./MasKHPZ_Bacteria_Fa
 MWW_family <- merge(MWW_family,WT,by="Bacteria Family", sort = FALSE)                                                                               
                                        
 #CONTROL (UNAFFECTED)
+Control.F <- prune_samples(KonzoData.F@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData.F@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData.F)                                        
+Control.F.tr <- transform_sample_counts(Control.F, function(x) x / sum(x))                                             
+Control.F.tr.f <- prune_taxa(f_0.0001, Control.F.tr)  
+
+F <- Control.F.tr.f
+                                               
+F.tr_META <- as.data.frame(F@sam_data)
+F.tr_OTU <- as.data.frame(t(F@otu_table))
+F.tr.DF <- cbind(F.tr_OTU, F.tr_META$Status)
+
+colnames(F.tr.DF)[colnames(F.tr.DF)=="F.tr_META$Status"] <- "Status"
+for (i in 1:nrow(F.tr.DF))
+  {F.tr.DF[i,]$Status <- Control.F.tr.f@sam_data[rownames(F.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 3)
+colnames(WT) <- c("Bacteria Family", "ULPZ vs. UHPZ p-value", "ULPZ vs. UHPZ p-value adjusted")
+
+for (i in 1:(ncol(F.tr.DF)-1))
+{
+  wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF)
+  WT[i,1] = colnames(F.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+                                       
+WT[,3] <- p.adjust(WT[,2], method = "BH")   
+write.csv(WT, file = "Control_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+                                      
+WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
+write.csv(WT.05, file = "Control_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
+write.csv(WT.01, file = "Control_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+
+ls_0.05 <- WT.05[,1]
+Control.F.tr.f.0.05 <- prune_taxa(ls_0.05,Control.F.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+Control.F.tr.f.0.01 <- prune_taxa(ls_0.01,Control.F.tr.f)                                        
+                                        
+write.csv(Control.F.tr.f.0.05@otu_table, file = "./Control_Bacteria_Family_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(Control.F.tr.f.0.01@otu_table, file = "./Control_Bacteria_Family_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+                                        
+Control.F.tr.f.status <- merge_samples(Control.F.tr.f, Control.F.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+Control.F.tr.f.status <- transform_sample_counts(Control.F.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+Control.F.tr.f.status.0.05 <- prune_taxa(ls_0.05,Control.F.tr.f.status)                                        
+Control.F.tr.f.status.0.01 <- prune_taxa(ls_0.01,Control.F.tr.f.status)                                        
+                                                                                               
+write.csv(t(Control.F.tr.f.status.0.05@otu_table), file = "./Control_Bacteria_Family_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(Control.F.tr.f.status.0.01@otu_table), file = "./Control_Bacteria_Family_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv") 
+                                                 
+MWW_family <- merge(MWW_family,WT,by="Bacteria Family", sort = FALSE)  
                                                  
 #DISEASE (KONZO)                                                                     
-                                                
-#LPZ (ULPZ vs. KLPZ)
+Disease.F <- prune_samples(KonzoData.F@sam_data$Status == "Konzo_Low_Prevalence_Zone" | KonzoData.F@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData.F)                                        
+Disease.F.tr <- transform_sample_counts(Disease.F, function(x) x / sum(x))                                             
+Disease.F.tr.f <- prune_taxa(f_0.0001, Disease.F.tr)  
 
+F <- Disease.F.tr.f
+                                               
+F.tr_META <- as.data.frame(F@sam_data)
+F.tr_OTU <- as.data.frame(t(F@otu_table))
+F.tr.DF <- cbind(F.tr_OTU, F.tr_META$Status)
+
+colnames(F.tr.DF)[colnames(F.tr.DF)=="F.tr_META$Status"] <- "Status"
+for (i in 1:nrow(F.tr.DF))
+  {F.tr.DF[i,]$Status <- Disease.F.tr.f@sam_data[rownames(F.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 3)
+colnames(WT) <- c("Bacteria Family", "KLPZ vs. KHPZ p-value", "KLPZ vs. KHPZ p-value adjusted")
+
+for (i in 1:(ncol(F.tr.DF)-1))
+{
+  wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF)
+  WT[i,1] = colnames(F.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+                                       
+WT[,3] <- p.adjust(WT[,2], method = "BH")   
+write.csv(WT, file = "Disease_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+                                      
+WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
+write.csv(WT.05, file = "Disease_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
+write.csv(WT.01, file = "Disease_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+
+ls_0.05 <- WT.05[,1]
+Disease.F.tr.f.0.05 <- prune_taxa(ls_0.05,Disease.F.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+Disease.F.tr.f.0.01 <- prune_taxa(ls_0.01,Disease.F.tr.f)                                        
+                                        
+write.csv(Disease.F.tr.f.0.05@otu_table, file = "./Disease_Bacteria_Family_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(Disease.F.tr.f.0.01@otu_table, file = "./Disease_Bacteria_Family_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+                                        
+Disease.F.tr.f.status <- merge_samples(Disease.F.tr.f, Disease.F.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+Disease.F.tr.f.status <- transform_sample_counts(Disease.F.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+Disease.F.tr.f.status.0.05 <- prune_taxa(ls_0.05,Disease.F.tr.f.status)                                        
+Disease.F.tr.f.status.0.01 <- prune_taxa(ls_0.01,Disease.F.tr.f.status)                                        
+                                                                                               
+write.csv(t(Disease.F.tr.f.status.0.05@otu_table), file = "./Disease_Bacteria_Family_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(Disease.F.tr.f.status.0.01@otu_table), file = "./Disease_Bacteria_Family_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv") 
+                                                 
+MWW_family <- merge(MWW_family,WT,by="Bacteria Family", sort = FALSE)       
+                                                 
+#LPZ (ULPZ vs. KLPZ)
+LPZ.F <- prune_samples(KonzoData.F@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData.F@sam_data$Status == "Konzo_Low_Prevalence_Zone", KonzoData.F)                                        
+LPZ.F.tr <- transform_sample_counts(LPZ.F, function(x) x / sum(x))                                             
+LPZ.F.tr.f <- prune_taxa(f_0.0001, LPZ.F.tr)  
+
+F <- LPZ.F.tr.f
+                                               
+F.tr_META <- as.data.frame(F@sam_data)
+F.tr_OTU <- as.data.frame(t(F@otu_table))
+F.tr.DF <- cbind(F.tr_OTU, F.tr_META$Status)
+
+colnames(F.tr.DF)[colnames(F.tr.DF)=="F.tr_META$Status"] <- "Status"
+for (i in 1:nrow(F.tr.DF))
+  {F.tr.DF[i,]$Status <- LPZ.F.tr.f@sam_data[rownames(F.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 3)
+colnames(WT) <- c("Bacteria Family", "ULPZ vs. KLPZ p-value", "ULPZ vs. KLPZ p-value adjusted")
+
+for (i in 1:(ncol(F.tr.DF)-1))
+{
+  wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF)
+  WT[i,1] = colnames(F.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+                                       
+WT[,3] <- p.adjust(WT[,2], method = "BH")   
+write.csv(WT, file = "LPZ_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+                                      
+WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
+write.csv(WT.05, file = "LPZ_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
+write.csv(WT.01, file = "LPZ_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+
+ls_0.05 <- WT.05[,1]
+LPZ.F.tr.f.0.05 <- prune_taxa(ls_0.05,LPZ.F.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+LPZ.F.tr.f.0.01 <- prune_taxa(ls_0.01,LPZ.F.tr.f)                                        
+                                        
+write.csv(LPZ.F.tr.f.0.05@otu_table, file = "./LPZ_Bacteria_Family_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(LPZ.F.tr.f.0.01@otu_table, file = "./LPZ_Bacteria_Family_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+                                        
+LPZ.F.tr.f.status <- merge_samples(LPZ.F.tr.f, LPZ.F.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+LPZ.F.tr.f.status <- transform_sample_counts(LPZ.F.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+LPZ.F.tr.f.status.0.05 <- prune_taxa(ls_0.05,LPZ.F.tr.f.status)                                        
+LPZ.F.tr.f.status.0.01 <- prune_taxa(ls_0.01,LPZ.F.tr.f.status)                                        
+                                                                                               
+write.csv(t(LPZ.F.tr.f.status.0.05@otu_table), file = "./LPZ_Bacteria_Family_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(LPZ.F.tr.f.status.0.01@otu_table), file = "./LPZ_Bacteria_Family_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv") 
+                                                 
+MWW_family <- merge(MWW_family,WT,by="Bacteria Family", sort = FALSE) 
+                                                 
 #HPZ (UHPZ vs. KHPZ)
+HPZ.F <- prune_samples(KonzoData.F@sam_data$Status == "Unaffected_High_Prevalence_Zone" | KonzoData.F@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData.F)                                        
+HPZ.F.tr <- transform_sample_counts(HPZ.F, function(x) x / sum(x))                                             
+HPZ.F.tr.f <- prune_taxa(f_0.0001, HPZ.F.tr)  
+
+F <- HPZ.F.tr.f
+                                               
+F.tr_META <- as.data.frame(F@sam_data)
+F.tr_OTU <- as.data.frame(t(F@otu_table))
+F.tr.DF <- cbind(F.tr_OTU, F.tr_META$Status)
+
+colnames(F.tr.DF)[colnames(F.tr.DF)=="F.tr_META$Status"] <- "Status"
+for (i in 1:nrow(F.tr.DF))
+  {F.tr.DF[i,]$Status <- HPZ.F.tr.f@sam_data[rownames(F.tr.DF[i,]),]$Status
+  }
+    
+WT <- matrix(nrow = ncol(F.tr_OTU), ncol = 3)
+colnames(WT) <- c("Bacteria Family", "UHPZ vs. KHPZ p-value", "UHPZ vs. KHPZ p-value adjusted")
+
+for (i in 1:(ncol(F.tr.DF)-1))
+{
+  wt <- wilcox.test(F.tr.DF[,i] ~F.tr.DF$Status, data = F.tr.DF)
+  WT[i,1] = colnames(F.tr.DF[i])
+  WT[i,2] = as.numeric(wt$p.value)
+}
+                                       
+WT[,3] <- p.adjust(WT[,2], method = "BH")   
+write.csv(WT, file = "HPZ_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH.csv")
+                                      
+WT.05 <- subset(WT, as.numeric(WT[,3]) <= 0.05)
+write.csv(WT.05, file = "HPZ_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+WT.01 <- subset(WT, as.numeric(WT[,3]) <= 0.01)
+write.csv(WT.01, file = "HPZ_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH_FDR_0.01.csv")
+
+ls_0.05 <- WT.05[,1]
+HPZ.F.tr.f.0.05 <- prune_taxa(ls_0.05,HPZ.F.tr.f)                                        
+ls_0.01 <- WT.01[,1] 
+HPZ.F.tr.f.0.01 <- prune_taxa(ls_0.01,HPZ.F.tr.f)                                        
+                                        
+write.csv(HPZ.F.tr.f.0.05@otu_table, file = "./HPZ_Bacteria_Family_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")
+write.csv(HPZ.F.tr.f.0.01@otu_table, file = "./HPZ_Bacteria_Family_f_0.0001_RelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv")                                        
+                                        
+HPZ.F.tr.f.status <- merge_samples(HPZ.F.tr.f, HPZ.F.tr.f@sam_data$Status) #merge_smaples by default sums the values for otu
+HPZ.F.tr.f.status <- transform_sample_counts(HPZ.F.tr.f.status, function(x) x / 30) #average the sum of relabund in each group
+
+HPZ.F.tr.f.status.0.05 <- prune_taxa(ls_0.05,HPZ.F.tr.f.status)                                        
+HPZ.F.tr.f.status.0.01 <- prune_taxa(ls_0.01,HPZ.F.tr.f.status)                                        
+                                                                                               
+write.csv(t(HPZ.F.tr.f.status.0.05@otu_table), file = "./HPZ_Bacteria_Family_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.05.csv")                                                
+write.csv(t(HPZ.F.tr.f.status.0.01@otu_table), file = "./HPZ_Bacteria_Family_f_0.0001_AvgRelAbund_ByStatus_WilcoxTest_BH_FDR_0.01.csv") 
+                                                                                                                                               
 MWW_family <- merge(MWW_family,WT,by="Bacteria Family", sort = FALSE)  
 write.csv(MWW_family, file = "Kinshasa_Konzo3_Bacteria_Family_f_0.0001_ByStatus_WilcoxTest_BH.csv")                                              
 
