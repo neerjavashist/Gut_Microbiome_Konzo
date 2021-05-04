@@ -6069,8 +6069,8 @@ for (i in 1:nrow(BP))
 {BP[i,]$Ratio <- BP[i,1]/BP[i,2]
 }
 
-bp1 <- ggboxplot(BP, x = "Status", y = "Ratio" , fill = "Status", xlab = "Samples", ylab = "Rel. Abund of Prevotella/Bacteroides", title = "")
-bp2 <- bp1 + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "t.test", size = 3)
+bp1 <- ggboxplot(BP, x = "Status", y = "Ratio" , fill = "Status", xlab = "Samples", ylab = "Rel. Abund of Prevotella/Bacteroides", title = "", outlier.size = 1)
+bp2 <- bp1 + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "t.test", size = 2)
 bp3 <- bp2 + theme(legend.position="none") + theme(axis.title.y = element_text(size = 7), axis.title.x = element_blank(), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7)) + stat_boxplot(geom ="errorbar") + scale_fill_manual(values = konzo_color) + scale_x_discrete(labels = SSSL)
 bp3
 #tiff(filename = "KinshasaKonzo3_Genus_RelAbund_Prev_over_Bact.tiff", width = 2.5, height = 3, units = "in", res = 600)
@@ -6171,7 +6171,7 @@ bray_avg <- read.csv("./KinshasaControl_Konzo3_RelAbundBray_Averages_Genus_PerSa
 bray_avg$Status <- factor(bray_avg$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
 
-b <- ggplot(bray_avg, aes(factor(Status), BrayAvg)) + geom_boxplot(aes(fill = factor(Status))) + labs(x = element_blank(), y = "Average Bray-Curtis") + theme(axis.text.x = element_blank()) + theme_classic()
+b <- ggplot(bray_avg, aes(factor(Status), BrayAvg)) + geom_boxplot(aes(fill = factor(Status)), outlier.size = 1) + labs(x = element_blank(), y = "Average Bray-Curtis") + theme(axis.text.x = element_blank()) + theme_classic()
 b2 <- b + theme(legend.position="none")
 b3 <- b2 + theme(axis.title.y = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7)) + stat_boxplot(geom ="errorbar")
 b4 <- b3 + scale_fill_manual(values = konzo_color) + scale_x_discrete(labels = SSSL)
