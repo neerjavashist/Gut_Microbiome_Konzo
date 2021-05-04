@@ -121,19 +121,19 @@ KonzoData_P@otu_table[is.na(KonzoData_P@otu_table)] <- 0
 KonzoData.P <- tax_glom(KonzoData_P, taxrank = "phylum")
 KonzoData.P@sam_data$Status <- factor(KonzoData.P@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 #Writing the otu_table. Supplemental File 1, Phylum Tab
-write.csv(KonzoData.P@otu_table), file = "./KonzoDataPhylum_ReadCounts.csv")  
+#write.csv(KonzoData.P@otu_table), file = "./KonzoDataPhylum_ReadCounts.csv")  
 
 
 #Read Counts to Relative Abundance
 KonzoData.P.tr <- transform_sample_counts(KonzoData.P, function(x) x / sum(x))
 #Writing the otu_table in Supplemental File 2, Phylum Tab                                     
-write.csv(KonzoData.P.tr@otu_table), file = "./KonzoDataPhylum_AvgRelAbund.csv")  
+#write.csv(KonzoData.P.tr@otu_table), file = "./KonzoDataPhylum_AvgRelAbund.csv")  
 #Merge samples by group/status                                         
 KonzoData.P.tr.status <- merge_samples(KonzoData.P.tr, KonzoData.P.tr@sam_data$Status) #merge_smaples by default sums the values for otu
 KonzoData.P.tr.status <- transform_sample_counts(KonzoData.P.tr.status, function(x) x / 30) #average the sum of relabund in each group
                                                  
 #Writing the otu_table in Supplemental File 2, Phylum Tab (data is joined by phylum name with KonzoData.P.tr@otu_table)                                                                                     
-write.csv(t(KonzoData.P.tr.status@otu_table), file = "./KonzoDataPhylum_AvgRelAbund_ByStatus.csv")
+#write.csv(t(KonzoData.P.tr.status@otu_table), file = "./KonzoDataPhylum_AvgRelAbund_ByStatus.csv")
   
 #keep Rel abund >= 0.01% in atleast one group
 #Creating phyloseq with only one group                                                 
@@ -241,9 +241,9 @@ KonzoData.C.tr.f <- prune_taxa(f_0.0001, KonzoData.C.tr)
 
 KonzoData.C.tr.status.f <- prune_taxa(f_0.0001, KonzoData.C.tr.status)
 
-write.csv((KonzoData.C@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Class_ReadCounts.csv")
-write.csv((KonzoData.C.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Class_RelAbund.csv")
-write.csv(t(KonzoData.C.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Class_Avg_RelAbund.csv")
+#write.csv((KonzoData.C@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Class_ReadCounts.csv")
+#write.csv((KonzoData.C.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Class_RelAbund.csv")
+#write.csv(t(KonzoData.C.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Class_Avg_RelAbund.csv")
                                                                                  
                            
 #Bacteria Order
@@ -314,9 +314,9 @@ KonzoData.O.tr.f <- prune_taxa(f_0.0001, KonzoData.O.tr)
                                                  
 KonzoData.O.tr.status.f <- prune_taxa(f_0.0001, KonzoData.O.tr.status)
 
-write.csv((KonzoData.O@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Order_ReadCounts.csv")
-write.csv((KonzoData.O.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Order_RelAbund.csv")
-write.csv(t(KonzoData.O.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Order_Avg_RelAbund.csv")
+#write.csv((KonzoData.O@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Order_ReadCounts.csv")
+#write.csv((KonzoData.O.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Order_RelAbund.csv")
+#write.csv(t(KonzoData.O.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Order_Avg_RelAbund.csv")
                            
                            
 #Bacteria Family
@@ -349,7 +349,7 @@ KonzoData.F.tr <- transform_sample_counts(KonzoData.F, function(x) x / sum(x))
 
 KonzoData.F.tr.status <- merge_samples(KonzoData.F.tr, KonzoData.F.tr@sam_data$Status)
 KonzoData.F.tr.status <- transform_sample_counts(KonzoData.F.tr.status, function(x) x / 30)                                          
-write.csv(t(KonzoData.F.tr.status@otu_table), file = "./KonzoDataFamily_AvgRelAbund_ByStatus.csv")
+#write.csv(t(KonzoData.F.tr.status@otu_table), file = "./KonzoDataFamily_AvgRelAbund_ByStatus.csv")
  
 #Filter
                                                                                                                         
@@ -389,9 +389,9 @@ KonzoData.F.tr.f <- prune_taxa(f_0.0001, KonzoData.F.tr)
 
 KonzoData.F.tr.status.f <- prune_taxa(f_0.0001, KonzoData.F.tr.status)
 
-write.csv((KonzoData.F@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Family_ReadCounts.csv")
-write.csv((KonzoData.F.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Family_RelAbund.csv")
-write.csv(t(KonzoData.F.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Family_Avg_RelAbund.csv")
+#write.csv((KonzoData.F@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Family_ReadCounts.csv")
+#write.csv((KonzoData.F.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Family_RelAbund.csv")
+#write.csv(t(KonzoData.F.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Family_Avg_RelAbund.csv")
                                
 #Bacteria Genus
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
@@ -469,9 +469,9 @@ KonzoData.G.tr.f <- prune_taxa(f_0.0001, KonzoData.G.tr)
 
 KonzoData.G.tr.status.f <- prune_taxa(f_0.0001, KonzoData.G.tr.status)
 
-write.csv((KonzoData.G@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Genus_ReadCounts.csv")
-write.csv((KonzoData.G.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Genus_RelAbund.csv")
-write.csv(t(KonzoData.G.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Genus_Avg_RelAbund.csv")
+#write.csv((KonzoData.G@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Genus_ReadCounts.csv")
+#write.csv((KonzoData.G.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Genus_RelAbund.csv")
+#write.csv(t(KonzoData.G.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Genus_Avg_RelAbund.csv")
 
 #Needed later for Figure 3 (Geography excluded all konzo individuals)                           
 Geography.G <- prune_samples((KonzoData.G@sam_data$Status != "Konzo_Low_Prevalence_Zone") & (KonzoData.G@sam_data$Status != "Konzo_High_Prevalence_Zone"), KonzoData.G)                                              
@@ -557,9 +557,9 @@ KonzoData.S.tr.f <- prune_taxa(f_0.0001, KonzoData.S.tr)
 
 KonzoData.S.tr.status.f <- prune_taxa(f_0.0001, KonzoData.S.tr.status)
                                                                                                        
-write.csv((KonzoData.S.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Species_RelAbund.csv")
-write.csv((KonzoData.S@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Species_ReadCounts.csv")
-write.csv(t(KonzoData.S.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Species_Avg_RelAbund.csv")
+#write.csv((KonzoData.S.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Species_RelAbund.csv")
+#write.csv((KonzoData.S@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Species_ReadCounts.csv")
+#write.csv(t(KonzoData.S.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Species_Avg_RelAbund.csv")
                                                  
                            
 ### Estimate Richness
@@ -6179,9 +6179,9 @@ b4 <- b3 + scale_fill_manual(values = konzo_color) + scale_x_discrete(labels = S
 #b4
 #dev.off()
 
-#Supplemental Fig: Class, Order, Prev/Bact and Intra Bray
-tiff(filename = "Konzo1Konzo3_Class_Order_PrevOverBact_IntraBray.tiff", width = 7, height = 6, units = "in", res = 600)
-ggarrange(top_class_plot, top_order_plot, bp3, b4, labels = c("A","B", "C", "D"), ncol = 2, nrow = 2, font.label = list(size = 7))
+#Supplemental Fig 2: Class, Order, Prev/Bact and Intra Bray
+tiff(filename = "Konzo1Konzo3_Class_Order_PrevOverBact_IntraBray.tiff", width = 7, height = 7, units = "in", res = 600)
+ggarrange(top_phylum_plot, top_class_plot, top_order_plot, top_family_plot, bp3, b4, labels = c("A","B","C", "D", "E", "F"), ncol = 2, nrow = 3, font.label = list(size = 7))
 dev.off()
 
 
