@@ -5918,9 +5918,7 @@ tiff(filename = "Kinshasa_Konzo3_Lab_Ecoli_Functional_BoxPlot.tiff", width = 7, 
 ggarrange(lab, ec, t ,r,labels = c("A", "C","B","D"), heights = c(3,2), ncol = 2, nrow = 2, font.label = list(size = 7))
 dev.off()                                     
                                     
-##### Supplemental Figures
-
-####    ------>   NEEDS UPDATING ASAP                                    
+##### Supplemental Figures                                   
                                     
 #Supplementary Figure 1
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken")                                             
@@ -5982,7 +5980,7 @@ p <- ggplot(diet, aes(x=as.factor(id), y=Frequency, fill=Food)) +       # Note t
   ) + 
   guides(fill=guide_legend(ncol=2,byrow=TRUE)) +
   coord_polar() +
-  geom_segment(data=base_diet, aes(x = start, y = -1, xend = end, yend = -1), colour = "black", size=0.3 , inherit.aes = FALSE ) + geom_text(data=base_diet, aes(x = title, y = -2.5, label=c("Kinshasa", "Masimanimba","LPZ", "HPZ")), hjust=c(0.5,0.5, 0.5,0.5), angle=c(-45, 45, -45, 45), colour = "black", size=2.5, inherit.aes = FALSE)
+  geom_segment(data=base_diet, aes(x = start, y = -1, xend = end, yend = -1), colour = "black", size=0.3 , inherit.aes = FALSE ) + geom_text(data=base_diet, aes(x = title, y = -2.5, label=c("Kinshasa", "Masi-manimba","LPZ", "HPZ")), hjust=c(0.5,0.5, 0.5,0.5), angle=c(-45, 45, -45, 45), colour = "black", size=2.5, inherit.aes = FALSE)
 
 p
 
