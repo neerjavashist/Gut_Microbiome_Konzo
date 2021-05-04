@@ -6086,37 +6086,37 @@ KIN <- matrix(nrow = 30, ncol = 30)
 colnames(KIN) <- colnames(brayd.DF[1:30])
 rownames(KIN) <- rownames(brayd.DF[1:30,])
 for (i in 1:30) {for (j in 1:30) {KIN[i,j] <- brayd.DF[i,j]}}
-#write.csv(KIN, file = "KinshasaControl_RelAbundBray_Genus.csv")
+write.csv(KIN, file = "Kinshasa_RelAbundBray_Genus.csv")
 
 KI <- matrix(nrow = 30, ncol = 30)
 colnames(KI) <- colnames(brayd.DF[31:60])
 rownames(KI) <- rownames(brayd.DF[31:60,])
 for (i in 1:30) {for (j in 1:30) {KI[i,j] <- brayd.DF[i+30,j+30]}}
-#write.csv(KI, file = "KonzoIntervention_RelAbundBray_Genus.csv")
+write.csv(KI, file = "KHPZ_RelAbundBray_Genus.csv")
 
 CI <- matrix(nrow = 30, ncol = 30)
 colnames(CI) <- colnames(brayd.DF[61:90])
 rownames(CI) <- rownames(brayd.DF[61:90,])
 for (i in 1:30) {for (j in 1:30) {CI[i,j] <- brayd.DF[i+60,j+60]}}
-#write.csv(CI, file = "ControlIntervention_RelAbundBray_Genus.csv")
+write.csv(CI, file = "UHPZ_RelAbundBray_Genus.csv")
 
 KNI <- matrix(nrow = 30, ncol = 30)
 colnames(KNI) <- colnames(brayd.DF[91:120])
 rownames(KNI) <- rownames(brayd.DF[91:120,])
 for (i in 1:30) {for (j in 1:30) {KNI[i,j] <- brayd.DF[i+90,j+90]}}
-#write.csv(KNI, file = "KonzoNonIntervention_RelAbundBray_Genus.csv")
+write.csv(KNI, file = "KLPZ_RelAbundBray_Genus.csv")
 
 CNI <- matrix(nrow = 30, ncol = 30)
 colnames(CNI) <- colnames(brayd.DF[121:150])
 rownames(CNI) <- rownames(brayd.DF[121:150,])
 for (i in 1:30) {for (j in 1:30) {CNI[i,j] <- brayd.DF[i+120,j+120]}}
-#write.csv(CNI, file = "ControlNonIntervention_RelAbundBray_Genus.csv")
+write.csv(CNI, file = "ULPZ_RelAbundBray_Genus.csv")
 
 MAS <- matrix(nrow = 30, ncol = 30)
 colnames(MAS) <- colnames(brayd.DF[151:180])
 rownames(MAS) <- rownames(brayd.DF[151:180,])
 for (i in 1:30) {for (j in 1:30) {MAS[i,j] <- brayd.DF[i+150,j+150]}}
-#write.csv(MIN, file = "Masimanimba_RelAbundBray_Genus.csv")
+write.csv(MIN, file = "Masimanimba_RelAbundBray_Genus.csv")
 
 bray_avg <- matrix(nrow = 180,  ncol = 3)
 
@@ -6140,35 +6140,35 @@ for (i in 1:30)
 {
   bray_avg[i+60,1] <- rownames(CNI)[i]
   bray_avg[i+60,2] <- mean(CNI[i,])
-  bray_avg[i+60,3] <- "Kahemba_Control_NonIntervention"
+  bray_avg[i+60,3] <- "Unaffected_Low_Prevalence_Zone"
 }
 
 for (i in 1:30) 
 {
   bray_avg[i+90,1] <- rownames(KNI)[i]
   bray_avg[i+90,2] <- mean(KNI[i,])
-  bray_avg[i+90,3] <- "Kahemba_Konzo_NonIntervention"
+  bray_avg[i+90,3] <- "Konzo_Low_Prevalence_Zone"
 }
 
 for (i in 1:30) 
 {
   bray_avg[i+120,1] <- rownames(CI)[i]
   bray_avg[i+120,2] <- mean(CI[i,])
-  bray_avg[i+120,3] <- "Kahemba_Control_Intervention"
+  bray_avg[i+120,3] <- "Unaffected_High_Prevalence_Zone"
 }
 
 for (i in 1:30) 
 {
   bray_avg[i+150,1] <- rownames(KI)[i]
   bray_avg[i+150,2] <- mean(KI[i,])
-  bray_avg[i+150,3] <- "Kahemba_Konzo_Intervention"
+  bray_avg[i+150,3] <- "Konzo_High_Prevalence_Zone"
 }
 
 write.csv(bray_avg, file = "KinshasaControl_Konzo3_RelAbundBray_Averages_Genus_PerSamples.csv")
 
 bray_avg <- read.csv("./KinshasaControl_Konzo3_RelAbundBray_Averages_Genus_PerSamples.csv")
 
-bray_avg$Status <- factor(bray_avg$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention", "Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention"))
+bray_avg$Status <- factor(bray_avg$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
 
 b <- ggplot(bray_avg, aes(factor(Status), BrayAvg)) + geom_boxplot(aes(fill = factor(Status))) + labs(x = element_blank(), y = "Average Bray-Curtis") + theme(axis.text.x = element_blank()) + theme_classic()
@@ -6180,11 +6180,13 @@ b4 <- b3 + scale_fill_manual(values = konzo_color) + scale_x_discrete(labels = S
 #dev.off()
 
 #Supplemental Fig 2: Class, Order, Prev/Bact and Intra Bray
-tiff(filename = "Konzo1Konzo3_Class_Order_PrevOverBact_IntraBray.tiff", width = 7, height = 7, units = "in", res = 600)
+tiff(filename = "Konzo1Konzo3_P_C_O_F_PrevOverBact_IntraBray.tiff", width = 7, height = 7, units = "in", res = 600)
 ggarrange(top_phylum_plot, top_class_plot, top_order_plot, top_family_plot, bp3, b4, labels = c("A","B","C", "D", "E", "F"), ncol = 2, nrow = 3, font.label = list(size = 7))
 dev.off()
 
-
+###NEED FIXING
+                                    
+                                    
 ##Supplementary Fig 4: Kin vs. Mas vs. ULPZ
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
 
