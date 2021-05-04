@@ -911,64 +911,7 @@ o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))
 tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap_V2.tiff", width = 2.5, height = 3.25, units = "in", res = 600)
 heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,1.25), lwid = c(0.1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3),c(2,1,1),c(2,1,1),c(0,0,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
 dev.off()                                        
-                                     
-                                     
-                                     
-                                     
-                                     
-#Phylum
-setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Phylum")
-                                     
-top_P <- read.csv("Kinshasa_Konzo3_Phylum_Top4.csv", row.names = 1, colClasses = "character")
-top_P <- unlist(top_P)
-
-KonzoData.P.tr.status.top = prune_taxa(top_P, KonzoData.P.tr.status)
-
-p <- plot_bar(KonzoData.P.tr.status.top, "Sample", "Abundance", fill = 'phylum')
-p$data$Sample <- factor(p$data$Sample, levels = c("Konzo_High_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_Low_Prevalence_Zone", "Masimanimba", "Kinshasa"))
-
-p <- p + labs(x = element_blank(), y = "Relative Abundance") +  scale_fill_discrete(name = "Phylum")
-top_phylum_plot <- p + theme(legend.position="bottom") + theme(legend.key.size = unit(.2, "cm"))
-
-top_phylum_plot <- top_phylum_plot + 
-  theme(legend.position="right", legend.margin=margin(0,0,0,0),
-        legend.box.margin=margin(-8,0,-8,-8)) + 
-  scale_y_continuous(expand = c(0,0), limits = c(0,1)) +
-  scale_x_discrete(labels= SSSL)+
-  theme(plot.title = element_blank(), legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7),legend.title = element_text(size = 7)) + 
-  guides(fill=guide_legend(ncol=1,byrow=TRUE)) + 
-  theme(axis.text.y = element_text(angle = 0, size = 7), axis.ticks.y = element_blank(), axis.text.x = element_text(angle = 0,vjust=1, hjust=0.5, size = 7), axis.title.y = element_text(size = 7), legend.title = element_text(size = 7)) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), strip.text.x = element_text(size=7))
-top_phylum_plot <- top_phylum_plot + geom_bar(stat = "identity") + coord_flip() + theme(axis.title.x = element_text(size = 7))
-top_phylum_plot
-
-#Family
-setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Family")
-                                     
-top_F <- read.csv("Kinshasa_Konzo3_Family_Top5.csv", row.names = 1, colClasses = "character")
-top_F <- unlist(top_F)
-
-KonzoData.F.tr.status.top = prune_taxa(top_F, KonzoData.F.tr.status)
-
-p <- plot_bar(KonzoData.F.tr.status.top, "Sample", "Abundance", fill = 'family')
-p$data$Sample <- factor(p$data$Sample, levels = c("Konzo_High_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_Low_Prevalence_Zone", "Masimanimba", "Kinshasa"))
-
-p <- p + labs(x = element_blank(), y = "Relative Abundance") +  scale_fill_discrete(name = "Family")
-top_family_plot <- p + theme(legend.position="bottom") + theme(legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7, face="italic"))
-
-top_family_plot <- top_family_plot + 
-  theme(legend.position="right", legend.margin=margin(0,0,0,0),
-        legend.box.margin=margin(-8,0,-8,-8)) + 
-  scale_y_continuous(expand = c(0,0), limits = c(0,0.7)) +
-  scale_x_discrete(labels= SSSL)+
-  theme(plot.title = element_blank(), legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7), legend.title = element_text(size = 7)) + 
-  guides(fill=guide_legend(ncol=1,byrow=TRUE)) + 
-  theme(axis.text.y = element_text(angle = 0, size = 7), axis.ticks.y = element_blank(), axis.text.x = element_text(angle = 0,vjust=1, hjust=0.5, size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), legend.title = element_text(size = 7)) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), strip.text.x = element_text(size=7))
-top_family_plot <- top_family_plot + geom_bar(stat = "identity") + coord_flip()
-top_family_plot
-
-                                                          
+                                                      
 #------------------------------------------------
                                      
 ### MANN WHITNEY_WILCOX TEST (with BH correction)
@@ -5990,6 +5933,32 @@ dev.off()
                                              
 ## Supplementary Figure 2:
 
+#Phylum
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Phylum")
+                                     
+top_P <- read.csv("Kinshasa_Konzo3_Phylum_Top4.csv", row.names = 1, colClasses = "character")
+top_P <- unlist(top_P)
+
+KonzoData.P.tr.status.top = prune_taxa(top_P, KonzoData.P.tr.status)
+
+p <- plot_bar(KonzoData.P.tr.status.top, "Sample", "Abundance", fill = 'phylum')
+p$data$Sample <- factor(p$data$Sample, levels = c("Konzo_High_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_Low_Prevalence_Zone", "Masimanimba", "Kinshasa"))
+
+p <- p + labs(x = element_blank(), y = "Relative Abundance") +  scale_fill_discrete(name = "Phylum")
+top_phylum_plot <- p + theme(legend.position="bottom") + theme(legend.key.size = unit(.2, "cm"))
+
+top_phylum_plot <- top_phylum_plot + 
+  theme(legend.position="right", legend.margin=margin(0,0,0,0),
+        legend.box.margin=margin(-8,0,-8,-8)) + 
+  scale_y_continuous(expand = c(0,0), limits = c(0,1)) +
+  scale_x_discrete(labels= SSSL)+
+  theme(plot.title = element_blank(), legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7),legend.title = element_text(size = 7)) + 
+  guides(fill=guide_legend(ncol=1,byrow=TRUE)) + 
+  theme(axis.text.y = element_text(angle = 0, size = 7), axis.ticks.y = element_blank(), axis.text.x = element_text(angle = 0,vjust=1, hjust=0.5, size = 7), axis.title.y = element_text(size = 7), legend.title = element_text(size = 7)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), strip.text.x = element_text(size=7))
+top_phylum_plot <- top_phylum_plot + geom_bar(stat = "identity") + coord_flip() + theme(axis.title.x = element_text(size = 7))
+top_phylum_plot
+                                    
 #Class
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
 
@@ -6042,7 +6011,35 @@ top_order_plot <- top_order_plot +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), strip.text.x = element_text(size=7))
 top_order_plot <- top_order_plot + geom_bar(stat = "identity") + coord_flip() + theme(axis.title.y = element_blank())
 top_order_plot
+                                    
 
+#Family
+setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Family")
+                                     
+top_F <- read.csv("Kinshasa_Konzo3_Family_Top5.csv", row.names = 1, colClasses = "character")
+top_F <- unlist(top_F)
+
+KonzoData.F.tr.status.top = prune_taxa(top_F, KonzoData.F.tr.status)
+
+p <- plot_bar(KonzoData.F.tr.status.top, "Sample", "Abundance", fill = 'family')
+p$data$Sample <- factor(p$data$Sample, levels = c("Konzo_High_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_Low_Prevalence_Zone", "Masimanimba", "Kinshasa"))
+
+p <- p + labs(x = element_blank(), y = "Relative Abundance") +  scale_fill_discrete(name = "Family")
+top_family_plot <- p + theme(legend.position="bottom") + theme(legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7, face="italic"))
+
+top_family_plot <- top_family_plot + 
+  theme(legend.position="right", legend.margin=margin(0,0,0,0),
+        legend.box.margin=margin(-8,0,-8,-8)) + 
+  scale_y_continuous(expand = c(0,0), limits = c(0,0.7)) +
+  scale_x_discrete(labels= SSSL)+
+  theme(plot.title = element_blank(), legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7), legend.title = element_text(size = 7)) + 
+  guides(fill=guide_legend(ncol=1,byrow=TRUE)) + 
+  theme(axis.text.y = element_text(angle = 0, size = 7), axis.ticks.y = element_blank(), axis.text.x = element_text(angle = 0,vjust=1, hjust=0.5, size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), legend.title = element_text(size = 7)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), strip.text.x = element_text(size=7))
+top_family_plot <- top_family_plot + geom_bar(stat = "identity") + coord_flip()
+top_family_plot
+
+                                    
 #Box Plot for Ratio of Prevotella / Bacteroides (Genus)
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
                                     
