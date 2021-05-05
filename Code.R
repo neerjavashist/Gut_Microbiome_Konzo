@@ -5166,7 +5166,7 @@ diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalenze_Zone"))
 
 brayd <- phyloseq::distance(Geography.G.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
 capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Geography.txt")
 
 
@@ -5177,7 +5177,7 @@ diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Masimanimba"))
 
 brayd <- phyloseq::distance(KinMas.G.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
 capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_KinMas.txt")
   
 otuD.G <- as.data.frame(t(otu_table(KinULPZ.G)))
@@ -5187,7 +5187,7 @@ diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Unaffected_Low_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(KinULPZ.G.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
 capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_KinULPZ.txt")
   
 otuD.G <- as.data.frame(t(otu_table(MasULPZ.G)))
@@ -5197,7 +5197,7 @@ diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Masimanimba", "Unaffected_Low_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(MasULPZ.G.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
 capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_MasULPZ.txt")
  
 otuD.G <- as.data.frame(t(otu_table(KinUHPZ.G)))
@@ -5207,7 +5207,7 @@ diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Unaffected_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(KinUHPZ.G.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
 capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_KinUHPZ.txt")
   
 otuD.G <- as.data.frame(t(otu_table(MasUHPZ.G)))
@@ -5217,7 +5217,7 @@ diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Masimanimba", "Unaffected_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(MasUHPZ.G.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
 capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_MasUHPZ.txt")
 
 otuD.G <- as.data.frame(t(otu_table(Control.G)))
@@ -5227,7 +5227,7 @@ diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(Control.G.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
 capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Control.txt")
 
 otuD.G <- as.data.frame(t(otu_table(Disease.G)))
@@ -5237,7 +5237,7 @@ diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(Disease.G.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
 capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Disease.txt")
   
 otuD.G <- as.data.frame(t(otu_table(LPZ.G)))
@@ -5247,7 +5247,7 @@ diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(LPZ.G.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
 capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_LPZ.txt")
 
 otuD.G <- as.data.frame(t(otu_table(HPZ.G)))
@@ -5257,7 +5257,7 @@ diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(HPZ.G.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=10000); bdiv_bray
+bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
 capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_HPZ.txt")
   
 
