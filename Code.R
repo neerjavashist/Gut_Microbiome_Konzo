@@ -6915,7 +6915,20 @@ Control.KO.tr.sam$Status <- factor(Control.KO.tr.sam$Status, levels = c("Unaffec
 brayd <- phyloseq::distance(Control.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ Control.KO.tr.sam$Status, perm=99999); bdiv_bray
 #capture.output(bdiv_bray, file="relabund_bdiv_adonis_Control_KO.tr.txt")  #0.08225         
-                                                      
+
+p1 = plot_ordination(Control.KO.tr, ordinate(Control.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+ko_PCB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = control_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom", legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
+
+ko_PCBt <- ko_PCB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
+ko_PCBt <- ko_PCBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.08225")), size = 2)
+                            
+                            
                                             
 #Disease                                                  
 Disease.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData_KO_tr)
@@ -6927,6 +6940,18 @@ brayd <- phyloseq::distance(Disease.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ Disease.KO.tr.sam$Status, perm=99999); bdiv_bray
 #capture.output(bdiv_bray, file="relabund_bdiv_adonis_Disease_KO.tr.txt")     #0.05258                                             
 
+p1 = plot_ordination(Disease.KO.tr, ordinate(Disease.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+ko_PKB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = disease_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom", legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
+
+ko_PKBt <- ko_PKB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
+ko_PKBt <- ko_PKBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.05258")), size = 2)
+     
                             
 #LPZ                                                  
 LPZ.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone", KonzoData_KO_tr)
@@ -6938,6 +6963,17 @@ brayd <- phyloseq::distance(LPZ.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ LPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
 #capture.output(bdiv_bray, file="relabund_bdiv_adonis_LPZ_KO.tr.txt")    #0.8878                                              
 
+p1 = plot_ordination(LPZ.KO.tr, ordinate(LPZ.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+ko_PNIB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = lpz_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom", legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
+
+ko_PNIBt <- ko_PNIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
+ko_PNIBt <- ko_PNIBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.8878")), size = 2)
                                                   
 #HPZ                                                 
 HPZ.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData_KO_tr)
@@ -6949,6 +6985,18 @@ brayd <- phyloseq::distance(HPZ.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ HPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
 #capture.output(bdiv_bray, file="relabund_bdiv_adonis_HPZ_KO.tr.txt")  #0.7856                                                
 
+p1 = plot_ordination(HPZ.KO.tr, ordinate(HPZ.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+  geom_point(size = 1, stroke = 0, shape = 16)
+p1$layers <- p1$layers[-1]
+ko_PIB <- p1 + 
+  labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
+                                axis.line = element_line(colour = "black")) + scale_color_manual(values = hpz_color, labels = SSSL)+
+  theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom", legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
+
+ko_PIBt <- ko_PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
+ko_PIBt <- ko_PIBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.7856")), size = 2)
+                            
                                                   
                                                   
                                                   
