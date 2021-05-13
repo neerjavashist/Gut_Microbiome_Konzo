@@ -6926,7 +6926,7 @@ ko_PCB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 ko_PCBt <- ko_PCB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-ko_PCBt <- ko_PCBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.08225")), size = 2)
+ko_PCBt <- ko_PCBt + annotate("text", x = 0.1, y = -0.3, label = expression(paste("p = 0.08225")), size = 2)
                             
                             
                                             
@@ -6950,7 +6950,7 @@ ko_PKB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 ko_PKBt <- ko_PKB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-ko_PKBt <- ko_PKBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.05258")), size = 2)
+ko_PKBt <- ko_PKBt + annotate("text", x = 0.26, y = -0.3, label = expression(paste("p = 0.05258")), size = 2)
      
                             
 #LPZ                                                  
@@ -6973,7 +6973,7 @@ ko_PNIB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 ko_PNIBt <- ko_PNIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-ko_PNIBt <- ko_PNIBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.8878")), size = 2)
+ko_PNIBt <- ko_PNIBt + annotate("text", x = 0.13, y = -0.3, label = expression(paste("p = 0.8878")), size = 2)
                                                   
 #HPZ                                                 
 HPZ.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData_KO_tr)
@@ -6995,7 +6995,7 @@ ko_PIB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 ko_PIBt <- ko_PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-ko_PIBt <- ko_PIBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.7856")), size = 2)
+ko_PIBt <- ko_PIBt + annotate("text", x = 0.22, y = -0.3, label = expression(paste("p = 0.7856")), size = 2)
                             
 tiff(filename = "Kahemba_KO_Control_Disease_LPZ_HPZ_PCoA.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
 ggarrange(ko_PCBt, ko_PKBt, ko_PNIBt, ko_PIBt, labels = c("A","B", "C", "D"), ncol = 2, nrow = 2, font.label = list(size = 7))
