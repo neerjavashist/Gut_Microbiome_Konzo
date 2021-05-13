@@ -547,7 +547,9 @@ filterList3 <- union(UHPZ.S.tr.f@tax_table,KHPZ.S.tr.f@tax_table)
 filterList4 <- union(filterList1, filterList2) #Kin, Mas, ULPZ, KLPZ
 filterList <- union(filterList3,filterList4) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 
-write.csv(filterList, file = "Kinshasa_Konzo3_Species_f_0.0001.csv")
+#write.csv(filterList, file = "Kinshasa_Konzo3_Species_f_0.0001.csv")
+#Manually Change Streptococcus sp. 'group B' to Streptococcus sp. group B 
+#Otherwise the filter function thinks its a different species and will filter it out                           
 
 x <- read.csv("Kinshasa_Konzo3_Species_f_0.0001.csv", row.names = 1, colClasses = "character")
 f_0.0001 <- unlist(x)
@@ -649,7 +651,7 @@ observed4 <- observed4 + scale_fill_manual(values = konzo_color, labels = SSSL)
 shan <- ggplot(diversity.S.0, aes(factor(Status), Shannon))+ geom_boxplot(aes(fill = factor(Status)),fatten = 1, outlier.shape = NA) + labs(x = element_blank(), y = "Shannon Diversity Index") + theme(axis.text.x = element_blank()) + theme_classic()
 shan <- shan + geom_jitter(position=position_jitter(0.2), size = 0.3)
 shan2 <- shan + stat_summary(fun=mean, geom="point", shape=23, size=1.5, color = "black", fill="white")
-shan3 <- shan2 + theme(legend.position="bottom", legend.margin=margin(-10,0,0,0)) + theme(legend.direction = "horizontal") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(axis.ticks.x = element_blank(), axis.title.y = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_blank())
+shan3 <- shan2 + theme(legend.position="bottom", legend.margin=margin(-10,0,0,0)) + theme(legend.direction = "horizontal") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(axis.ticks.x = element_blank(), axis.title.y = element_text(size = 7), axis.text.y = element_text(size = 5), axis.text.x = element_blank())
 
 shan4 <- shan3 + guides(fill=guide_legend(ncol=6)) 
 shan4 <- shan4 + scale_fill_manual(values = konzo_color, labels = SSSL)
@@ -874,7 +876,7 @@ top_genus_plot <- top_genus_plot +
   theme(legend.position="bottom", legend.margin=margin(0,0,0,0),
         legend.box.margin=margin(0,0,0,0)) + 
   scale_x_continuous(expand = c(0,0), limits = c(0,0.9)) +
-  theme(plot.title = element_blank(), legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 7), legend.title = element_text(size = 7)) + 
+  theme(plot.title = element_blank(), legend.key.size = unit(.2, "cm"), legend.text = element_text(size = 5), legend.title = element_text(size = 5)) + 
   guides(fill=guide_legend(ncol=3,byrow=TRUE)) + # scale_fill_manual(values = t3_cols) +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(size = 7), axis.title.x = element_text(size = 7)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"))
@@ -893,7 +895,7 @@ Gen_ph <- ggarrange(Gen,placeholder, widths = c(1, 1), ncol = 2, nrow = 1)
 F1 <- arrangeGrob(ad, Gen_ph, ncol = 1, nrow = 2,
              layout_matrix = rbind(c(1), c(2), c(2), c(2)))
 #Figure 2
-tiff(filename = "KinshasaKonzo3_TaxaFigure_WithoutHeatMap.tiff", width = 7, height = 7, units = "in", res = 600)
+tiff(filename = "KinshasaKonzo3_TaxaFigure_WithoutHeatMap.tiff", width = 5, height = 5, units = "in", res = 600)
 as_ggplot(F1)
 dev.off()
                                      
@@ -908,7 +910,7 @@ dev.off()
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Species")
 
 o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))                                                 
-tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap_V2.tiff", width = 2.5, height = 3.25, units = "in", res = 600)
+tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap_V2.tiff", width = 2.5, height = 3.75, units = "in", res = 600)
 heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,1.25), lwid = c(0.1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3),c(2,1,1),c(2,1,1),c(0,0,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
 dev.off()                                        
                                                       
