@@ -5723,16 +5723,16 @@ means = aggregate(. ~ Status + variable,
 
 t6 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
     geom_boxplot(aes(fill = variable), outlier.size = 0.2, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.")
-t6 <- t6 + theme(legend.position="bottom", legend.margin=margin(0,0,0,0)) + scale_x_discrete(labels= SSSL) + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+t6 <- t6 + theme(legend.position="bottom", legend.margin=margin(0,0,0,0)) + scale_x_discrete(labels= SSSL) + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 6, face = "italic"), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t6 <- t6 + scale_fill_discrete(labels = temp)
 t6 <- t6 + coord_cartesian(ylim = c(0, 0.0026)) + scale_y_continuous(breaks= seq(0.0005, 0.0026, by = 0.001), expand = c(0,0))
 
                                     
 t7 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
     geom_boxplot(aes(fill = variable), outlier.size = 0.2, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.") #  scale_x_discrete(labels= SSSL, position = "top")
-t7 <- t7 + theme(legend.position="bottom", legend.margin=margin(0,0,0,0)) + scale_x_discrete(labels= SSSL, position = "top") + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 7, face = "italic"), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+t7 <- t7 + theme(legend.position="bottom", legend.margin=margin(0,0,0,0)) + scale_x_discrete(labels= SSSL, position = "top") + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 6, face = "italic"), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t7 <- t7 + scale_fill_discrete(labels = temp) 
 t7 <- t7 + coord_cartesian(ylim = c(0.0035, 0.037)) + scale_y_continuous(breaks= seq(0.0035, 0.037, by = 0.01), expand = c(0,0))  
 t7 <- t7 + theme(legend.position = "NA")
@@ -5781,8 +5781,8 @@ my_comparisons <- list(c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Ma
 t <- ggplot(K.tr.DF,aes(x = Status,y = K05350)) + 
     geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab("Rel. Abund. of K05350: beta-glucosidase [EC:3.2.1.21]") + stat_boxplot(geom ='errorbar')
 t <- t + geom_jitter(position=position_jitter(0.2), size = 0.2)
-t <- t + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 4.5), axis.title.x = element_blank())
+t <- t + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 6), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 4.5), axis.title.x = element_blank())
 t <- t + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
 
 
@@ -5799,8 +5799,8 @@ dev.off()
 #E. coli
 ec <- ggplot(S.tr.DF,aes(x = Status, y = S.tr.DF$Escherichia.coli)) + 
     geom_boxplot(aes(fill = Status), outlier.size = 0.2, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Escherichia coli"))))
-ec <- ec + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+ec <- ec + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 6), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
 ec <- ec + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
                                     
 
@@ -5848,8 +5848,8 @@ my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Masimanimba", "Unaffect
 r <- ggplot(K.tr.DF,aes(x = Status,y = K01011)) + 
     geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of K01011: \nthiosulfate/3-mercaptopyruvate sulfurtransferase \n[EC:2.8.1.1, 2.8.1.2]"))) + stat_boxplot(geom ='errorbar')
 r <- r + geom_jitter(position=position_jitter(0.2), size = 0.3)
-r <- r + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 4), axis.title.x = element_blank())
+r <- r + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 6), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 4), axis.title.x = element_blank())
 r <- r + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
 
                                     
@@ -5863,7 +5863,7 @@ dev.off()
 #dev.off()    
                                     
 tiff(filename = "Kinshasa_Konzo3_Lab_Functional_BoxPlot.tiff", width = 7, height = 3.5, units = "in", res = 600)
-ggarrange(lab, t , r,labels = c("A","B","C"), widths = c(1.5,1,1), ncol = 3, nrow = 1, font.label = list(size = 7))
+ggarrange(lab, t , r,labels = c("A","B","C"), widths = c(1.35,1,1), ncol = 3, nrow = 1, font.label = list(size = 7))
 dev.off()  
                                     
 ##### Supplemental Figures                                   
