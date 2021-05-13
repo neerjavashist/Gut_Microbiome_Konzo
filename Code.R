@@ -5559,7 +5559,7 @@ PCBt <- PCB + stat_ellipse(type = "t") + scale_x_continuous(position = "top", br
 
 
 PCBt <- PCBt + theme(legend.position="none")
-PCBt <- PCBt + annotate("text", x = 0.375, y = -0.22, label = expression(paste("p = 0.00053")), size = 2) #0.00053
+PCBt <- PCBt + annotate("text", x = 0.37, y = -0.22, label = expression(paste("p = 0.00053")), size = 2) #0.00053
 
 C <- arrangeGrob(PCBt, a1,                               # bar plot spaning two columns
              a2, l,                               # box plot and scatter plot
@@ -5587,7 +5587,7 @@ G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Unaffected_Low_Prevalence_Z
 for (i in nrow(G.tr.DF))
 {G.tr.DF[i,]$Geography <- Control.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Geography
 }
-G.tr.DF$Intervention <- factor(G.tr.DF$Intervention, levels = c("Low_Prevalence_Zone", "High_Prevalence_Zone"))
+G.tr.DF$Geography <- factor(G.tr.DF$Geography, levels = c("Low_Prevalence_Zone", "High_Prevalence_Zone"))
 
 #my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
                         #c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone"), 
