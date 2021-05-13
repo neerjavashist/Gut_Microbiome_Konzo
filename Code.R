@@ -6609,8 +6609,6 @@ dev.off()
                                              
 #------------------------FUNTIONAL---------------------------------
                                               
-                                              
-                                              
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken")
 
 #META
@@ -6645,7 +6643,7 @@ KonzoData_KO_count <-phyloseq(KO_count, KO, META)
 #Set NAs to 0
 KonzoData_KO_count@otu_table[is.na(KonzoData_KO_count@otu_table)] <- 0
 KonzoData_KO_count@sam_data$Status <- factor(KonzoData_KO_count@sam_data$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
-#write.csv(t(KonzoData_KO_count@otu_table), file = "./KinshasaKonzo3_KO_Count_BySample.csv")
+#write.csv(KonzoData_KO_count@otu_table, file = "./KinshasaKonzo3_KO_Count_BySample.csv")
 
 #Merge samples by group/status                                         
 KonzoData_KO_count_status <- merge_samples(KonzoData_KO_count, KonzoData_KO_count@sam_data$Status) #merge_smaples by default sums the values for otu
@@ -6661,6 +6659,48 @@ KonzoData_KO_tr_status <- merge_samples(KonzoData_KO_tr, KonzoData_KO_tr@sam_dat
 KonzoData_KO_tr_status <- transform_sample_counts(KonzoData_KO_tr_status, function(x) x / 30) #average the sum of relabund in each group                                                                                                                                    
 #write.csv(t(KonzoData_KO_tr_status@otu_table), file = "./KinshasaKonzo3_KO_AvgRelAbund_ByStatus.csv")
 
+# Filtering
+Kinshasa.KO.tr <- prune_samples(KonzoData_KO_tr@sam_data$Status == "Kinshasa", KonzoData_KO_tr)
+Masimanimba.KO.tr <- prune_samples(KonzoData_KO_tr@sam_data$Status == "Masimanimba", KonzoData_KO_tr)
+ULPZ.KO.tr <- prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone", KonzoData_KO_tr)
+KLPZ.KO.tr <- prune_samples(KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone", KonzoData_KO_tr)
+UHPZ.KO.tr <- prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData_KO_tr)
+KHPZ.KO.tr <- prune_samples(KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData_KO_tr)
+                                     
+Kinshasa.KO.tr.f <- filter_taxa(Kinshasa.KO.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+Masimanimba.KO.tr.f <- filter_taxa(Masimanimba.KO.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+ULPZ.KO.tr.f <- filter_taxa(ULPZ.KO.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+KLPZ.KO.tr.f <- filter_taxa(KLPZ.KO.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+UHPZ.KO.tr.f <- filter_taxa(UHPZ.KO.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+KHPZ.KO.tr.f <- filter_taxa(KHPZ.KO.tr, function (x) mean(x) >= 1e-4, prune = TRUE)
+
+filterList1 <- union(Kinshasa.KO.tr.f@tax_table,Masimanimba.KO.tr.f@tax_table) #Kin, Mas
+filterList2 <- union(ULPZ.KO.tr.f@tax_table, KLPZ.KO.tr.f@tax_table) #ULPZ, KLPZ
+filterList3 <- union(UHPZ.KO.tr.f@tax_table,KHPZ.KO.tr.f@tax_table)
+filterList4 <- union(filterList1, filterList2) #Kin, Mas, ULPZ, KLPZ
+filterList <- union(filterList3,filterList4) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
+
+#write.csv(filterList, file = "Kinshasa_Konzo3_KO_f_0.0001.csv")
+                            
+x <- read.csv("Kinshasa_Konzo3_KO_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+                                                 
+KonzoData_KO_count.f <- prune_taxa(f_0.0001, KonzoData_KO_count) #filtered readcount phyloseq object
+KonzoData_KO_tr.f <- prune_taxa(f_0.0001, KonzoData_KO_tr) #filtered rel abund phyloseq object                                            
+KonzoData_KO_tr_status.f <- prune_taxa(f_0.0001,KonzoData_KO_tr_status)
+                            
+KonzoData_KO_tr.f.otu <- as.data.frame(KonzoData_KO_tr.f@otu_table)                           
+KonzoData_KO_tr_status.f.otu <- as.data.frame(t(KonzoData_KO_tr_status.f@otu_table))                            
+ 
+KO_func_f_0.0001 <- read.csv("./KinshasaKonzo3_KO_f_0.0001_function_AM.csv", row.names = 1) 
+
+                                                      
+KonzoData_KO_tr.f.otu.func <- cbind(KO_func_f_0.0001, KonzoData_KO_tr.f.otu)
+#write.csv(KonzoData_KO_tr.f.otu.func, file = "./KinshasaKonzo3_KO_f_0.0001_RelAbund_WithFunction.csv")
+                            
+KonzoData_KO_tr_status.f.otu.func <- cbind(KO_func_f_0.0001, KonzoData_KO_tr_status.f.otu)
+#write.csv(KonzoData_KO_tr_status.f.otu.func, file = "./KinshasaKonzo3_KO_f_0.0001_AvgRelAbund_ByStatus_WithFunction.csv")                                             
+                                              
 #Geography_KO                                                  
 Geography.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status != "Konzo_Low_Prevalence_Zone") & (KonzoData_KO_tr@sam_data$Status != "Konzo_High_Prevalence_Zone"), KonzoData_KO_tr)                                              
                                                                                                                                                                                                                                                                 
