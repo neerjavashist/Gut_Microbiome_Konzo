@@ -5163,7 +5163,7 @@ otuD.G <- as.data.frame(t(otu_table(Geography.G)))
 diversity.G <- estimate_richness(Geography.G)
 diversity.G <- cbind(sample_data(Geography.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
 diversity.G$Status <- as.factor(diversity.G$Status)
-diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalenze_Zone"))
+diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(Geography.G.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
