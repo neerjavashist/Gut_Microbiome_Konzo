@@ -5858,9 +5858,13 @@ ggarrange(ec,r,labels = c("C","D"), ncol = 2, nrow = 1, font.label = list(size =
 dev.off() 
                                     
                                     
-tiff(filename = "Kinshasa_Konzo3_Lab_Ecoli_Functional_BoxPlot.tiff", width = 7, height = 5, units = "in", res = 600)
-ggarrange(lab, ec, t ,r,labels = c("A", "C","B","D"), heights = c(3,2), ncol = 2, nrow = 2, font.label = list(size = 7))
-dev.off()                                     
+#tiff(filename = "Kinshasa_Konzo3_Lab_Ecoli_Functional_BoxPlot.tiff", width = 7, height = 5, units = "in", res = 600)
+#ggarrange(lab, ec, t ,r,labels = c("A", "C","B","D"), heights = c(3,2), ncol = 2, nrow = 2, font.label = list(size = 7))
+#dev.off()    
+                                    
+tiff(filename = "Kinshasa_Konzo3_Lab_Functional_BoxPlot.tiff", width = 7, height = 3, units = "in", res = 600)
+ggarrange(lab, t , r,labels = c("A","B","C"), ncol = 3, nrow = 1, font.label = list(size = 7))
+dev.off()  
                                     
 ##### Supplemental Figures                                   
                                     
