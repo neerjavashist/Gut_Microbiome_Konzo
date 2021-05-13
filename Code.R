@@ -5322,10 +5322,10 @@ for (i in a:ncol(G.tr.DF))
     Cor[j,2] = as.numeric(cor$estimate)
     Cor[j,3] = as.numeric(cor$p.value)
   }
-  write.csv(Cor, file = paste("Geography_Genus_",colnames(G.tr.DF[i]),"_Correlation.csv", sep = ""))
+  #write.csv(Cor, file = paste("Geography_Genus_",colnames(G.tr.DF[i]),"_Correlation.csv", sep = ""))
   Cor <- data.frame(Cor, row.names = TRUE)
   Cor.f <- subset(Cor, rownames(Cor) %in% f_0.0001)                                       
-  write.csv(Cor.f, file = paste("Geography_Genus_f_0.0001_",colnames(G.tr.DF[i]),"_Correlation.csv", sep = ""))
+  #write.csv(Cor.f, file = paste("Geography_Genus_f_0.0001_",colnames(G.tr.DF[i]),"_Correlation.csv", sep = ""))
 }
 
 #Plot most correlated with Axis 1 and Axis 2                                             
@@ -5361,7 +5361,7 @@ l <- l + theme(plot.margin=unit(c(-1,0,0,-1), "lines"))
 
 PGBt <- PGB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 PGBt <- PGBt + theme(legend.position="none")
-PGBt <- PGBt + annotate("text", x = -0.43, y = -0.42, label = expression(paste("p = 1x",10^-5)), size = 2.5) #1e-05
+PGBt <- PGBt + annotate("text", x = -0.46, y = -0.42, label = expression(paste("p = 1x",10^-5)), size = 2.5) #1e-05
 PGBt <- ggarrange(PGBt,labels = c("A"),font.label = list(size = 7))
 
 PGB <- PGB + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines")) + theme(legend.position="none")
@@ -5405,7 +5405,7 @@ PKUB <- p1 +
 
 PKUBt <- PKUB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 PKUBt <- PKUBt + theme(legend.position="none")
-PKUBt <- PKUBt + annotate("text", x = 0.4, y = -0.43, label = expression(paste("p = 0.00166")), size = 2)#0.00166
+PKUBt <- PKUBt + annotate("text", x = 0.37, y = -0.43, label = expression(paste("p = 0.00166")), size = 2)#0.00166
 PKUBt <- ggarrange(PKUBt,labels = c("C"),font.label = list(size = 7))
                                     
 #MasULPZ
@@ -5421,7 +5421,7 @@ PMUB <- p1 +
 
 PMUBt <- PMUB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 PMUBt <- PMUBt + theme(legend.position="none")
-PMUBt <- PMUBt + annotate("text", x = 0.34, y = -0.27, label = expression(paste("p = 3x",10^-5)), size = 2) #3e-05
+PMUBt <- PMUBt + annotate("text", x = 0.38, y = -0.27, label = expression(paste("p = 3x",10^-5)), size = 2) #3e-05
 PMUBt <- ggarrange(PMUBt,labels = c("E"),font.label = list(size = 7))
 
 #KinUHPZ
@@ -5437,7 +5437,7 @@ PKUHB <- p1 +
 
 PKUHBt <- PKUHB + stat_ellipse(type = "t") +  scale_y_continuous(position = "right")+ theme(plot.margin=unit(c(0.15,0.15,0.15,0.6), "lines"))
 PKUHBt <- PKUHBt + theme(legend.position="none")
-PKUHBt <- PKUHBt + annotate("text", x = 0.35, y = -0.43, label = expression(paste("p = 1x",10^-5)), size = 2) #1e-05
+PKUHBt <- PKUHBt + annotate("text", x = 0.38, y = -0.43, label = expression(paste("p = 1x",10^-5)), size = 2) #1e-05
 PKUHBt <- ggarrange(PKUHBt,labels = c("D"),font.label = list(size = 7))
 
 #MasUHPZ
@@ -5453,7 +5453,7 @@ PMUHB <- p1 +
 
 PMUHBt <- PMUHB + stat_ellipse(type = "t") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.6,0.15,0.15,0.15), "lines"))
 PMUHBt <- PMUHBt + theme(legend.position="none")
-PMUHBt <- PMUHBt + annotate("text", x = 0.31, y = -0.33, label = expression(paste("p = 0.00272")), size = 2) #0.00272
+PMUHBt <- PMUHBt + annotate("text", x = 0.28, y = -0.33, label = expression(paste("p = 0.00272")), size = 2) #0.00272
 PMUHBt <- ggarrange(PMUHBt,labels = c("F"),font.label = list(size = 7))
 
 #EF <- ggarrange(PMUBt, PMUHBt, ncol = 1, nrow = 2, labels = c("E", "F"))
@@ -5559,7 +5559,7 @@ PCBt <- PCB + stat_ellipse(type = "t") + scale_x_continuous(position = "top", br
 
 
 PCBt <- PCBt + theme(legend.position="none")
-PCBt <- PCBt + annotate("text", x = 0.37, y = -0.22, label = expression(paste("p = 0.00053")), size = 2) #0.00053
+PCBt <- PCBt + annotate("text", x = 0.35, y = -0.22, label = expression(paste("p = 0.00053")), size = 2) #0.00053
 
 C <- arrangeGrob(PCBt, a1,                               # bar plot spaning two columns
              a2, l,                               # box plot and scatter plot
