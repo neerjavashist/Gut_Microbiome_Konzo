@@ -5746,7 +5746,7 @@ dev.off()
 ###
 #Beta-Glucosidase
                                     
-K <- KonzoData_KO_tr.f
+K <- KonzoData_KO_tr
 
 K.tr_META <- as.data.frame(K@sam_data)
 K.tr_OTU <- as.data.frame(t(K@otu_table))
@@ -5757,12 +5757,12 @@ colnames(K.tr.DF)[colnames(K.tr.DF)=="K.tr_META$Status"] <- "Status"
 colnames(K.tr.DF)[colnames(K.tr.DF)=="K.tr_META$Geography"] <- "Geography"
 
 for (i in nrow(K.tr.DF))
-{K.tr.DF[i,]$Status <- KonzoData_KO_tr.f@sam_data[rownames(K.tr.DF[i,]),]$Status
+{K.tr.DF[i,]$Status <- KonzoData_KO_tr@sam_data[rownames(K.tr.DF[i,]),]$Status
 }
 K.tr.DF$Status <- factor(K.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
 for (i in nrow(K.tr.DF))
-{K.tr.DF[i,]$Geography <- KonzoData_KO_tr.f@sam_data[rownames(K.tr.DF[i,]),]$Geography
+{K.tr.DF[i,]$Geography <- KonzoData_KO_tr@sam_data[rownames(K.tr.DF[i,]),]$Geography
 }
 K.tr.DF$Geography <- factor(K.tr.DF$Geography, levels = c("Kinshasa", "Masimanimba", "Low_Prevalence_Zone", "High_Prevalence_Zone"))
 
@@ -5782,7 +5782,7 @@ t <- ggplot(K.tr.DF,aes(x = Status,y = K05350)) +
     geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab("Rel. Abund. of K05350: beta-glucosidase [EC:3.2.1.21]") + stat_boxplot(geom ='errorbar')
 t <- t + geom_jitter(position=position_jitter(0.2), size = 0.2)
 t <- t + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 4.5), axis.title.x = element_blank())
+   theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 4.5), axis.title.x = element_blank())
 t <- t + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
 
 
@@ -5829,7 +5829,7 @@ K.tr.DF$Geography <- factor(K.tr.DF$Geography, levels = c("Kinshasa", "Masimanim
                                     
                                     
 pw_wt <-  pairwise.wilcox.test(K.tr.DF$K01011, K.tr.DF$Status, p.adj = "none")
-capture.output(pw_wt, file="KinshasaKonzo3_pairwiseMWW_K01011_rhodanese.txt")                                                
+#capture.output(pw_wt, file="KinshasaKonzo3_pairwiseMWW_K01011_rhodanese.txt")                                                
                                     
                                     
 #my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
@@ -5849,7 +5849,7 @@ r <- ggplot(K.tr.DF,aes(x = Status,y = K01011)) +
     geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of K01011: \nthiosulfate/3-mercaptopyruvate sulfurtransferase \n[EC:2.8.1.1, 2.8.1.2]"))) + stat_boxplot(geom ='errorbar')
 r <- r + geom_jitter(position=position_jitter(0.2), size = 0.3)
 r <- r + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 4), axis.title.x = element_blank())
+   theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 7), axis.title.y = element_text(size = 4), axis.title.x = element_blank())
 r <- r + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
 
                                     
@@ -5862,8 +5862,8 @@ dev.off()
 #ggarrange(lab, ec, t ,r,labels = c("A", "C","B","D"), heights = c(3,2), ncol = 2, nrow = 2, font.label = list(size = 7))
 #dev.off()    
                                     
-tiff(filename = "Kinshasa_Konzo3_Lab_Functional_BoxPlot.tiff", width = 7, height = 3, units = "in", res = 600)
-ggarrange(lab, t , r,labels = c("A","B","C"), ncol = 3, nrow = 1, font.label = list(size = 7))
+tiff(filename = "Kinshasa_Konzo3_Lab_Functional_BoxPlot.tiff", width = 7, height = 3.5, units = "in", res = 600)
+ggarrange(lab, t , r,labels = c("A","B","C"), widths = c(1.5,1,1), ncol = 3, nrow = 1, font.label = list(size = 7))
 dev.off()  
                                     
 ##### Supplemental Figures                                   
