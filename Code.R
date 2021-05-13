@@ -5361,7 +5361,7 @@ l <- l + theme(plot.margin=unit(c(-1,0,0,-1), "lines"))
 
 PGBt <- PGB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 PGBt <- PGBt + theme(legend.position="none")
-PGBt <- PGBt + annotate("text", x = -0.43, y = -0.42, label = expression(paste("p = 9.999x",10^-5)), size = 2.5)
+PGBt <- PGBt + annotate("text", x = -0.43, y = -0.42, label = expression(paste("p = 1x",10^-5)), size = 2.5) #1e-05
 PGBt <- ggarrange(PGBt,labels = c("A"),font.label = list(size = 7))
 
 PGB <- PGB + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines")) + theme(legend.position="none")
@@ -5389,7 +5389,7 @@ PKMB <- p1 +
 
 PKMBt <- PKMB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 PKMBt <- PKMBt + theme(legend.position="none")
-PKMBt <- PKMBt + annotate("text", x = 0.4, y = -0.43, label = expression(paste("p = 2x",10^-4)), size = 2)
+PKMBt <- PKMBt + annotate("text", x = 0.4, y = -0.43, label = expression(paste("p = 2x",10^-5)), size = 2) #2e-05
 PKMBt <- ggarrange(PKMBt,labels = c("B"),font.label = list(size = 7))
                                     
 #KinULPZ
@@ -5405,7 +5405,7 @@ PKUB <- p1 +
 
 PKUBt <- PKUB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 PKUBt <- PKUBt + theme(legend.position="none")
-PKUBt <- PKUBt + annotate("text", x = 0.4, y = -0.43, label = expression(paste("p = 0.0014")), size = 2)
+PKUBt <- PKUBt + annotate("text", x = 0.4, y = -0.43, label = expression(paste("p = 0.00166")), size = 2)#0.00166
 PKUBt <- ggarrange(PKUBt,labels = c("C"),font.label = list(size = 7))
                                     
 #MasULPZ
@@ -5421,7 +5421,7 @@ PMUB <- p1 +
 
 PMUBt <- PMUB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 PMUBt <- PMUBt + theme(legend.position="none")
-PMUBt <- PMUBt + annotate("text", x = 0.34, y = -0.27, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+PMUBt <- PMUBt + annotate("text", x = 0.34, y = -0.27, label = expression(paste("p = 3x",10^-5)), size = 2) #3e-05
 PMUBt <- ggarrange(PMUBt,labels = c("E"),font.label = list(size = 7))
 
 #KinUHPZ
@@ -5437,7 +5437,7 @@ PKUHB <- p1 +
 
 PKUHBt <- PKUHB + stat_ellipse(type = "t") +  scale_y_continuous(position = "right")+ theme(plot.margin=unit(c(0.15,0.15,0.15,0.6), "lines"))
 PKUHBt <- PKUHBt + theme(legend.position="none")
-PKUHBt <- PKUHBt + annotate("text", x = 0.35, y = -0.43, label = expression(paste("p = 9.999x",10^-5)), size = 2)
+PKUHBt <- PKUHBt + annotate("text", x = 0.35, y = -0.43, label = expression(paste("p = 1x",10^-5)), size = 2) #1e-05
 PKUHBt <- ggarrange(PKUHBt,labels = c("D"),font.label = list(size = 7))
 
 #MasUHPZ
@@ -5453,7 +5453,7 @@ PMUHB <- p1 +
 
 PMUHBt <- PMUHB + stat_ellipse(type = "t") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.6,0.15,0.15,0.15), "lines"))
 PMUHBt <- PMUHBt + theme(legend.position="none")
-PMUHBt <- PMUHBt + annotate("text", x = 0.31, y = -0.33, label = expression(paste("p = 0.0035")), size = 2)
+PMUHBt <- PMUHBt + annotate("text", x = 0.31, y = -0.33, label = expression(paste("p = 0.00272")), size = 2) #0.00272
 PMUHBt <- ggarrange(PMUHBt,labels = c("F"),font.label = list(size = 7))
 
 #EF <- ggarrange(PMUBt, PMUHBt, ncol = 1, nrow = 2, labels = c("E", "F"))
@@ -5559,7 +5559,7 @@ PCBt <- PCB + stat_ellipse(type = "t") + scale_x_continuous(position = "top", br
 
 
 PCBt <- PCBt + theme(legend.position="none")
-PCBt <- PCBt + annotate("text", x = 0.375, y = -0.22, label = expression(paste("p = 5x",10^-4)), size = 2)
+PCBt <- PCBt + annotate("text", x = 0.375, y = -0.22, label = expression(paste("p = 0.00053")), size = 2) #0.00053
 
 C <- arrangeGrob(PCBt, a1,                               # bar plot spaning two columns
              a2, l,                               # box plot and scatter plot
@@ -5634,7 +5634,7 @@ PKB <- PKB + guides(colour = guide_legend(override.aes = list(size=1)))
 
 PKBt <- PKB + stat_ellipse(type = "t", show.legend = FALSE) + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 
-PKBt <- PKBt + annotate("text", x = 0.42, y = -0.35, label = "p = 0.0159", size = 2)
+PKBt <- PKBt + annotate("text", x = 0.42, y = -0.35, label = "p = 0.01761", size = 2) #0.01761
 
 PKBt
 
@@ -5644,6 +5644,7 @@ dev.off()
 
 #Figure 6: Kahemba Disease Genus PCoA
 #PCoA for Kahemba
+                                    
 #ULPZ vs. KLPZ
 p1 = plot_ordination(LPZ.G.tr, ordinate(LPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
@@ -5655,8 +5656,8 @@ PNIB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 PNIBt <- PNIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-PNIBt <- PNIBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.9161")), size = 2)
-
+PNIBt <- PNIBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.914")), size = 2) #0.914
+                                    
 #UHPZ vs. KHPZ
 p1 = plot_ordination(HPZ.G.tr, ordinate(HPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
@@ -5669,7 +5670,7 @@ PIB <- p1 +
 
 
 PIBt <- PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-PIBt <- PIBt + annotate("text", x = 0.45, y = -0.4, label = expression(paste("p = 0.5784")), size = 2)
+PIBt <- PIBt + annotate("text", x = 0.45, y = -0.4, label = expression(paste("p = 0.5721")), size = 2) #0.5721
 
 tiff(filename = "Kahemba_Genus_LPZ_HPZ_PCoA.tiff", width = 3.5, height = 1.75, units = "in", res = 600)
 ggarrange(PNIBt, PIBt, labels = c("A","B"), ncol = 2, nrow = 1, font.label = list(size = 7))
