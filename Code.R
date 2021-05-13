@@ -651,7 +651,7 @@ observed4 <- observed4 + scale_fill_manual(values = konzo_color, labels = SSSL)
 shan <- ggplot(diversity.S.0, aes(factor(Status), Shannon))+ geom_boxplot(aes(fill = factor(Status)),fatten = 1, outlier.shape = NA) + labs(x = element_blank(), y = "Shannon Diversity Index") + theme(axis.text.x = element_blank()) + theme_classic()
 shan <- shan + geom_jitter(position=position_jitter(0.2), size = 0.3)
 shan2 <- shan + stat_summary(fun=mean, geom="point", shape=23, size=1.5, color = "black", fill="white")
-shan3 <- shan2 + theme(legend.position="bottom", legend.margin=margin(-10,0,0,0)) + theme(legend.direction = "horizontal") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(axis.ticks.x = element_blank(), axis.title.y = element_text(size = 7), axis.text.y = element_text(size = 5), axis.text.x = element_blank())
+shan3 <- shan2 + theme(legend.position="bottom", legend.margin=margin(-10,0,0,0)) + theme(legend.direction = "horizontal") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(axis.ticks.x = element_blank(), axis.title.y = element_text(size = 5), axis.text.y = element_text(size = 7), axis.text.x = element_blank())
 
 shan4 <- shan3 + guides(fill=guide_legend(ncol=6)) 
 shan4 <- shan4 + scale_fill_manual(values = konzo_color, labels = SSSL)
