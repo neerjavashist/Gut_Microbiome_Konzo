@@ -6997,7 +6997,9 @@ ko_PIB <- p1 +
 ko_PIBt <- ko_PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
 ko_PIBt <- ko_PIBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.7856")), size = 2)
                             
-                                                  
+tiff(filename = "Kahemba_KO_Control_Disease_LPZ_HPZ_PCoA.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
+ggarrange(ko_PCBt, ko_PKBt, ko_PNIBt, ko_PIBt, labels = c("A","B", "C", "D"), ncol = 2, nrow = 2, font.label = list(size = 7))
+dev.off()                                                  
                                                   
                                                   
 ###THE END ######
