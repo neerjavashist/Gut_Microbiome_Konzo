@@ -314,24 +314,22 @@ KonzoData.O.tr.status <- merge_samples(KonzoData.O.tr, KonzoData.O.tr@sam_data$S
 KonzoData.O.tr.status <- transform_sample_counts(KonzoData.O.tr.status, function(x) x / 30)
 
 #Mean and Standard Deviation
-KonzoData.P.tr.df <- as.data.frame(t(KonzoData.P.tr@otu_table))
-KonzoData.P.tr.df <- cbind(KonzoData.P.tr.df, KonzoData.P.tr@sam_data$Status)
+KonzoData.O.tr.df <- as.data.frame(t(KonzoData.O.tr@otu_table))
+KonzoData.O.tr.df <- cbind(KonzoData.O.tr.df, KonzoData.O.tr@sam_data$Status)
 
-colnames(KonzoData.P.tr.df)[colnames(KonzoData.P.tr.df)=="KonzoData.P.tr@sam_data$Status"] <- "Status"
-for (i in 1:nrow(KonzoData.P.tr.df))
-  {KonzoData.P.tr.df[i,]$Status <- KonzoData.P.tr@sam_data[rownames(KonzoData.P.tr.df[i,]),]$Status
+colnames(KonzoData.O.tr.df)[colnames(KonzoData.O.tr.df)=="KonzoData.O.tr@sam_data$Status"] <- "Status"
+for (i in 1:nrow(KonzoData.O.tr.df))
+  {KonzoData.O.tr.df[i,]$Status <- KonzoData.O.tr@sam_data[rownames(KonzoData.O.tr.df[i,]),]$Status
   } 
-KonzoData.P.tr.avg <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
-KonzoData.P.tr.avg <- t(KonzoData.P.tr.avg)   
-write.csv(KonzoData.P.tr.avg, file = "./KonzoDataPhylum_AvgRelAbund_ByGroup.csv")
+KonzoData.O.tr.avg <- KonzoData.O.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
+KonzoData.O.tr.avg <- t(KonzoData.O.tr.avg)   
+write.csv(KonzoData.O.tr.avg, file = "./KonzoDataOrder_AvgRelAbund_ByGroup.csv")
                                                  
-KonzoData.P.tr.sd <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))                                                                                                     
-KonzoData.P.tr.sd <- t(KonzoData.P.tr.sd) 
-write.csv(KonzoData.P.tr.sd, file = "./KonzoDataPhylum_SD_ByGroup.csv")                                          
+KonzoData.O.tr.sd <- KonzoData.O.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))                                                                                                     
+KonzoData.O.tr.sd <- t(KonzoData.O.tr.sd) 
+write.csv(KonzoData.O.tr.sd, file = "./KonzoDataOrder_SD_ByGroup.csv")                                          
                                                  
-                                                 
-                                                 
-                                                 
+                                                                                                                                                
 #Filter
                                                  
 Kinshasa.O <- prune_samples(KonzoData.O@sam_data$Status == "Kinshasa", KonzoData.O)
@@ -406,7 +404,24 @@ KonzoData.F.tr <- transform_sample_counts(KonzoData.F, function(x) x / sum(x))
 KonzoData.F.tr.status <- merge_samples(KonzoData.F.tr, KonzoData.F.tr@sam_data$Status)
 KonzoData.F.tr.status <- transform_sample_counts(KonzoData.F.tr.status, function(x) x / 30)                                          
 #write.csv(t(KonzoData.F.tr.status@otu_table), file = "./KonzoDataFamily_AvgRelAbund_ByStatus.csv")
- 
+
+#Mean and Standard Deviation
+KonzoData.F.tr.df <- as.data.frame(t(KonzoData.F.tr@otu_table))
+KonzoData.F.tr.df <- cbind(KonzoData.F.tr.df, KonzoData.F.tr@sam_data$Status)
+
+colnames(KonzoData.F.tr.df)[colnames(KonzoData.F.tr.df)=="KonzoData.F.tr@sam_data$Status"] <- "Status"
+for (i in 1:nrow(KonzoData.F.tr.df))
+  {KonzoData.F.tr.df[i,]$Status <- KonzoData.F.tr@sam_data[rownames(KonzoData.F.tr.df[i,]),]$Status
+  } 
+KonzoData.F.tr.avg <- KonzoData.F.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
+KonzoData.F.tr.avg <- t(KonzoData.F.tr.avg)   
+write.csv(KonzoData.F.tr.avg, file = "./KonzoDataFamily_AvgRelAbund_ByGroup.csv")
+                                                 
+KonzoData.F.tr.sd <- KonzoData.F.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))                                                                                                     
+KonzoData.F.tr.sd <- t(KonzoData.F.tr.sd) 
+write.csv(KonzoData.F.tr.sd, file = "./KonzoDataFamily_SD_ByGroup.csv")                                          
+                                                 
+                                                 
 #Filter
                                                                                                                         
 Kinshasa.F <- prune_samples(KonzoData.F@sam_data$Status == "Kinshasa", KonzoData.F)
@@ -485,7 +500,23 @@ KonzoData.G.tr.log10 <- transform_sample_counts(KonzoData.G.tr, function(x) log1
 
 KonzoData.G.tr.status <- merge_samples(KonzoData.G.tr, KonzoData.G.tr@sam_data$Status, fun = mean)
 KonzoData.G.tr.status <- transform_sample_counts(KonzoData.G.tr.status, function(x) x / 30)
-                                                                       
+ 
+#Mean and Standard Deviation
+KonzoData.G.tr.df <- as.data.frame(t(KonzoData.G.tr@otu_table))
+KonzoData.G.tr.df <- cbind(KonzoData.G.tr.df, KonzoData.G.tr@sam_data$Status)
+
+colnames(KonzoData.G.tr.df)[colnames(KonzoData.G.tr.df)=="KonzoData.G.tr@sam_data$Status"] <- "Status"
+for (i in 1:nrow(KonzoData.G.tr.df))
+  {KonzoData.G.tr.df[i,]$Status <- KonzoData.G.tr@sam_data[rownames(KonzoData.G.tr.df[i,]),]$Status
+  } 
+KonzoData.G.tr.avg <- KonzoData.G.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
+KonzoData.G.tr.avg <- t(KonzoData.G.tr.avg)   
+write.csv(KonzoData.G.tr.avg, file = "./KonzoDataGenus_AvgRelAbund_ByGroup.csv")
+                                                 
+KonzoData.G.tr.sd <- KonzoData.G.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))                                                                                                     
+KonzoData.G.tr.sd <- t(KonzoData.G.tr.sd) 
+write.csv(KonzoData.G.tr.sd, file = "./KonzoDataGenus_SD_ByGroup.csv")                                          
+                                                 
 #Filter                           
 Kinshasa.G <- prune_samples(KonzoData.G@sam_data$Status == "Kinshasa", KonzoData.G)
 Kinshasa.G.tr <- transform_sample_counts(Kinshasa.G, function(x) x / sum(x))
@@ -574,7 +605,24 @@ KonzoData.S.tr.log10 <- transform_sample_counts(KonzoData.S.tr, function(x) log1
                                                 
 KonzoData.S.tr.status <- merge_samples(KonzoData.S.tr, KonzoData.S.tr@sam_data$Status)
 KonzoData.S.tr.status <- transform_sample_counts(KonzoData.S.tr.status, function(x) x / 30)
-                                         
+ 
+#Mean and Standard Deviation
+KonzoData.S.tr.df <- as.data.frame(t(KonzoData.S.tr@otu_table))
+KonzoData.S.tr.df <- cbind(KonzoData.S.tr.df, KonzoData.S.tr@sam_data$Status)
+
+colnames(KonzoData.S.tr.df)[colnames(KonzoData.S.tr.df)=="KonzoData.S.tr@sam_data$Status"] <- "Status"
+for (i in 1:nrow(KonzoData.S.tr.df))
+  {KonzoData.S.tr.df[i,]$Status <- KonzoData.S.tr@sam_data[rownames(KonzoData.S.tr.df[i,]),]$Status
+  } 
+KonzoData.S.tr.avg <- KonzoData.S.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
+KonzoData.S.tr.avg <- t(KonzoData.S.tr.avg)   
+write.csv(KonzoData.S.tr.avg, file = "./KonzoDataSpecies_AvgRelAbund_ByGroup.csv")
+                                                 
+KonzoData.S.tr.sd <- KonzoData.S.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))                                                                                                     
+KonzoData.S.tr.sd <- t(KonzoData.S.tr.sd) 
+write.csv(KonzoData.S.tr.sd, file = "./KonzoDataSpecies_SD_ByGroup.csv")                                          
+                                                 
+                                                
 #Filter                           
 Kinshasa.S <- prune_samples(KonzoData.S@sam_data$Status == "Kinshasa", KonzoData.S)
 Kinshasa.S.tr <- transform_sample_counts(Kinshasa.S, function(x) x / sum(x))
