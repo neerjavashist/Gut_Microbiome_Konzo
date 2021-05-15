@@ -134,7 +134,23 @@ KonzoData.P.tr.status <- transform_sample_counts(KonzoData.P.tr.status, function
                                                  
 #Writing the otu_table in Supplemental File 2, Phylum Tab (data is joined by phylum name with KonzoData.P.tr@otu_table)                                                                                     
 #write.csv(t(KonzoData.P.tr.status@otu_table), file = "./KonzoDataPhylum_AvgRelAbund_ByStatus.csv")
-  
+
+#Mean and Standard Deviation
+KonzoData.P.tr.df <- as.data.frame(t(KonzoData.P.tr@otu_table))
+KonzoData.P.tr.df <- cbind(KonzoData.P.tr.df, KonzoData.P.tr@sam_data$Status)
+
+colnames(KonzoData.P.tr.df)[colnames(KonzoData.P.tr.df)=="KonzoData.P.tr@sam_data$Status"] <- "Status"
+for (i in 1:nrow(KonzoData.P.tr.df))
+  {KonzoData.P.tr.df[i,]$Status <- KonzoData.P.tr@sam_data[rownames(KonzoData.P.tr.df[i,]),]$Status
+  } 
+KonzoData.P.tr.avg <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
+KonzoData.P.tr.avg <- t(KonzoData.P.tr.avg)   
+write.csv(KonzoData.P.tr.avg, file = "./KonzoDataPhylum_AvgRelAbund_ByGroup.csv")
+                                                 
+KonzoData.P.tr.sd <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))                                                                                                     
+KonzoData.P.tr.sd <- t(KonzoData.P.tr.sd) 
+write.csv(KonzoData.P.tr.sd, file = "./KonzoDataPhylum_SD_ByGroup.csv")                                          
+                                                 
 #keep Rel abund >= 0.01% in atleast one group
 #Creating phyloseq with only one group                                                 
 Kinshasa.P <- prune_samples(KonzoData.P@sam_data$Status == "Kinshasa", KonzoData.P)
@@ -171,7 +187,10 @@ f_0.0001 <- unlist(x)
 KonzoData.P.f <- prune_taxa(f_0.0001, KonzoData.P) #filtered readcount phyloseq object
 KonzoData.P.tr.f <- prune_taxa(f_0.0001, KonzoData.P.tr) #filtered rel abund phyloseq object                                            
 KonzoData.P.tr.status.f <- prune_taxa(f_0.0001, KonzoData.P.tr.status) #filtered rel abund megerd by groups/status phyoseq object
-                                                 
+
+                           
+                           
+                           
 #Bacteria Class
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
 
