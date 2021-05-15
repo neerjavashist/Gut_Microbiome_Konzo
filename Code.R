@@ -144,15 +144,22 @@ for (i in 1:nrow(KonzoData.P.tr.df))
   {KonzoData.P.tr.df[i,]$Status <- KonzoData.P.tr@sam_data[rownames(KonzoData.P.tr.df[i,]),]$Status
   } 
 KonzoData.P.tr.avg <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
-
-KonzoData.P.tr.avg <- t(KonzoData.P.tr.avg)   
-write.csv(KonzoData.P.tr.avg, file = "./KonzoDataPhylum_AvgRelAbund_ByGroup.csv")
+KonzoData.P.tr.avg.x <- data.frame(KonzoData.P.tr.avg)
+rownames(KonzoData.P.tr.avg.x) <- KonzoData.P.tr.avg.x[,1]
+KonzoData.P.tr.avg.x <- KonzoData.P.tr.avg.x[,-1]
+                                                 
+KonzoData.P.tr.avg.x <- t(KonzoData.P.tr.avg.x)   
+write.csv(KonzoData.P.tr.avg.x, file = "./KonzoDataPhylum_AvgRelAbund_ByGroup.csv")
                                                  
                                                  
                                                  
 KonzoData.P.tr.sd <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))                                                                                                     
-KonzoData.P.tr.sd <- t(KonzoData.P.tr.sd) 
-write.csv(KonzoData.P.tr.sd, file = "./KonzoDataPhylum_SD_ByGroup.csv")                                          
+KonzoData.P.tr.sd.x <- data.frame(KonzoData.P.tr.sd)
+rownames(KonzoData.P.tr.sd.x) <- KonzoData.P.tr.sd.x[,1]
+KonzoData.P.tr.sd.x <- KonzoData.P.tr.sd.x[,-1]
+                                                 
+KonzoData.P.tr.sd.x <- t(KonzoData.P.tr.sd.x)   
+write.csv(KonzoData.P.tr.sd.x, file = "./KonzoDataPhylum_SD_ByGroup.csv")                                          
                                                  
 #keep Rel abund >= 0.01% in atleast one group
 #Creating phyloseq with only one group                                                 
@@ -182,7 +189,7 @@ filterList3 <- union(UHPZ.P.tr.f@tax_table,KHPZ.P.tr.f@tax_table)
 filterList4 <- union(filterList1, filterList2) #Kin, Mas, ULPZ, KLPZ
 filterList <- union(filterList3,filterList4) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 #Save the filter list for future filtering
-write.csv(filterList, file = "Kinshasa_Konzo3_Phylum_f_0.0001.csv")
+#write.csv(filterList, file = "Kinshasa_Konzo3_Phylum_f_0.0001.csv")
                                                                                                  
 x <- read.csv("Kinshasa_Konzo3_Phylum_f_0.0001.csv", row.names = 1, colClasses = "character")
 f_0.0001 <- unlist(x)
@@ -191,8 +198,8 @@ KonzoData.P.f <- prune_taxa(f_0.0001, KonzoData.P) #filtered readcount phyloseq 
 KonzoData.P.tr.f <- prune_taxa(f_0.0001, KonzoData.P.tr) #filtered rel abund phyloseq object                                            
 KonzoData.P.tr.status.f <- prune_taxa(f_0.0001, KonzoData.P.tr.status) #filtered rel abund megerd by groups/status phyoseq object
 
-                           
-                           
+KonzoData.P.tr.avg.f <- subset(KonzoData.P.tr.avg.x, rownames(KonzoData.P.tr.avg.x) %in% f_0.0001)                           
+write.csv(KonzoData.P.tr.avg.f, file = "./KonzoDataPhylum_AvgRelAbund_ByGroup_filtered.csv")                           
                            
 #Bacteria Class
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
