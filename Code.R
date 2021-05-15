@@ -144,8 +144,11 @@ for (i in 1:nrow(KonzoData.P.tr.df))
   {KonzoData.P.tr.df[i,]$Status <- KonzoData.P.tr@sam_data[rownames(KonzoData.P.tr.df[i,]),]$Status
   } 
 KonzoData.P.tr.avg <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
+
 KonzoData.P.tr.avg <- t(KonzoData.P.tr.avg)   
 write.csv(KonzoData.P.tr.avg, file = "./KonzoDataPhylum_AvgRelAbund_ByGroup.csv")
+                                                 
+                                                 
                                                  
 KonzoData.P.tr.sd <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))                                                                                                     
 KonzoData.P.tr.sd <- t(KonzoData.P.tr.sd) 
