@@ -6763,6 +6763,22 @@ KonzoData_KO_tr_status <- merge_samples(KonzoData_KO_tr, KonzoData_KO_tr@sam_dat
 KonzoData_KO_tr_status <- transform_sample_counts(KonzoData_KO_tr_status, function(x) x / 30) #average the sum of relabund in each group                                                                                                                                    
 #write.csv(t(KonzoData_KO_tr_status@otu_table), file = "./KinshasaKonzo3_KO_AvgRelAbund_ByStatus.csv")
 
+#Mean and Standard Deviation
+KonzoData_KO_tr.df <- as.data.frame(t(KonzoData_KO_tr@otu_table))
+KonzoData_KO_tr.df <- cbind(KonzoData_KO_tr.df, KonzoData_KO_tr@sam_data$Status)
+
+colnames(KonzoData_KO_tr.df)[colnames(KonzoData_KO_tr.df)=="KonzoData_KO_tr@sam_data$Status"] <- "Status"
+for (i in 1:nrow(KonzoData_KO_tr.df))
+  {KonzoData_KO_tr.df[i,]$Status <- KonzoData_KO_trr@sam_data[rownames(KonzoData_KO_tr.df[i,]),]$Status
+  } 
+KonzoData_KO_tr.avg <- KonzoData_KO_tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
+KonzoData_KO_tr.avg <- t(KonzoData_KO_tr.avg)   
+write.csv(KonzoData_KO_tr.avg, file = "./KonzoData_KO_AvgRelAbund_ByGroup.csv")
+                                                 
+KonzoData_KO_tr.sd <- KonzoData_KO_tr.df %>% group_by(Status) %>% summarise_each(funs(sd))                                                                                                     
+KonzoData_KO_tr.sd <- t(KonzoData_KO_tr.sd) 
+write.csv(KonzoData_KO_tr.sd, file = "./KonzoData_KO_SD_ByGroup.csv")                                          
+                                                 
 # Filtering
 Kinshasa.KO.tr <- prune_samples(KonzoData_KO_tr@sam_data$Status == "Kinshasa", KonzoData_KO_tr)
 Masimanimba.KO.tr <- prune_samples(KonzoData_KO_tr@sam_data$Status == "Masimanimba", KonzoData_KO_tr)
