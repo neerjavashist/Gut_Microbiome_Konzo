@@ -143,22 +143,22 @@ colnames(KonzoData.P.tr.df)[colnames(KonzoData.P.tr.df)=="KonzoData.P.tr@sam_dat
 for (i in 1:nrow(KonzoData.P.tr.df))
   {KonzoData.P.tr.df[i,]$Status <- KonzoData.P.tr@sam_data[rownames(KonzoData.P.tr.df[i,]),]$Status
   } 
-KonzoData.P.tr.avg <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
-KonzoData.P.tr.avg.x <- data.frame(KonzoData.P.tr.avg)
-rownames(KonzoData.P.tr.avg.x) <- KonzoData.P.tr.avg.x[,1]
-KonzoData.P.tr.avg.x <- KonzoData.P.tr.avg.x[,-1]
                                                  
-KonzoData.P.tr.avg.x <- t(KonzoData.P.tr.avg.x)   
+KonzoData.P.tr.avg <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
+KonzoData.P.tr.avg.x <- t(KonzoData.P.tr.avg)
+colnames(KonzoData.P.tr.avg.x) <- KonzoData.P.tr.avg.x[1,]   
+KonzoData.P.tr.avg.x <- KonzoData.P.tr.avg.x[-1,]
+                                                 
+  
 write.csv(KonzoData.P.tr.avg.x, file = "./KonzoDataPhylum_AvgRelAbund_ByGroup.csv")
                                                  
                                                  
                                                  
-KonzoData.P.tr.sd <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))                                                                                                     
-KonzoData.P.tr.sd.x <- data.frame(KonzoData.P.tr.sd)
-rownames(KonzoData.P.tr.sd.x) <- KonzoData.P.tr.sd.x[,1]
-KonzoData.P.tr.sd.x <- KonzoData.P.tr.sd.x[,-1]
-                                                 
-KonzoData.P.tr.sd.x <- t(KonzoData.P.tr.sd.x)   
+KonzoData.P.tr.sd <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))  
+KonzoData.P.tr.sd.x <- t(KonzoData.P.tr.sd)
+colnames(KonzoData.P.tr.sd.x) <- KonzoData.P.tr.sd.x[1,]   
+KonzoData.P.tr.sd.x <- KonzoData.P.tr.sd.x[-1,]
+                                                                                                  
 write.csv(KonzoData.P.tr.sd.x, file = "./KonzoDataPhylum_SD_ByGroup.csv")                                          
                                                  
 #keep Rel abund >= 0.01% in atleast one group
@@ -200,6 +200,10 @@ KonzoData.P.tr.status.f <- prune_taxa(f_0.0001, KonzoData.P.tr.status) #filtered
 
 KonzoData.P.tr.avg.f <- subset(KonzoData.P.tr.avg.x, rownames(KonzoData.P.tr.avg.x) %in% f_0.0001)                           
 write.csv(KonzoData.P.tr.avg.f, file = "./KonzoDataPhylum_AvgRelAbund_ByGroup_filtered.csv")                           
+ 
+KonzoData.P.tr.sd.f <- subset(KonzoData.P.tr.sd.x, rownames(KonzoData.P.tr.sd.x) %in% f_0.0001)                           
+write.csv(KonzoData.P.tr.sd.f, file = "./KonzoDataPhylum_SD_ByGroup_filtered.csv")                           
+                           
                            
 #Bacteria Class
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
