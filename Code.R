@@ -5787,13 +5787,13 @@ for (i in 1:n)
 #Prevotella Axis 2
 
 a1 <- ggplot(G.tr.DF, aes(x = Axis.1, y = Faecalibacterium)) +
-    geom_point(aes(color = factor(Status)), size = 0.7, stroke = 0, shape = 16) + theme_classic() + ylab("Faec.") + theme(axis.title.x = element_blank(), axis.text.x = element_text(size = 6))
+    geom_point(aes(color = factor(Status)), size = 0.7, stroke = 0, shape = 16) + theme_classic() + ylab("Faec.") + theme(axis.title.x = element_blank(), axis.text.x = element_text(size = 5))
 a1 <- a1 + scale_color_manual(labels = SSSL, values = control_color) + theme(legend.position="none", panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme (axis.title.y = element_text(size = 6, face = "italic"), axis.text.y = element_text(size = 5))  
 a1 <- a1 + geom_smooth(method=lm, color = "black", size = 0.35) + theme(plot.margin=unit(c(0.05,0.05,0.05,0.05), "lines")) + scale_y_continuous(breaks = seq(-0.1, 0.3, by = 0.2))
 #a1 <- a1 + stat_cor(method = "spearman", size = 5) 
 
 a2 <- ggplot(G.tr.DF, aes(x = Prevotella, y = Axis.2)) +
-    geom_point(aes(color = factor(Status)), size = 0.7, stroke = 0, shape = 16) + theme_classic() + xlab("Prev.") + theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 6))
+    geom_point(aes(color = factor(Status)), size = 0.7, stroke = 0, shape = 16) + theme_classic() + xlab("Prev.") + theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 5))
 a2 <- a2 + scale_color_manual(labels = SSSL, values = control_color) + theme(legend.position="none", panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme (axis.title.x = element_text(size = 6, face = "italic"), axis.text.x = element_text(size = 5))  
 a2 <- a2 + scale_y_continuous(position = "right") + scale_x_continuous(position = "top", breaks = seq(0.1, 0.4, by = 0.2))
 a2 <- a2 + geom_smooth(method=lm, color = "black", size = 0.35) + theme(plot.margin=unit(c(0.05,0.05,0.05,0.05), "lines"))
@@ -5937,14 +5937,14 @@ ggarrange(PNIBt, PIBt, labels = c("A","B"), ncol = 2, nrow = 1, font.label = lis
 dev.off()                                  
 
 s <- plot_spacer() + theme_minimal()                                    
-part2 <- ggarrange(PNIBt, PIBt,s , labels = c("A","B", ""), ncol = 3, nrow = 1, font.label = list(size = 7), widths = c(2.5, 2.5, 2) )                                  
+part2 <- ggarrange(PNIBt, PIBt,s , labels = c("D","E", ""), ncol = 3, nrow = 1, font.label = list(size = 7), widths = c(2.25, 2.25, 2.5) )                                  
 
-tiff(filename = "Kahemba_Genus_PCoA_CombFig.tiff", width = 7, height = 5, units = "in", res = 600)
-ggarrange(part1, part2, ncol = 1, nrow = 2, heights = c(3,2))
+tiff(filename = "Kahemba_Genus_PCoA_CombFig.tiff", width = 7, height = 4.5, units = "in", res = 600)
+ggarrange(part1, part2, ncol = 1, nrow = 2, heights = c(2.5,2))
 dev.off()                                     
                                     
                                     
-#Figure 7:LAB and Beta-glucosidase
+#Figure 6:LAB and Beta-glucosidase
 
 S <- KonzoData.S.tr
 
