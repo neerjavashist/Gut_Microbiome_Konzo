@@ -5730,7 +5730,7 @@ ggarrange(as_ggplot(Geo))
 dev.off()
 
                                              
-###Figure 5: Kahemba Prevalence Zone Genus PCoA------------------------
+###Figure 5: Kahemba Prevalence Zones Genus PCoA------------------------
 
 #Control
 
@@ -5798,6 +5798,7 @@ a2 <- a2 + scale_color_manual(labels = SSSL, values = control_color) + theme(leg
 a2 <- a2 + scale_y_continuous(position = "right") + scale_x_continuous(position = "top", breaks = seq(0.1, 0.4, by = 0.2))
 a2 <- a2 + geom_smooth(method=lm, color = "black", size = 0.5) + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 
+                                    
 p1 = plot_ordination(Control.G.tr, ordinate(Control.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
@@ -5805,7 +5806,7 @@ p1$layers <- p1$layers[-1]
 PCB <- p1 + 
   labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
                                 axis.line = element_line(colour = "black")) + scale_color_manual(values = control_color, labels = SSSL)+
-  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.2, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 P <- PCB + guides(colour = guide_legend(override.aes = list(size=1)))
@@ -5827,7 +5828,7 @@ C <- arrangeGrob(PCBt, a1,                               # bar plot spaning two 
              layout_matrix = rbind(c(1,1,1,3), c(1,1,1,3), c(1,1,1,3), c(2, 2, 2, 4)))
 as_ggplot(C)
 
-#Figure: Prevotella and Faecalibacterium for ULPZ vs. UHPZ
+#Prevotella and Faecalibacterium for ULPZ vs. UHPZ
 
 G <- Control.G.tr
 
@@ -5861,7 +5862,7 @@ p <- ggplot(G.tr.DF,aes(x = Status,y = Prevotella)) +
     geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.75) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Prevotella")))) + stat_boxplot(geom ='errorbar')
 p <- p + geom_jitter(position=position_jitter(0.2), size = 0.5)
 p <- p + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+   theme(axis.text.x = element_text(size = 5), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
 p <- p + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2.5)
 p <- p + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
 #remove outlier.shape = NA and add outlier.size if you don't want jitter
@@ -5869,17 +5870,17 @@ f <- ggplot(G.tr.DF,aes(x = Status,y = Faecalibacterium)) +
     geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.75) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Faecalibacterium")))) + stat_boxplot(geom ='errorbar')
 f <- f + geom_jitter(position=position_jitter(0.2), size = 0.5)
 f <- f + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+   theme(axis.text.x = element_text(size = 5), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
 f <- f + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2.5)
 f <- f + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
 
-tiff(filename = "Kinshasa_Konzo3_Control_Prevotella_Faecalibacterium.tiff", width = 2, height = 2.5, units = "in", res = 600)
-ggarrange(p,f, ncol = 2, nrow = 1, align = "hv")
-dev.off()
+#tiff(filename = "Kinshasa_Konzo3_Control_Prevotella_Faecalibacterium.tiff", width = 2, height = 2.5, units = "in", res = 600)
+#ggarrange(p,f, ncol = 2, nrow = 1, align = "hv")
+#dev.off()
 
 pf <- ggarrange(p,f, ncol = 2, nrow = 1, align = "hv")
 
-#Figure 4: Kahemba Prevalence Zone Genus PCoA
+#KLPZ vs. KHPZ
 
 p1 = plot_ordination(Disease.G.tr, ordinate(Disease.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
@@ -5887,7 +5888,7 @@ p1$layers <- p1$layers[-1]
 PKB <- p1 + 
   labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
                                 axis.line = element_line(colour = "black")) + scale_color_manual(values = disease_color, labels = SSSL)+
-  theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom",legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.3, "cm")) + theme(legend.text = element_text(size=7)) +
+  theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom",legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 PKB <- PKB + guides(colour = guide_legend(override.aes = list(size=1)))
@@ -5898,12 +5899,10 @@ PKBt <- PKBt + annotate("text", x = 0.42, y = -0.35, label = "p = 0.01761", size
 
 PKBt
 
-tiff(filename = "Kinshasa_Konzo3_PZ_PCoA_RelBoxPlot.tiff", width = 7, height = 3, units = "in", res = 600)
+tiff(filename = "Kinshasa_Konzo3_PZ_PCoA_RelBoxPlot.tiff", width = 5, height = 3, units = "in", res = 600)
 ggarrange(as_ggplot(C),pf, PKBt, labels = c("A","B", "C"), font.label = list(size = 7), ncol = 3, nrow = 1, widths = c(2.5, 2, 2.5))
 dev.off()
 
-#Figure 6: Kahemba Disease Genus PCoA
-#PCoA for Kahemba
                                     
 #ULPZ vs. KLPZ
 p1 = plot_ordination(LPZ.G.tr, ordinate(LPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
@@ -6381,7 +6380,7 @@ MAS <- matrix(nrow = 30, ncol = 30)
 colnames(MAS) <- colnames(brayd.DF[151:180])
 rownames(MAS) <- rownames(brayd.DF[151:180,])
 for (i in 1:30) {for (j in 1:30) {MAS[i,j] <- brayd.DF[i+150,j+150]}}
-write.csv(MIN, file = "Masimanimba_RelAbundBray_Genus.csv")
+write.csv(MAS, file = "Masimanimba_RelAbundBray_Genus.csv")
 
 bray_avg <- matrix(nrow = 180,  ncol = 3)
 
