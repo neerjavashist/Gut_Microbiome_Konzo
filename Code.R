@@ -87,23 +87,23 @@ konzo_color <- c("royalblue1",   "springgreen3", "turquoise3", "tomato", "slateb
 
 #TESTING NEW COLOR SCHEME
 kinmas_color <- c("royalblue1",   "springgreen3")
-kinulpz_color <- c("royalblue1",    "deepskyblue1")
-masulpz_color <- c("springgreen3",     "deepskyblue1")
+kinulpz_color <- c("royalblue1",    "gold")
+masulpz_color <- c("springgreen3",     "gold")
 kinuhpz_color <- c("royalblue1",  "mediumorchid1")
 masuhpz_color <- c("springgreen3","mediumorchid1")
 kinklpz_color <- c("royalblue1",    "tomato" )
 masklpz_color <- c("springgreen3",    "tomato" )
-kinkhpz_color <- c("royalblue1",    "gold")
-maskhpz_color <- c("springgreen3",     "gold")
+kinkhpz_color <- c("royalblue1",    "deepskyblue1")
+maskhpz_color <- c("springgreen3",     "deepskyblue1")
 
 
-lpz_color <- c("deepskyblue1",        "tomato" )
-hpz_color <- c( "mediumorchid1",        "gold")
-control_color <- c( "deepskyblue1",        "mediumorchid1")
-disease_color <- c("tomato", "gold")
-geography_color <- c("royalblue1",   "springgreen3", "deepskyblue1", "mediumorchid1")
-kahemba_color <- c("deepskyblue1", "tomato", "mediumorchid1", "gold")
-konzo_color <- c("royalblue1",   "springgreen3", "deepskyblue1", "tomato", "mediumorchid1", "gold")
+lpz_color <- c("gold",        "tomato" )
+hpz_color <- c( "mediumorchid1",        "deepskyblue1")
+control_color <- c( "gold",        "mediumorchid1")
+disease_color <- c("tomato", "deepskyblue1")
+geography_color <- c("royalblue1",   "springgreen3", "gold", "mediumorchid1")
+kahemba_color <- c("gold", "tomato", "mediumorchid1", "deepskyblue1")
+konzo_color <- c("royalblue1",   "springgreen3", "gold", "tomato", "mediumorchid1", "deepskyblue1")
 
 
 
