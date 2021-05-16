@@ -126,13 +126,11 @@ KonzoData.P@sam_data$Status <- factor(KonzoData.P@sam_data$Status, levels = c("K
 
 #Read Counts to Relative Abundance
 KonzoData.P.tr <- transform_sample_counts(KonzoData.P, function(x) x / sum(x))
-#Writing the otu_table in Supplemental File 2, Phylum Tab                                     
 #write.csv(KonzoData.P.tr@otu_table), file = "./KonzoDataPhylum_AvgRelAbund.csv")  
 #Merge samples by group/status                                         
 KonzoData.P.tr.status <- merge_samples(KonzoData.P.tr, KonzoData.P.tr@sam_data$Status) #merge_smaples by default sums the values for otu
 KonzoData.P.tr.status <- transform_sample_counts(KonzoData.P.tr.status, function(x) x / 30) #average the sum of relabund in each group
                                                  
-#Writing the otu_table in Supplemental File 2, Phylum Tab (data is joined by phylum name with KonzoData.P.tr@otu_table)                                                                                     
 #write.csv(t(KonzoData.P.tr.status@otu_table), file = "./KonzoDataPhylum_AvgRelAbund_ByStatus.csv")
                                                  
 #keep Rel abund >= 0.01% in atleast one group
@@ -204,9 +202,10 @@ write.csv(KonzoData.P.tr.avg.sd, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGrou
 KonzoData.P.tr.avg.sd.f <- subset(KonzoData.P.tr.avg.sd, rownames(KonzoData.P.tr.avg.sd) %in% f_0.0001)                                             
 write.csv(KonzoData.P.tr.avg.sd.f, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup_filtered.csv")                            
 
+#Data for Relative Abundnace for Phylum (Supplemental File 2)                           
 Phylum.tr <- merge(KonzoData.P.tr.avg.sd,as.data.frame(KonzoData.P.tr@otu_table),by='row.names', sort = FALSE)                           
 write.csv(Phylum.tr, file = "./KonzoDataPhylum_RelAbund_Supp.csv")                           
-
+#Data for Relative Abundnace for Phylum Filtered (Supplemental File 2) 
 Phylum.tr.f <- merge(KonzoData.P.tr.avg.sd.f,as.data.frame(KonzoData.P.tr.f@otu_table),by='row.names', sort = FALSE)                           
 write.csv(Phylum.tr.f, file = "./KonzoDataPhylum_RelAbund_filtered_Supp.csv")                           
                            
