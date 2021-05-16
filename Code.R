@@ -134,31 +134,6 @@ KonzoData.P.tr.status <- transform_sample_counts(KonzoData.P.tr.status, function
                                                  
 #Writing the otu_table in Supplemental File 2, Phylum Tab (data is joined by phylum name with KonzoData.P.tr@otu_table)                                                                                     
 #write.csv(t(KonzoData.P.tr.status@otu_table), file = "./KonzoDataPhylum_AvgRelAbund_ByStatus.csv")
-
-#Mean and Standard Deviation
-KonzoData.P.tr.df <- as.data.frame(t(KonzoData.P.tr@otu_table))
-KonzoData.P.tr.df <- cbind(KonzoData.P.tr.df, KonzoData.P.tr@sam_data$Status)
-
-colnames(KonzoData.P.tr.df)[colnames(KonzoData.P.tr.df)=="KonzoData.P.tr@sam_data$Status"] <- "Status"
-for (i in 1:nrow(KonzoData.P.tr.df))
-  {KonzoData.P.tr.df[i,]$Status <- KonzoData.P.tr@sam_data[rownames(KonzoData.P.tr.df[i,]),]$Status
-  } 
-                                                 
-KonzoData.P.tr.avg <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
-KonzoData.P.tr.avg.x <- t(KonzoData.P.tr.avg)
-colnames(KonzoData.P.tr.avg.x) <- KonzoData.P.tr.avg.x[1,]   
-KonzoData.P.tr.avg.x <- KonzoData.P.tr.avg.x[-1,]
-colnames(KonzoData.P.tr.avg.x) <- paste("Avg", colnames(KonzoData.P.tr.avg.x), sep = "_")                                                 
-                                                
-                                                 
-KonzoData.P.tr.sd <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))  
-KonzoData.P.tr.sd.x <- t(KonzoData.P.tr.sd)
-colnames(KonzoData.P.tr.sd.x) <- KonzoData.P.tr.sd.x[1,]   
-KonzoData.P.tr.sd.x <- KonzoData.P.tr.sd.x[-1,]
-colnames(KonzoData.P.tr.sd.x) <- paste("SD", colnames(KonzoData.P.tr.sd.x), sep = "_")                                                 
-
-KonzoData.P.tr.avg.sd <-merge(KonzoData.P.tr.avg.x,KonzoData.P.tr.sd.x,by='row.names', sort = FALSE)                                                 
-write.csv(KonzoData.P.tr.avg.sd, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup.csv")    
                                                  
 #keep Rel abund >= 0.01% in atleast one group
 #Creating phyloseq with only one group                                                 
@@ -196,7 +171,34 @@ f_0.0001 <- unlist(x)
 KonzoData.P.f <- prune_taxa(f_0.0001, KonzoData.P) #filtered readcount phyloseq object
 KonzoData.P.tr.f <- prune_taxa(f_0.0001, KonzoData.P.tr) #filtered rel abund phyloseq object                                            
 KonzoData.P.tr.status.f <- prune_taxa(f_0.0001, KonzoData.P.tr.status) #filtered rel abund megerd by groups/status phyoseq object
-                        
+
+#Mean and Standard Deviation
+KonzoData.P.tr.df <- as.data.frame(t(KonzoData.P.tr@otu_table))
+KonzoData.P.tr.df <- cbind(KonzoData.P.tr.df, KonzoData.P.tr@sam_data$Status)
+
+colnames(KonzoData.P.tr.df)[colnames(KonzoData.P.tr.df)=="KonzoData.P.tr@sam_data$Status"] <- "Status"
+for (i in 1:nrow(KonzoData.P.tr.df))
+  {KonzoData.P.tr.df[i,]$Status <- KonzoData.P.tr@sam_data[rownames(KonzoData.P.tr.df[i,]),]$Status
+  } 
+                                                 
+KonzoData.P.tr.avg <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
+KonzoData.P.tr.avg.x <- t(KonzoData.P.tr.avg)
+colnames(KonzoData.P.tr.avg.x) <- KonzoData.P.tr.avg.x[1,]   
+KonzoData.P.tr.avg.x <- KonzoData.P.tr.avg.x[-1,]
+colnames(KonzoData.P.tr.avg.x) <- paste("Avg", colnames(KonzoData.P.tr.avg.x), sep = "_")                                                 
+                                                
+                                                 
+KonzoData.P.tr.sd <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))  
+KonzoData.P.tr.sd.x <- t(KonzoData.P.tr.sd)
+colnames(KonzoData.P.tr.sd.x) <- KonzoData.P.tr.sd.x[1,]   
+KonzoData.P.tr.sd.x <- KonzoData.P.tr.sd.x[-1,]
+colnames(KonzoData.P.tr.sd.x) <- paste("SD", colnames(KonzoData.P.tr.sd.x), sep = "_")                                                 
+
+KonzoData.P.tr.avg.sd <-merge(KonzoData.P.tr.avg.x,KonzoData.P.tr.sd.x,by='row.names', sort = FALSE) 
+rownames(KonzoData.P.tr.avg.sd) <- KonzoData.P.tr.avg.sd[,1]   
+KonzoData.P.tr.avg.sd <- KonzoData.P.tr.avg.sd[,-1]                                                                                                 
+write.csv(KonzoData.P.tr.avg.sd, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup.csv")                               
+                           
 KonzoData.P.tr.avg.sd.f <- subset(KonzoData.P.tr.avg.sd, rownames(KonzoData.P.tr.avg.sd) %in% f_0.0001)                                             
 write.csv(KonzoData.P.tr.avg.sd.f, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup_filtered.csv")                            
                            
