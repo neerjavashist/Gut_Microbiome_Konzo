@@ -394,7 +394,46 @@ KonzoData.O.tr.status.f <- prune_taxa(f_0.0001, KonzoData.O.tr.status)
 #write.csv((KonzoData.O@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Order_ReadCounts.csv")
 #write.csv((KonzoData.O.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Order_RelAbund.csv")
 #write.csv(t(KonzoData.O.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Order_Avg_RelAbund.csv")
+
+#Mean and Standard Deviation
+KonzoData.O.tr.df <- as.data.frame(t(KonzoData.O.tr@otu_table))
+KonzoData.O.tr.df <- cbind(KonzoData.O.tr.df, KonzoData.O.tr@sam_data$Status)
+
+colnames(KonzoData.O.tr.df)[colnames(KonzoData.O.tr.df)=="KonzoData.O.tr@sam_data$Status"] <- "Status"
+for (i in 1:nrow(KonzoData.O.tr.df))
+  {KonzoData.O.tr.df[i,]$Status <- KonzoData.O.tr@sam_data[rownames(KonzoData.O.tr.df[i,]),]$Status
+  } 
+                                                 
+KonzoData.O.tr.avg <- KonzoData.O.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
+KonzoData.O.tr.avg.x <- t(KonzoData.O.tr.avg)
+colnames(KonzoData.O.tr.avg.x) <- KonzoData.O.tr.avg.x[1,]   
+KonzoData.O.tr.avg.x <- KonzoData.O.tr.avg.x[-1,]
+colnames(KonzoData.O.tr.avg.x) <- paste("Avg", colnames(KonzoData.O.tr.avg.x), sep = "_")                                                 
+                                                
+                                                 
+KonzoData.O.tr.sd <- KonzoData.O.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))  
+KonzoData.O.tr.sd.x <- t(KonzoData.O.tr.sd)
+colnames(KonzoData.O.tr.sd.x) <- KonzoData.O.tr.sd.x[1,]   
+KonzoData.O.tr.sd.x <- KonzoData.O.tr.sd.x[-1,]
+colnames(KonzoData.O.tr.sd.x) <- paste("SD", colnames(KonzoData.O.tr.sd.x), sep = "_")                                                 
+
+KonzoData.O.tr.avg.sd <-merge(KonzoData.O.tr.avg.x,KonzoData.O.tr.sd.x,by='row.names', sort = FALSE) 
+rownames(KonzoData.O.tr.avg.sd) <- KonzoData.O.tr.avg.sd[,1]   
+KonzoData.O.tr.avg.sd <- KonzoData.O.tr.avg.sd[,-1]  
                            
+KonzoData.O.tr.avg.sd <- KonzoData.O.tr.avg.sd[, c(1, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12)]                                                   
+write.csv(KonzoData.O.tr.avg.sd, file = "./KonzoDataOrder_AvgRelAbund_SD_ByGroup.csv") 
+                           
+KonzoData.O.tr.avg.sd.f <- subset(KonzoData.O.tr.avg.sd, rownames(KonzoData.O.tr.avg.sd) %in% f_0.0001)                                             
+write.csv(KonzoData.O.tr.avg.sd.f, file = "./KonzoDataOrder_AvgRelAbund_SD_ByGroup_filtered.csv") 
+                                                     
+Order.tr <- merge(KonzoData.O.tr.avg.sd,as.data.frame(KonzoData.O.tr@otu_table),by='row.names', sort = FALSE)                           
+write.csv(Order.tr, file = "./KonzoDataOrder_RelAbund_Supp.csv")                           
+
+Order.tr.f <- merge(KonzoData.O.tr.avg.sd.f,as.data.frame(KonzoData.O.tr.f@otu_table),by='row.names', sort = FALSE)                           
+write.csv(Order.tr.f, file = "./KonzoDataOrder_RelAbund_filtered_Supp.csv")                           
+                           
+
                            
 #Bacteria Family
 #FAMILY
@@ -470,7 +509,46 @@ KonzoData.F.tr.status.f <- prune_taxa(f_0.0001, KonzoData.F.tr.status)
 #write.csv((KonzoData.F@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Family_ReadCounts.csv")
 #write.csv((KonzoData.F.tr@otu_table), file = "./KonzoMicrobiome_Samples_Bacteria_Family_RelAbund.csv")
 #write.csv(t(KonzoData.F.tr.status@otu_table), file = "./KonzoMicrobiome_Groups_Bacteria_Family_Avg_RelAbund.csv")
-                               
+
+#Mean and Standard Deviation
+KonzoData.F.tr.df <- as.data.frame(t(KonzoData.F.tr@otu_table))
+KonzoData.F.tr.df <- cbind(KonzoData.F.tr.df, KonzoData.F.tr@sam_data$Status)
+
+colnames(KonzoData.F.tr.df)[colnames(KonzoData.F.tr.df)=="KonzoData.F.tr@sam_data$Status"] <- "Status"
+for (i in 1:nrow(KonzoData.F.tr.df))
+  {KonzoData.F.tr.df[i,]$Status <- KonzoData.F.tr@sam_data[rownames(KonzoData.F.tr.df[i,]),]$Status
+  } 
+                                                 
+KonzoData.F.tr.avg <- KonzoData.F.tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
+KonzoData.F.tr.avg.x <- t(KonzoData.F.tr.avg)
+colnames(KonzoData.F.tr.avg.x) <- KonzoData.F.tr.avg.x[1,]   
+KonzoData.F.tr.avg.x <- KonzoData.F.tr.avg.x[-1,]
+colnames(KonzoData.F.tr.avg.x) <- paste("Avg", colnames(KonzoData.F.tr.avg.x), sep = "_")                                                 
+                                                
+                                                 
+KonzoData.F.tr.sd <- KonzoData.F.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))  
+KonzoData.F.tr.sd.x <- t(KonzoData.F.tr.sd)
+colnames(KonzoData.F.tr.sd.x) <- KonzoData.F.tr.sd.x[1,]   
+KonzoData.F.tr.sd.x <- KonzoData.F.tr.sd.x[-1,]
+colnames(KonzoData.F.tr.sd.x) <- paste("SD", colnames(KonzoData.F.tr.sd.x), sep = "_")                                                 
+
+KonzoData.F.tr.avg.sd <-merge(KonzoData.F.tr.avg.x,KonzoData.F.tr.sd.x,by='row.names', sort = FALSE) 
+rownames(KonzoData.F.tr.avg.sd) <- KonzoData.F.tr.avg.sd[,1]   
+KonzoData.F.tr.avg.sd <- KonzoData.F.tr.avg.sd[,-1]  
+                           
+KonzoData.F.tr.avg.sd <- KonzoData.F.tr.avg.sd[, c(1, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12)]                                                   
+write.csv(KonzoData.F.tr.avg.sd, file = "./KonzoDataFamily_AvgRelAbund_SD_ByGroup.csv") 
+                           
+KonzoData.F.tr.avg.sd.f <- subset(KonzoData.F.tr.avg.sd, rownames(KonzoData.F.tr.avg.sd) %in% f_0.0001)                                             
+write.csv(KonzoData.F.tr.avg.sd.f, file = "./KonzoDataFamily_AvgRelAbund_SD_ByGroup_filtered.csv") 
+                                                     
+Family.tr <- merge(KonzoData.F.tr.avg.sd,as.data.frame(KonzoData.F.tr@otu_table),by='row.names', sort = FALSE)                           
+write.csv(Family.tr, file = "./KonzoDataFamily_RelAbund_Supp.csv")                           
+
+Family.tr.f <- merge(KonzoData.F.tr.avg.sd.f,as.data.frame(KonzoData.F.tr.f@otu_table),by='row.names', sort = FALSE)                           
+write.csv(Family.tr.f, file = "./KonzoDataFamily_RelAbund_filtered_Supp.csv")                                
+                           
+                           
 #Bacteria Genus
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
 
