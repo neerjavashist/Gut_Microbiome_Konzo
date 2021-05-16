@@ -5916,7 +5916,7 @@ PNIB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 PNIBt <- PNIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-PNIBt <- PNIBt + annotate("text", x = 0.2, y = -0.56, label = expression(paste("p = 0.914")), size = 2) #0.914
+PNIBt <- PNIBt + annotate("text", x = 0.26, y = -0.56, label = expression(paste("p = 0.914")), size = 2) #0.914
                                     
 #UHPZ vs. KHPZ
 p1 = plot_ordination(HPZ.G.tr, ordinate(HPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
@@ -5930,7 +5930,7 @@ PIB <- p1 +
 
 
 PIBt <- PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-PIBt <- PIBt + annotate("text", x = 0.45, y = -0.4, label = expression(paste("p = 0.5721")), size = 2) #0.5721
+PIBt <- PIBt + annotate("text", x = 0.49, y = -0.4, label = expression(paste("p = 0.5721")), size = 2) #0.5721
 
 tiff(filename = "Kahemba_Genus_LPZ_HPZ_PCoA.tiff", width = 3.5, height = 1.75, units = "in", res = 600)
 ggarrange(PNIBt, PIBt, labels = c("A","B"), ncol = 2, nrow = 1, font.label = list(size = 7))
