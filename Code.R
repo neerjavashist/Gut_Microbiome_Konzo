@@ -5787,27 +5787,27 @@ for (i in 1:n)
 #Prevotella Axis 2
 
 a1 <- ggplot(G.tr.DF, aes(x = Axis.1, y = Faecalibacterium)) +
-    geom_point(aes(color = factor(Status)), size = 0.75, stroke = 0, shape = 16) + theme_classic() + ylab("Faec.") + theme(axis.title.x = element_blank(), axis.text.x = element_text(size = 6))
-a1 <- a1 + scale_color_manual(labels = SSSL, values = control_color) + theme(legend.position="none", panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme (axis.title.y = element_text(size = 7, face = "italic"), axis.text.y = element_text(size = 6))  
-a1 <- a1 + geom_smooth(method=lm, color = "black", size = 0.5) + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines")) + scale_y_continuous(breaks = seq(-0.1, 0.3, by = 0.2))
+    geom_point(aes(color = factor(Status)), size = 0.7, stroke = 0, shape = 16) + theme_classic() + ylab("Faec.") + theme(axis.title.x = element_blank(), axis.text.x = element_text(size = 6))
+a1 <- a1 + scale_color_manual(labels = SSSL, values = control_color) + theme(legend.position="none", panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme (axis.title.y = element_text(size = 6, face = "italic"), axis.text.y = element_text(size = 5))  
+a1 <- a1 + geom_smooth(method=lm, color = "black", size = 0.35) + theme(plot.margin=unit(c(0.05,0.05,0.05,0.05), "lines")) + scale_y_continuous(breaks = seq(-0.1, 0.3, by = 0.2))
 #a1 <- a1 + stat_cor(method = "spearman", size = 5) 
 
 a2 <- ggplot(G.tr.DF, aes(x = Prevotella, y = Axis.2)) +
-    geom_point(aes(color = factor(Status)), size = 0.75, stroke = 0, shape = 16) + theme_classic() + xlab("Prev.") + theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 6))
-a2 <- a2 + scale_color_manual(labels = SSSL, values = control_color) + theme(legend.position="none", panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme (axis.title.x = element_text(size = 7, face = "italic"), axis.text.x = element_text(size = 6))  
+    geom_point(aes(color = factor(Status)), size = 0.7, stroke = 0, shape = 16) + theme_classic() + xlab("Prev.") + theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 6))
+a2 <- a2 + scale_color_manual(labels = SSSL, values = control_color) + theme(legend.position="none", panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme (axis.title.x = element_text(size = 6, face = "italic"), axis.text.x = element_text(size = 5))  
 a2 <- a2 + scale_y_continuous(position = "right") + scale_x_continuous(position = "top", breaks = seq(0.1, 0.4, by = 0.2))
-a2 <- a2 + geom_smooth(method=lm, color = "black", size = 0.5) + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+a2 <- a2 + geom_smooth(method=lm, color = "black", size = 0.35) + theme(plot.margin=unit(c(0.05,0.05,0.05,0.05), "lines"))
 
                                     
 p1 = plot_ordination(Control.G.tr, ordinate(Control.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
-  geom_point(size = 1, stroke = 0, shape = 16)
+  geom_point(size = 0.85, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 
 PCB <- p1 + 
   labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
                                 axis.line = element_line(colour = "black")) + scale_color_manual(values = control_color, labels = SSSL)+
-  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
-  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
+  theme(legend.title=element_blank(), legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.2, "cm")) + theme(legend.text = element_text(size=5)) +
+  theme(axis.title.y = element_text(size = 6), axis.title.x = element_text(size = 6), axis.text.y = element_text(size = 5), axis.text.x = element_text(size = 5))
 
 P <- PCB + guides(colour = guide_legend(override.aes = list(size=1)))
 
@@ -5859,19 +5859,19 @@ my_comparisons <- list(c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prev
 
 #remove outlier.shape = NA and add outlier.size if you don't want jitter
 p <- ggplot(G.tr.DF,aes(x = Status,y = Prevotella)) + 
-    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.75) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Prevotella")))) + stat_boxplot(geom ='errorbar')
-p <- p + geom_jitter(position=position_jitter(0.2), size = 0.5)
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Prevotella")))) + stat_boxplot(geom ='errorbar')
+p <- p + geom_jitter(position=position_jitter(0.2), size = 0.35)
 p <- p + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 5), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
-p <- p + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2.5)
+   theme(axis.text.x = element_text(size = 4), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
+p <- p + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
 p <- p + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
 #remove outlier.shape = NA and add outlier.size if you don't want jitter
 f <- ggplot(G.tr.DF,aes(x = Status,y = Faecalibacterium)) + 
-    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.75) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Faecalibacterium")))) + stat_boxplot(geom ='errorbar')
-f <- f + geom_jitter(position=position_jitter(0.2), size = 0.5)
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Faecalibacterium")))) + stat_boxplot(geom ='errorbar')
+f <- f + geom_jitter(position=position_jitter(0.2), size = 0.35)
 f <- f + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
-   theme(axis.text.x = element_text(size = 5), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
-f <- f + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2.5)
+   theme(axis.text.x = element_text(size = 4), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
+f <- f + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
 f <- f + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
 
 #tiff(filename = "Kinshasa_Konzo3_Control_Prevotella_Faecalibacterium.tiff", width = 2, height = 2.5, units = "in", res = 600)
@@ -5889,7 +5889,7 @@ PKB <- p1 +
   labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
                                 axis.line = element_line(colour = "black")) + scale_color_manual(values = disease_color, labels = SSSL)+
   theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom",legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
-  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
+  theme(axis.title.y = element_text(size = 6), axis.title.x = element_text(size = 6), axis.text.y = element_text(size = 5), axis.text.x = element_text(size = 5))
 
 PKB <- PKB + guides(colour = guide_legend(override.aes = list(size=1)))
 
@@ -5898,11 +5898,12 @@ PKBt <- PKB + stat_ellipse(type = "t", show.legend = FALSE) + scale_x_continuous
 PKBt <- PKBt + annotate("text", x = 0.42, y = -0.35, label = "p = 0.01761", size = 2) #0.01761
 
 PKBt
-
-tiff(filename = "Kinshasa_Konzo3_PZ_PCoA_RelBoxPlot.tiff", width = 5, height = 3, units = "in", res = 600)
+                                                                        
+tiff(filename = "Kinshasa_Konzo3_PZ_PCoA_RelBoxPlot.tiff", width = 7, height = 3, units = "in", res = 600)
 ggarrange(as_ggplot(C),pf, PKBt, labels = c("A","B", "C"), font.label = list(size = 7), ncol = 3, nrow = 1, widths = c(2.5, 2, 2.5))
 dev.off()
 
+part1 <- ggarrange(as_ggplot(C),pf, PKBt, labels = c("A","B", "C"), font.label = list(size = 7), ncol = 3, nrow = 1, widths = c(2.5, 2, 2.5))                                    
                                     
 #ULPZ vs. KLPZ
 p1 = plot_ordination(LPZ.G.tr, ordinate(LPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
@@ -5933,8 +5934,16 @@ PIBt <- PIBt + annotate("text", x = 0.45, y = -0.4, label = expression(paste("p 
 
 tiff(filename = "Kahemba_Genus_LPZ_HPZ_PCoA.tiff", width = 3.5, height = 1.75, units = "in", res = 600)
 ggarrange(PNIBt, PIBt, labels = c("A","B"), ncol = 2, nrow = 1, font.label = list(size = 7))
-dev.off()
+dev.off()                                  
 
+s <- plot_spacer() + theme_minimal()                                    
+part2 <- ggarrange(PNIBt, PIBt,s , labels = c("A","B", ""), ncol = 3, nrow = 1, font.label = list(size = 7), widths = c(2.5, 2.5, 2) )                                  
+
+tiff(filename = "Kahemba_Genus_PCoA_CombFig.tiff", width = 7, height = 5, units = "in", res = 600)
+ggarrange(part1, part2, ncol = 1, nrow = 2, heights = c(3,2))
+dev.off()                                     
+                                    
+                                    
 #Figure 7:LAB and Beta-glucosidase
 
 S <- KonzoData.S.tr
