@@ -5816,7 +5816,7 @@ l <- as_ggplot(l)
 l <- l + theme(plot.margin=unit(c(-1,0,0,-1), "lines"))
 
 
-PCBt <- PCB + stat_ellipse(type = "t") + scale_x_continuous(position = "top", breaks = seq(-0.1, 0.5, by = 0.5) ) + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+PCBt <- PCB + stat_ellipse(type = "t") + scale_x_continuous(position = "top", breaks = seq(-0.1, 0.5, by = 0.5) ) + theme(plot.margin=unit(c(0.05,0.05,0.05,0.05), "lines"))
 
 
 PCBt <- PCBt + theme(legend.position="none")
@@ -5893,7 +5893,7 @@ PKB <- p1 +
 
 PKB <- PKB + guides(colour = guide_legend(override.aes = list(size=1)))
 
-PKBt <- PKB + stat_ellipse(type = "t", show.legend = FALSE) + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
+PKBt <- PKB + stat_ellipse(type = "t", show.legend = FALSE) + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.05,0.05,0.05,0.05), "lines"))
 
 PKBt <- PKBt + annotate("text", x = 0.42, y = -0.35, label = "p = 0.01761", size = 2) #0.01761
 
