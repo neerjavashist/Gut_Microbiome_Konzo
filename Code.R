@@ -148,18 +148,17 @@ KonzoData.P.tr.avg <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(
 KonzoData.P.tr.avg.x <- t(KonzoData.P.tr.avg)
 colnames(KonzoData.P.tr.avg.x) <- KonzoData.P.tr.avg.x[1,]   
 KonzoData.P.tr.avg.x <- KonzoData.P.tr.avg.x[-1,]
-                                                 
-  
-write.csv(KonzoData.P.tr.avg.x, file = "./KonzoDataPhylum_AvgRelAbund_ByGroup.csv")
-                                                 
-                                                 
+colnames(KonzoData.P.tr.avg.x) <- paste("Avg", colnames(KonzoData.P.tr.avg.x), sep = "_")                                                 
+                                                
                                                  
 KonzoData.P.tr.sd <- KonzoData.P.tr.df %>% group_by(Status) %>% summarise_each(funs(sd))  
 KonzoData.P.tr.sd.x <- t(KonzoData.P.tr.sd)
 colnames(KonzoData.P.tr.sd.x) <- KonzoData.P.tr.sd.x[1,]   
 KonzoData.P.tr.sd.x <- KonzoData.P.tr.sd.x[-1,]
-                                                                                                  
-write.csv(KonzoData.P.tr.sd.x, file = "./KonzoDataPhylum_SD_ByGroup.csv")                                          
+colnames(KonzoData.P.tr.sd.x) <- paste("SD", colnames(KonzoData.P.tr.sd.x), sep = "_")                                                 
+
+KonzoData.P.tr.avg.sd <-merge(KonzoData.P.tr.avg.x,KonzoData.P.tr.sd.x,by='row.names', sort = FALSE)                                                 
+write.csv(KonzoData.P.tr.avg.sd, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup.csv")    
                                                  
 #keep Rel abund >= 0.01% in atleast one group
 #Creating phyloseq with only one group                                                 
@@ -197,13 +196,9 @@ f_0.0001 <- unlist(x)
 KonzoData.P.f <- prune_taxa(f_0.0001, KonzoData.P) #filtered readcount phyloseq object
 KonzoData.P.tr.f <- prune_taxa(f_0.0001, KonzoData.P.tr) #filtered rel abund phyloseq object                                            
 KonzoData.P.tr.status.f <- prune_taxa(f_0.0001, KonzoData.P.tr.status) #filtered rel abund megerd by groups/status phyoseq object
-
-KonzoData.P.tr.avg.f <- subset(KonzoData.P.tr.avg.x, rownames(KonzoData.P.tr.avg.x) %in% f_0.0001)                           
-write.csv(KonzoData.P.tr.avg.f, file = "./KonzoDataPhylum_AvgRelAbund_ByGroup_filtered.csv")                           
- 
-KonzoData.P.tr.sd.f <- subset(KonzoData.P.tr.sd.x, rownames(KonzoData.P.tr.sd.x) %in% f_0.0001)                           
-write.csv(KonzoData.P.tr.sd.f, file = "./KonzoDataPhylum_SD_ByGroup_filtered.csv")                           
-                           
+                        
+KonzoData.P.tr.avg.sd.f <- subset(KonzoData.P.tr.avg.sd, rownames(KonzoData.P.tr.avg.sd) %in% f_0.0001)                                             
+write.csv(KonzoData.P.tr.avg.sd.f, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup_filtered.csv")                            
                            
 #Bacteria Class
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
