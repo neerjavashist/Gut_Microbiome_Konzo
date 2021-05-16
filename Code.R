@@ -199,10 +199,16 @@ rownames(KonzoData.P.tr.avg.sd) <- KonzoData.P.tr.avg.sd[,1]
 KonzoData.P.tr.avg.sd <- KonzoData.P.tr.avg.sd[,-1]  
                            
 KonzoData.P.tr.avg.sd <- KonzoData.P.tr.avg.sd[, c(1, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12)]                                                   
-write.csv(KonzoData.P.tr.avg.sd, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup.csv")                               
+write.csv(KonzoData.P.tr.avg.sd, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup.csv") 
                            
 KonzoData.P.tr.avg.sd.f <- subset(KonzoData.P.tr.avg.sd, rownames(KonzoData.P.tr.avg.sd) %in% f_0.0001)                                             
 write.csv(KonzoData.P.tr.avg.sd.f, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup_filtered.csv")                            
+
+Phylum.tr <- merge(KonzoData.P.tr.avg.sd,as.data.frame(KonzoData.P.tr@otu_table),by='row.names', sort = FALSE)                           
+write.csv(Phylum.tr, file = "./KonzoDataPhylum_RelAbund_Supp.csv")                           
+
+Phylum.tr.f <- merge(KonzoData.P.tr.avg.sd.f,as.data.frame(KonzoData.P.tr.f@otu_table),by='row.names', sort = FALSE)                           
+write.csv(Phylum.tr.f, file = "./KonzoDataPhylum_RelAbund_filtered_Supp.csv")                           
                            
 #Bacteria Class
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
