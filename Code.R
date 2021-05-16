@@ -6892,22 +6892,6 @@ KonzoData_KO_tr <- transform_sample_counts(KonzoData_KO_count, function(x) x / s
 KonzoData_KO_tr_status <- merge_samples(KonzoData_KO_tr, KonzoData_KO_tr@sam_data$Status) #merge_smaples by default sums the values for otu
 KonzoData_KO_tr_status <- transform_sample_counts(KonzoData_KO_tr_status, function(x) x / 30) #average the sum of relabund in each group                                                                                                                                    
 #write.csv(t(KonzoData_KO_tr_status@otu_table), file = "./KinshasaKonzo3_KO_AvgRelAbund_ByStatus.csv")
-
-#Mean and Standard Deviation
-KonzoData_KO_tr.df <- as.data.frame(t(KonzoData_KO_tr@otu_table))
-KonzoData_KO_tr.df <- cbind(KonzoData_KO_tr.df, KonzoData_KO_tr@sam_data$Status)
-
-colnames(KonzoData_KO_tr.df)[colnames(KonzoData_KO_tr.df)=="KonzoData_KO_tr@sam_data$Status"] <- "Status"
-for (i in 1:nrow(KonzoData_KO_tr.df))
-  {KonzoData_KO_tr.df[i,]$Status <- KonzoData_KO_trr@sam_data[rownames(KonzoData_KO_tr.df[i,]),]$Status
-  } 
-KonzoData_KO_tr.avg <- KonzoData_KO_tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
-KonzoData_KO_tr.avg <- t(KonzoData_KO_tr.avg)   
-write.csv(KonzoData_KO_tr.avg, file = "./KonzoData_KO_AvgRelAbund_ByGroup.csv")
-                                                 
-KonzoData_KO_tr.sd <- KonzoData_KO_tr.df %>% group_by(Status) %>% summarise_each(funs(sd))                                                                                                     
-KonzoData_KO_tr.sd <- t(KonzoData_KO_tr.sd) 
-write.csv(KonzoData_KO_tr.sd, file = "./KonzoData_KO_SD_ByGroup.csv")                                          
                                                  
 # Filtering
 Kinshasa.KO.tr <- prune_samples(KonzoData_KO_tr@sam_data$Status == "Kinshasa", KonzoData_KO_tr)
@@ -6950,7 +6934,47 @@ KonzoData_KO_tr.f.otu.func <- cbind(KO_func_f_0.0001, KonzoData_KO_tr.f.otu)
                             
 KonzoData_KO_tr_status.f.otu.func <- cbind(KO_func_f_0.0001, KonzoData_KO_tr_status.f.otu)
 #write.csv(KonzoData_KO_tr_status.f.otu.func, file = "./KinshasaKonzo3_KO_f_0.0001_AvgRelAbund_ByStatus_WithFunction.csv")                                             
-                                              
+
+                            
+#Mean and Standard Deviation
+KonzoData_KO_tr.df <- as.data.frame(t(KonzoData_KO_tr@otu_table))
+KonzoData_KO_tr.df <- cbind(KonzoData_KO_tr.df, KonzoData_KO_tr@sam_data$Status)
+
+colnames(KonzoData_KO_tr.df)[colnames(KonzoData_KO_tr.df)=="KonzoData_KO_tr@sam_data$Status"] <- "Status"
+for (i in 1:nrow(KonzoData_KO_tr.df))
+  {KonzoData_KO_tr.df[i,]$Status <- KonzoData_KO_tr@sam_data[rownames(KonzoData_KO_tr.df[i,]),]$Status
+  } 
+                                                 
+KonzoData_KO_tr.avg <- KonzoData_KO_tr.df %>% group_by(Status) %>% summarise_each(funs(mean)) 
+KonzoData_KO_tr.avg.x <- t(KonzoData_KO_tr.avg)
+colnames(KonzoData_KO_tr.avg.x) <- KonzoData_KO_tr.avg.x[1,]   
+KonzoData_KO_tr.avg.x <- KonzoData_KO_tr.avg.x[-1,]
+colnames(KonzoData_KO_tr.avg.x) <- paste("Avg", colnames(KonzoData_KO_tr.avg.x), sep = "_")                                                 
+                                                
+                                                 
+KonzoData_KO_tr.sd <- KonzoData_KO_tr.df %>% group_by(Status) %>% summarise_each(funs(sd))  
+KonzoData_KO_tr.sd.x <- t(KonzoData_KO_tr.sd)
+colnames(KonzoData_KO_tr.sd.x) <- KonzoData_KO_tr.sd.x[1,]   
+KonzoData_KO_tr.sd.x <- KonzoData_KO_tr.sd.x[-1,]
+colnames(KonzoData_KO_tr.sd.x) <- paste("SD", colnames(KonzoData_KO_tr.sd.x), sep = "_")                                                 
+
+KonzoData_KO_tr.avg.sd <-merge(KonzoData_KO_tr.avg.x, KonzoData_KO_tr.sd.x,by='row.names', sort = FALSE) 
+rownames(KonzoData_KO_tr.avg.sd) <- KonzoData_KO_tr.avg.sd[,1]   
+KonzoData_KO_tr.avg.sd <- KonzoData_KO_tr.avg.sd[,-1]  
+                           
+KonzoData_KO_tr.avg.sd <- KonzoData_KO_tr.avg.sd[, c(1, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12)]                                                   
+write.csv(KonzoData_KO_tr.avg.sd, file = "./KonzoData_KO_AvgRelAbund_SD_ByGroup.csv") 
+                           
+KonzoData_KO_tr.avg.sd.f <- subset(KonzoData_KO_tr.avg.sd, rownames(KonzoData_KO_tr.avg.sd) %in% f_0.0001)                                             
+write.csv(KonzoData_KO_tr.avg.sd.f, file = "./KonzoData_KO_AvgRelAbund_SD_ByGroup_filtered.csv") 
+                                                     
+KO.tr <- merge(KonzoData_KO_tr.avg.sd,as.data.frame(KonzoData_KO_tr@otu_table),by='row.names', sort = FALSE)                           
+write.csv(KO.tr, file = "./KonzoData_KO_RelAbund_Supp.csv")                           
+
+KO.tr.f <- merge(KonzoData_KO_tr.avg.sd.f,as.data.frame(KonzoData_KO_tr.f@otu_table),by='row.names', sort = FALSE)                           
+write.csv(KO.tr.f, file = "./KonzoData_KO_RelAbund_filtered_Supp.csv")                            
+                            
+                            
 #Geography_KO                                                  
 Geography.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status != "Konzo_Low_Prevalence_Zone") & (KonzoData_KO_tr@sam_data$Status != "Konzo_High_Prevalence_Zone"), KonzoData_KO_tr)                                              
                                                                                                                                                                                                                                                                 
