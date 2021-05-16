@@ -6969,10 +6969,17 @@ KonzoData_KO_tr.avg.sd.f <- subset(KonzoData_KO_tr.avg.sd, rownames(KonzoData_KO
 write.csv(KonzoData_KO_tr.avg.sd.f, file = "./KonzoData_KO_AvgRelAbund_SD_ByGroup_filtered.csv") 
                                                      
 KO.tr <- merge(KonzoData_KO_tr.avg.sd,as.data.frame(KonzoData_KO_tr@otu_table),by='row.names', sort = FALSE)                           
-write.csv(KO.tr, file = "./KonzoData_KO_RelAbund_Supp.csv")                           
-
-KO.tr.f <- merge(KonzoData_KO_tr.avg.sd.f,as.data.frame(KonzoData_KO_tr.f@otu_table),by='row.names', sort = FALSE)                           
-write.csv(KO.tr.f, file = "./KonzoData_KO_RelAbund_filtered_Supp.csv")                            
+write.csv(KO.tr, file = "./KonzoData_KO_RelAbund_Supp.csv")      
+                            
+KO_func_f_0.0001 <- read.csv("./KinshasaKonzo3_KO_f_0.0001_function_AM.csv", row.names = 1) 
+                                                                                
+KO.tr.f <- merge(KonzoData_KO_tr.avg.sd.f,as.data.frame(KonzoData_KO_tr.f@otu_table),by='row.names', sort = FALSE)  
+rownames(KO.tr.f) <- KO.tr.f[,1]   
+KO.tr.f <- KO.tr.f[,-1]                              
+                            
+KO.tr.f_func <- cbind(KO_func_f_0.0001, KO.tr.f)
+                            
+write.csv(KO.tr.f_func, file = "./KonzoData_KO_RelAbund_Func_filtered_Supp.csv")                            
                             
                             
 #Geography_KO                                                  
