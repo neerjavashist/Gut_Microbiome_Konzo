@@ -196,7 +196,9 @@ colnames(KonzoData.P.tr.sd.x) <- paste("SD", colnames(KonzoData.P.tr.sd.x), sep 
 
 KonzoData.P.tr.avg.sd <-merge(KonzoData.P.tr.avg.x,KonzoData.P.tr.sd.x,by='row.names', sort = FALSE) 
 rownames(KonzoData.P.tr.avg.sd) <- KonzoData.P.tr.avg.sd[,1]   
-KonzoData.P.tr.avg.sd <- KonzoData.P.tr.avg.sd[,-1]                                                                                                 
+KonzoData.P.tr.avg.sd <- KonzoData.P.tr.avg.sd[,-1]  
+                           
+KonzoData.P.tr.avg.sd <- KonzoData.P.tr.avg.sd[, c(1, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12)]                                                   
 write.csv(KonzoData.P.tr.avg.sd, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup.csv")                               
                            
 KonzoData.P.tr.avg.sd.f <- subset(KonzoData.P.tr.avg.sd, rownames(KonzoData.P.tr.avg.sd) %in% f_0.0001)                                             
