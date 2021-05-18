@@ -49,7 +49,7 @@ library(gplots)
 
 #Old Nameing: Kinshasa = Kinshasa; Masimanimba = Masimanimba; Kahemba_Control_NonIntervention = Unaffected_Low_Prevalence_Zone;  Kahemba_Konzo_NonIntervention = Konzo_Low_Prevalence_Zone;  Kahemba_Control_Intervention = Unaffected_High_Prevalence_Zone;  Kahemba_Konzo_Intervention = Konzo_High_Prevalence_Zone;  
 
-SL <- c(Kinshasa = "Kinshasa", Masimanimba = "Masi-manimba", Unaffected_Low_Prevalence_Zone = "Unaffected LPZ", Konzo_Low_Prevalence_Zone = "Konzo LPZ", Unaffected_High_Prevalence_Zone = "Unaffected HPZ", Konzo_High_Prevalence_Zone = "Konzo HPZ")
+SL <- c(Kinshasa = "Kinshasa", Masimanimba = "Masi-Manimba", Unaffected_Low_Prevalence_Zone = "Unaffected LPZ", Konzo_Low_Prevalence_Zone = "Konzo LPZ", Unaffected_High_Prevalence_Zone = "Unaffected HPZ", Konzo_High_Prevalence_Zone = "Konzo HPZ")
 
 SSL <- c(Kinshasa = "Kin", Masimanimba = "Mas", Unaffected_Low_Prevalence_Zone = "Unaffected LPZ", Konzo_Low_Prevalence_Zone = "Konzo LPZ", Unaffected_High_Prevalence_Zone = "Unaffected HPZ", Konzo_High_Prevalence_Zone = "Konzo HPZ")
 
@@ -59,33 +59,13 @@ SSSL <- c(Kinshasa = "Kin", Masimanimba = "Mas", Unaffected_Low_Prevalence_Zone 
 
 #Kinshasa: "royalblue1"
 #Masi-manimba: "springgreen3"
-#ULPZ: "turquoise3"
+#ULPZ: "gold"
 #KLPZ: "tomato"
-#UHPZ: "slateblue1"
-#KHPZ: "gold"
-
-kinmas_color <- c("royalblue1",   "springgreen3")
-kinulpz_color <- c("royalblue1",    "turquoise3")
-masulpz_color <- c("springgreen3",     "turquoise3")
-kinuhpz_color <- c("royalblue1",  "slateblue1")
-masuhpz_color <- c("springgreen3","slateblue1")
-kinklpz_color <- c("royalblue1",    "tomato" )
-masklpz_color <- c("springgreen3",    "tomato" )
-kinkhpz_color <- c("royalblue1",    "gold")
-maskhpz_color <- c("springgreen3",     "gold")
+#UHPZ: "mediumorchid1"
+#KHPZ: "deepskyblue1"
 
 
-lpz_color <- c("turquoise3",        "tomato" )
-hpz_color <- c( "slateblue1",        "gold")
-control_color <- c( "turquoise3",        "slateblue1")
-disease_color <- c("tomato", "gold")
-geography_color <- c("royalblue1",   "springgreen3", "turquoise3", "slateblue1")
-kahemba_color <- c("turquoise3", "tomato", "slateblue1", "gold")
-konzo_color <- c("royalblue1",   "springgreen3", "turquoise3", "tomato", "slateblue1", "gold")
-
-
-
-#TESTING NEW COLOR SCHEME
+#COLOR SCHEME
 kinmas_color <- c("royalblue1",   "springgreen3")
 kinulpz_color <- c("royalblue1",    "gold")
 masulpz_color <- c("springgreen3",     "gold")
@@ -6196,7 +6176,7 @@ p <- ggplot(diet, aes(x=as.factor(id), y=Frequency, fill=Food)) +       # Note t
   ) + 
   guides(fill=guide_legend(ncol=2,byrow=TRUE)) +
   coord_polar() +
-  geom_segment(data=base_diet, aes(x = start, y = -1, xend = end, yend = -1), colour = "black", size=0.3 , inherit.aes = FALSE ) + geom_text(data=base_diet, aes(x = title, y = -2.5, label=c("Kinshasa", "Masi-manimba","LPZ", "HPZ")), hjust=c(0.5,0.5, 0.5,0.5), angle=c(-45, 45, -45, 45), colour = "black", size=2.5, inherit.aes = FALSE)
+  geom_segment(data=base_diet, aes(x = start, y = -1, xend = end, yend = -1), colour = "black", size=0.3 , inherit.aes = FALSE ) + geom_text(data=base_diet, aes(x = title, y = -2.5, label=c("Kinshasa", "Masi-Manimba","LPZ", "HPZ")), hjust=c(0.5,0.5, 0.5,0.5), angle=c(-45, 45, -45, 45), colour = "black", size=2.5, inherit.aes = FALSE)
 
 p
 
