@@ -5400,7 +5400,7 @@ x <- read.csv("Kinshasa_Konzo3_Genus_f_0.0001.csv", row.names = 1, colClasses = 
 f_0.0001 <- unlist(x)  
                          
                                     
-#Initially perform a multivariate analysis to determing with variable affects the gut microbiome of the various cohorts                                    
+#Initially perform a multivariate analysis to determine which variables influence the gut microbiome of the various cohorts                                    
 otuD.G <- as.data.frame(t(otu_table(KonzoData.G)))
 diversity.G <- estimate_richness(KonzoData.G)
 diversity.G <- cbind(sample_data(KonzoData.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
@@ -6807,6 +6807,17 @@ KO.tr.f <- KO.tr.f[,-1]
 KO.tr.f_func <- cbind(KO_func_f_0.0001, KO.tr.f)
                             
 write.csv(KO.tr.f_func, file = "./KonzoData_KO_RelAbund_Func_filtered_Supp.csv")                            
+
+                            
+#Initially perform a multivariate analysis to determine which variables influence the gut microbiome of the various cohorts    
+                            
+KonzoData_KO_tr.sam <- as.data.frame(as.matrix(sample_data(KonzoData_KO_tr)))
+KonzoData_KO_tr.sam$Status <- as.factor(KonzoData_KO_tr.sam$Status)
+KonzoData_KO_tr.sam$Status <- factor(KonzoData_KO_tr.sam$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
+
+brayd <- phyloseq::distance(KonzoData_KO_tr, method="bray")
+bdiv_bray <- adonis(brayd ~ KonzoData_KO_tr.sam$Geography * KonzoData_KO_tr.sam$Region * KonzoData_KO_tr.sam$Disease * KonzoData_KO_tr.sam$Age * KonzoData_KO_tr.sam$Sex, perm=99999); bdiv_bray
+                            
                             
 #Supplementary Figure 3                            
 #Geography_KO                                                  
