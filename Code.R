@@ -5392,13 +5392,22 @@ write.csv(MWW_species, file = "Kinshasa_Konzo3_Bacteria_Species_f_0.0001_ByStatu
                                                                                                             
 ### Beta Diversity using Bray-Curtis for Bacteria Genus ----------------- 
                                              
-#Using phyloseq distnace function and bray method, and the sample wise distances are generated. Using the adonis (PERMANOVA) function, stats are performed with 10000 permutations
+#Using phyloseq distance function and bray method, and the sample wise distances are generated. Using the adonis (PERMANOVA) function, stats are performed with 99999 permutations
 #the p-values generated here are reported in PCoA Figures for the relavant comparisons  
 
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
 x <- read.csv("Kinshasa_Konzo3_Genus_f_0.0001.csv", row.names = 1, colClasses = "character")
-f_0.0001 <- unlist(x)                                             
-                                             
+f_0.0001 <- unlist(x)  
+                         
+                                    
+#Initially perform a multivariate analysis to determing with variable affects the gut microbiome of the various cohorts                                    
+otuD.G <- as.data.frame(t(otu_table(KonzoData.G)))
+diversity.G <- estimate_richness(KonzoData.G)
+diversity.G <- cbind(sample_data(KonzoData.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+brayd <- phyloseq::distance(KonzoData.G.tr, method="bray")
+bdiv_bray <- adonis(brayd ~ diversity.G$Geography * diversity.G$Region * diversity.G$Disease * diversity.G$Age * diversity.G$Sex, perm=99999); bdiv_bray
+                                    
+#Specific Comparisons                                                                              
 otuD.G <- as.data.frame(t(otu_table(Geography.G)))
 diversity.G <- estimate_richness(Geography.G)
 diversity.G <- cbind(sample_data(Geography.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
