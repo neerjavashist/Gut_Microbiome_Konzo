@@ -4573,7 +4573,7 @@ ls_0.01 <- WT.01[,1]
                                         
 MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
 
-#NON-INTERVENTION (LPZ)
+#Low Prevalence Zone (LPZ)
 
 LPZ.G <- prune_samples((KonzoData.G@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.G@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.G)
 LPZ.G.tr <- transform_sample_counts(LPZ.G, function(x) x / sum(x)) 
@@ -4628,7 +4628,7 @@ ls_0.01 <- WT.01[,1]
 MWW_genus <- merge(MWW_genus,WT,by="Bacteria Genus", sort = FALSE)
 
                                                 
-#INTERVENTION (HPZ)
+#High Prevalence Zone (HPZ)
 HPZ.G <- prune_samples((KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone") | (KonzoData.G@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.G)
 HPZ.G.tr <- transform_sample_counts(HPZ.G, function(x) x / sum(x)) 
 HPZ.G.tr.f <- prune_taxa(f_0.0001, HPZ.G.tr)  
@@ -5285,7 +5285,7 @@ Disease.S.tr.f.status <- transform_sample_counts(Disease.S.tr.f.status, function
 MWW_species <- merge(MWW_species,WT,by="Bacteria Species", sort = FALSE)
 
 
-#LPZ
+#Low Prevalence Zone (LPZ)
 LPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData.S@sam_data$Status == "Konzo_Low_Prevalence_Zone", KonzoData.S)                                        
 LPZ.S.tr <- transform_sample_counts(LPZ.S, function(x) x / sum(x))                                             
 LPZ.S.tr.f <- prune_taxa(f_0.0001, LPZ.S.tr)  
@@ -5337,7 +5337,7 @@ ls_0.01 <- WT.01[,1]
                                     
 MWW_species <- merge(MWW_species,WT,by="Bacteria Species", sort = FALSE)
                                                 
-#INTERVENTION (HPZ)
+#High Prevalence Zone (HPZ)
 HPZ.S <- prune_samples(KonzoData.S@sam_data$Status == "Unaffected_High_Prevalence_Zone" | KonzoData.S@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData.S)                                        
 HPZ.S.tr <- transform_sample_counts(HPZ.S, function(x) x / sum(x))                                             
 HPZ.S.tr.f <- prune_taxa(f_0.0001, HPZ.S.tr)  
@@ -6301,8 +6301,6 @@ setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/Kinshas
                        #c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"), c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"), 
                         #c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"), c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
-#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Control_NonIntervention"), c("Kinshasa", "Kahemba_Konzo_NonIntervention"), c("Masimanimba", "Kahemba_Konzo_NonIntervention"), c("Kinshasa", "Kahemba_Control_Intervention"), c("Masimanimba", "Kahemba_Control_Intervention"), c("Kinshasa", "Kahemba_Konzo_Intervention"), c("Masimanimba", "Kahemba_Konzo_Intervention"), c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention" ), c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"), c("Kahemba_Control_NonIntervention", "Kahemba_Konzo_NonIntervention"), c("Kahemba_Control_Intervention", "Kahemba_Konzo_Intervention")) 
-
 my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone")) 
 
 
@@ -6449,12 +6447,12 @@ s <- plot_spacer() + theme_minimal()
 
 ##----IMPORTANT CHANGE----------- Geography (Kin vs. Mas vs. ULPZ only)
                                      
-my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Kahemba_Control_NonIntervention"), c("Masimanimba", "Kahemba_Control_NonIntervention")) 
+my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_Low_Prevalence_Zone")) 
 g_color <- c("royalblue1",   "springgreen3", "turquoise3")
 
 #Specifically for this Figure
                                      
-Geography.G <- prune_samples((KonzoData.G@sam_data$Status != "Kahemba_Control_Intervention") & (KonzoData.G@sam_data$Status != "Kahemba_Konzo_NonIntervention") & (KonzoData.G@sam_data$Status != "Kahemba_Konzo_Intervention"), KonzoData.G)                                              
+Geography.G <- prune_samples((KonzoData.G@sam_data$Status != "Unaffected_High_Prevalence_Zone") & (KonzoData.G@sam_data$Status != "Konzo_Low_Prevalence_Zone") & (KonzoData.G@sam_data$Status != "Konzo_High_Prevalence_Zone"), KonzoData.G)                                              
 Geography.G.tr <-  transform_sample_counts(Geography.G, function(x) x / sum(x))
 Geography.G.tr.log10 <-  transform_sample_counts(Geography.G.tr, function(x) log10(x))
 
@@ -6468,7 +6466,7 @@ colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
 for (i in 1:nrow(G.tr.DF))
   {G.tr.DF[i,]$Status <- Geography.G.tr.log10@sam_data[rownames(G.tr.DF[i,]),]$Status
   }
-G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "Kahemba_Control_NonIntervention"))
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone"))
 
 #Kinshasa vs. ULPZ vs. Mas
                                      
@@ -6697,7 +6695,7 @@ Disease.G.tr.log10 <- transform_sample_counts(Disease.G.tr, function(x) log10(x)
 #Moraxella
 #Tolumonas
                                      
-my_comparisons <- list( c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention")) 
+my_comparisons <- list( c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone")) 
 
                                      
 G <- Control.G.tr.log10
@@ -6710,7 +6708,7 @@ colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
 for (i in 1:nrow(G.tr.DF))
   {G.tr.DF[i,]$Status <- Control.G.tr.log10@sam_data[rownames(G.tr.DF[i,]),]$Status
   }
-G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kahemba_Control_NonIntervention", "Kahemba_Control_Intervention"))
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
 c1 <- ggboxplot(G.tr.DF, x = "Status", y = "Gordonibacter", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Gordonibacter"))) + theme(axis.text.x = element_blank()) + theme_classic()
 c1 <- c1 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
@@ -6781,7 +6779,7 @@ dev.off()
 #Thermacetogenium                                  
 
                                      
-my_comparisons <- list( c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention")) 
+my_comparisons <- list( c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone")) 
 
                                      
 G <- Disease.G.tr.log10
@@ -6794,7 +6792,7 @@ colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
 for (i in 1:nrow(G.tr.DF))
   {G.tr.DF[i,]$Status <- Disease.G.tr.log10@sam_data[rownames(G.tr.DF[i,]),]$Status
   }
-G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kahemba_Konzo_NonIntervention", "Kahemba_Konzo_Intervention"))
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
                                      
 d1 <- ggboxplot(G.tr.DF, x = "Status", y = "Adlercreutzia", fill = "Status", xlab = "Samples", ylab = "log(rel. abund.)", title = expression(italic("Adlercreutzia"))) + theme(axis.text.x = element_blank()) + theme_classic()
 d1 <- d1 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
