@@ -5808,7 +5808,7 @@ PCBt <- PCB + stat_ellipse(type = "t") + scale_x_continuous(position = "top", br
 
 
 PCBt <- PCBt + theme(legend.position="none")
-PCBt <- PCBt + annotate("text", x = 0.35, y = -0.22, label = expression(paste("p = 0.00057")), size = 2) #0.00057
+PCBt <- PCBt + annotate("text", x = 0.39, y = -0.24, label = expression(paste("p = 0.00057")), size = 2) #0.00057
 
 C <- arrangeGrob(PCBt, a1,                               # bar plot spaning two columns
              a2, l,                               # box plot and scatter plot
@@ -5851,7 +5851,6 @@ p <- ggplot(G.tr.DF,aes(x = Status,y = Prevotella)) +
 p <- p + geom_jitter(position=position_jitter(0.2), size = 0.35)
 p <- p + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 4), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
-p <- p + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
 p <- p + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
 #remove outlier.shape = NA and add outlier.size if you don't want jitter
 f <- ggplot(G.tr.DF,aes(x = Status,y = Faecalibacterium)) + 
@@ -5859,16 +5858,7 @@ f <- ggplot(G.tr.DF,aes(x = Status,y = Faecalibacterium)) +
 f <- f + geom_jitter(position=position_jitter(0.2), size = 0.35)
 f <- f + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 4), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
-f <- f + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
 f <- f + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
-
-#tiff(filename = "Kinshasa_Konzo3_Control_Prevotella_Faecalibacterium.tiff", width = 2, height = 2.5, units = "in", res = 600)
-#ggarrange(p,f, ncol = 2, nrow = 1, align = "hv")
-#dev.off()
-
-pf <- ggarrange(p,f, ncol = 2, nrow = 1, align = "hv")
-fp <- ggarrange(f, p, ncol = 2, nrow = 1, align = "hv")
-                                    
                                     
 #Prevotella and Faecalibacterium for ULPZ vs. UHPZ #CLR
 p2 <- ggplot(Control.G.CLR.DF,aes(x = Status,y = Prevotella)) + 
@@ -5888,9 +5878,12 @@ f2 <- f2 + stat_compare_means(comparisons = my_comparisons, label = "p.signif", 
 f2 <- f2 + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
                                     
                                     
-pf2 <- ggarrange(p2,f2, ncol = 2, nrow = 1, align = "hv")
-fp2 <- ggarrange(f2, p2, ncol = 2, nrow = 1, align = "hv")
-                                                                                                            
+pf <- ggarrange(p,f, p2, f2, ncol = 4, nrow = 1, align = "hv")                                  
+fp <- ggarrange (f, p, f2, p2, ncol = 4, nrow = 1, align = "hv")
+                                   
+part1 <- ggarrange(as_ggplot(C), pf, labels = c("A","B"), font.label = list(size = 7), ncol = 2, nrow = 1, widths = c(2.5, 3.5)) 
+                                    
+part1_v2 <- ggarrange(as_ggplot(C),fp, labels = c("A","B"), font.label = list(size = 7), ncol = 2, nrow = 1, widths = c(2.5, 3.5))
                                     
 #KLPZ vs. KHPZ
 
@@ -5901,21 +5894,15 @@ PKB <- p1 +
   labs(color = "Groups")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), 
                                 axis.line = element_line(colour = "black")) + scale_color_manual(values = disease_color, labels = SSSL)+
   theme(legend.title=element_blank(), legend.margin=margin(-5,0,0,0), legend.position = "bottom",legend.background = element_rect(colour = NA, fill = NA)) + theme (legend.key = element_rect(colour = NA, fill = NA ), panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme(legend.key.size = unit(.1, "cm")) + theme(legend.text = element_text(size=5)) +
-  theme(axis.title.y = element_text(size = 6), axis.title.x = element_text(size = 6), axis.text.y = element_text(size = 5), axis.text.x = element_text(size = 5))
+  theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 PKB <- PKB + guides(colour = guide_legend(override.aes = list(size=1)))
 
-PKBt <- PKB + stat_ellipse(type = "t", show.legend = FALSE) + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.05,0.05,0.05,0.05), "lines"))
+PKBt <- PKB + stat_ellipse(type = "t", show.legend = FALSE) 
 
-PKBt <- PKBt + annotate("text", x = 0.42, y = -0.35, label = "p = 0.01744", size = 2) #0.01744
+PKBt <- PKBt + annotate("text", x = 0.4, y = -0.34, label = "p = 0.01744", size = 2) #0.01744
 
-PKBt
-
-part1 <- ggarrange(as_ggplot(C),pf, pf2, labels = c("A","B", "C"), font.label = list(size = 7), ncol = 3, nrow = 1, widths = c(2.5, 1.75, 1.75)) 
-                                    
-part1_v2 <- ggarrange(as_ggplot(C),fp, fp2, labels = c("A","B", "C"), font.label = list(size = 7), ncol = 3, nrow = 1, widths = c(2.5, 1.75,1.75))
-                                    
-                                    
+PKBt                                    
                                     
 #ULPZ vs. KLPZ
 p1 = plot_ordination(LPZ.G.tr.f, ordinate(LPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
@@ -5928,7 +5915,7 @@ PNIB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 PNIBt <- PNIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-PNIBt <- PNIBt + annotate("text", x = 0.26, y = -0.56, label = expression(paste("p = 0.9105")), size = 2) #0.9105
+PNIBt <- PNIBt + annotate("text", x = 0.42, y = -0.56, label = expression(paste("p = 0.9105")), size = 2) #0.9105
                                     
 #UHPZ vs. KHPZ
 p1 = plot_ordination(HPZ.G.tr.f, ordinate(HPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
@@ -5942,7 +5929,7 @@ PIB <- p1 +
 
 
 PIBt <- PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-PIBt <- PIBt + annotate("text", x = 0.49, y = -0.4, label = expression(paste("p = 0.569")), size = 2) #0.569
+PIBt <- PIBt + annotate("text", x = 0.5, y = -0.4, label = expression(paste("p = 0.569")), size = 2) #0.569
 
                                     
 part2 <- ggarrange(PKBt, PNIBt, PIBt, labels = c("D","E", "F"), ncol = 3, nrow = 1, font.label = list(size = 7), widths = c(2, 2, 2) )                                  
