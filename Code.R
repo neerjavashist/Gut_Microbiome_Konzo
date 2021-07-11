@@ -5399,122 +5399,186 @@ setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/Kinshas
 x <- read.csv("Kinshasa_Konzo3_Genus_f_0.0001.csv", row.names = 1, colClasses = "character")
 f_0.0001 <- unlist(x)  
                          
-                                    
+
+KonzoData.G.tr.f <- prune_taxa(f_0.0001, KonzoData.G.tr)
+
 #Initially perform a multivariate analysis to determine which variables influence the gut microbiome of the various cohorts                                    
-otuD.G <- as.data.frame(t(otu_table(KonzoData.G)))
-diversity.G <- estimate_richness(KonzoData.G)
-diversity.G <- cbind(sample_data(KonzoData.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
-brayd <- phyloseq::distance(KonzoData.G.tr, method="bray")
+otuD.G <- as.data.frame(t(otu_table(KonzoData.G.f)))
+diversity.G <- estimate_richness(KonzoData.G.f)
+diversity.G <- cbind(sample_data(KonzoData.G.f),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+brayd <- phyloseq::distance(KonzoData.G.tr.f, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Geography * diversity.G$Region * diversity.G$Disease * diversity.G$Age * diversity.G$Sex, perm=99999); bdiv_bray
-                                    
-#Specific Comparisons                                                                              
-otuD.G <- as.data.frame(t(otu_table(Geography.G)))
-diversity.G <- estimate_richness(Geography.G)
-diversity.G <- cbind(sample_data(Geography.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+
+#Specific Comparisons  
+
+Geography.G <- prune_samples((KonzoData.G@sam_data$Status != "Konzo_Low_Prevalence_Zone") & (KonzoData.G@sam_data$Status != "Konzo_High_Prevalence_Zone"), KonzoData.G)                                              
+Geography.G.tr <-  transform_sample_counts(Geography.G, function(x) x / sum(x))
+Geography.G.tr.log10 <-  transform_sample_counts(Geography.G.tr, function(x) log10(x))    
+Geography.G.f <- prune_taxa(f_0.0001, Geography.G)                                                 
+Geography.G.tr.f <- prune_taxa(f_0.0001, Geography.G.tr)
+
+
+otuD.G <- as.data.frame(t(otu_table(Geography.G.f)))
+diversity.G <- estimate_richness(Geography.G.f)
+diversity.G <- cbind(sample_data(Geography.G.f),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
 diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(Geography.G.tr, method="bray")
+brayd <- phyloseq::distance(Geography.G.tr.f, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
-capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Geography.txt")
+#capture.output(bdiv_bray, file="relabund_filtered_bdiv_genus_adonis_Geography.txt")
+                                                 
+
+KinMas.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Masimanimba"),  KonzoData.G)
+KinMas.G.tr <-  transform_sample_counts(KinMas.G, function(x) x / sum(x))
+KinMas.G.f <- prune_taxa(f_0.0001, KinMas.G) 
+KinMas.G.tr.f <- prune_taxa(f_0.0001, KinMas.G.tr)   
 
 
-otuD.G <- as.data.frame(t(otu_table(KinMas.G)))
-diversity.G <- estimate_richness(KinMas.G)
-diversity.G <- cbind(sample_data(KinMas.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+otuD.G <- as.data.frame(t(otu_table(KinMas.G.f)))
+diversity.G <- estimate_richness(KinMas.G.f)
+diversity.G <- cbind(sample_data(KinMas.G.f),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
 diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Masimanimba"))
 
-brayd <- phyloseq::distance(KinMas.G.tr, method="bray")
+brayd <- phyloseq::distance(KinMas.G.tr.f, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
-capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_KinMas.txt")
-  
-otuD.G <- as.data.frame(t(otu_table(KinULPZ.G)))
-diversity.G <- estimate_richness(KinULPZ.G)
-diversity.G <- cbind(sample_data(KinULPZ.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+#capture.output(bdiv_bray, file="relabund_filtered_bdiv_genus_adonis_KinMas.txt")
+
+
+KinULPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.G)
+KinULPZ.G.tr <-  transform_sample_counts(KinULPZ.G, function(x) x / sum(x))
+KinULPZ.G.f <- prune_taxa(f_0.0001, KinULPZ.G)
+KinULPZ.G.tr.f <- prune_taxa(f_0.0001, KinULPZ.G.tr)  
+
+
+otuD.G <- as.data.frame(t(otu_table(KinULPZ.G.f)))
+diversity.G <- estimate_richness(KinULPZ.G.f)
+diversity.G <- cbind(sample_data(KinULPZ.G.f),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
 diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Unaffected_Low_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(KinULPZ.G.tr, method="bray")
+brayd <- phyloseq::distance(KinULPZ.G.tr.f, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
-capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_KinULPZ.txt")
-  
-otuD.G <- as.data.frame(t(otu_table(MasULPZ.G)))
-diversity.G <- estimate_richness(MasULPZ.G)
-diversity.G <- cbind(sample_data(MasULPZ.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+#capture.output(bdiv_bray, file="relabund_filtered_bdiv_genus_adonis_KinULPZ.txt")
+
+
+MasULPZ.G <- prune_samples((KonzoData.G@sam_data$Status == "Masimanimba") | (KonzoData.G@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.G)
+MasULPZ.G.tr <- transform_sample_counts(MasULPZ.G, function(x) x / sum(x)) 
+MasULPZ.G.f <- prune_taxa(f_0.0001, MasULPZ.G)
+MasULPZ.G.tr.f <- prune_taxa(f_0.0001, MasULPZ.G.tr)  
+
+otuD.G <- as.data.frame(t(otu_table(MasULPZ.G.f)))
+diversity.G <- estimate_richness(MasULPZ.G.f)
+diversity.G <- cbind(sample_data(MasULPZ.G.f),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
 diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Masimanimba", "Unaffected_Low_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(MasULPZ.G.tr, method="bray")
+brayd <- phyloseq::distance(MasULPZ.G.tr.f, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
-capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_MasULPZ.txt")
- 
-otuD.G <- as.data.frame(t(otu_table(KinUHPZ.G)))
-diversity.G <- estimate_richness(KinUHPZ.G)
-diversity.G <- cbind(sample_data(KinUHPZ.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+#capture.output(bdiv_bray, file="relabund_filtered_bdiv_genus_adonis_MasULPZ.txt")
+
+KinUHPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.G)
+KinUHPZ.G.tr <-  transform_sample_counts(KinUHPZ.G, function(x) x / sum(x))
+KinUHPZ.G.f <- prune_taxa(f_0.0001, KinUHPZ.G)
+KinUHPZ.G.tr.f <- prune_taxa(f_0.0001, KinUHPZ.G.tr)  
+
+otuD.G <- as.data.frame(t(otu_table(KinUHPZ.G.f)))
+diversity.G <- estimate_richness(KinUHPZ.G.f)
+diversity.G <- cbind(sample_data(KinUHPZ.G.f),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
 diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Kinshasa", "Unaffected_High_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(KinUHPZ.G.tr, method="bray")
+brayd <- phyloseq::distance(KinUHPZ.G.tr.f, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
-capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_KinUHPZ.txt")
-  
-otuD.G <- as.data.frame(t(otu_table(MasUHPZ.G)))
-diversity.G <- estimate_richness(MasUHPZ.G)
-diversity.G <- cbind(sample_data(MasUHPZ.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+#capture.output(bdiv_bray, file="relabund_filtered_bdiv_genus_adonis_KinUHPZ.txt")
+
+
+
+MasUHPZ.G <- prune_samples((KonzoData.G@sam_data$Status == "Masimanimba") | (KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.G)
+MasUHPZ.G.tr <- transform_sample_counts(MasUHPZ.G, function(x) x / sum(x)) 
+MasUHPZ.G.f <- prune_taxa(f_0.0001, MasUHPZ.G)
+MasUHPZ.G.tr.f <- prune_taxa(f_0.0001, MasUHPZ.G.tr)  
+
+otuD.G <- as.data.frame(t(otu_table(MasUHPZ.G.f)))
+diversity.G <- estimate_richness(MasUHPZ.G.f)
+diversity.G <- cbind(sample_data(MasUHPZ.G.f),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
 diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Masimanimba", "Unaffected_High_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(MasUHPZ.G.tr, method="bray")
+brayd <- phyloseq::distance(MasUHPZ.G.tr.f, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
-capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_MasUHPZ.txt")
-
-otuD.G <- as.data.frame(t(otu_table(Control.G)))
-diversity.G <- estimate_richness(Control.G)
-diversity.G <- cbind(sample_data(Control.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+#capture.output(bdiv_bray, file="relabund_filtered_bdiv_genus_adonis_MasUHPZ.txt")
+  
+Control.G <- prune_samples((KonzoData.G@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.G)
+Control.G.tr <- transform_sample_counts(Control.G, function(x) x / sum(x)) 
+Control.G.f <- prune_taxa(f_0.0001, Control.G)                                         
+Control.G.tr.f <- prune_taxa(f_0.0001, Control.G.tr)                                          
+                                        
+                                        
+otuD.G <- as.data.frame(t(otu_table(Control.G.f)))
+diversity.G <- estimate_richness(Control.G.f)
+diversity.G <- cbind(sample_data(Control.G.f),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
 diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(Control.G.tr, method="bray")
+brayd <- phyloseq::distance(Control.G.tr.f, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
-capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Control.txt")
+#capture.output(bdiv_bray, file="relabund_filtered_bdiv_genus_adonis_Control.txt")
 
-otuD.G <- as.data.frame(t(otu_table(Disease.G)))
-diversity.G <- estimate_richness(Disease.G)
-diversity.G <- cbind(sample_data(Disease.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+                                        
+Disease.G <- prune_samples((KonzoData.G@sam_data$Status == "Konzo_Low_Prevalence_Zone") | (KonzoData.G@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.G)
+Disease.G.tr <- transform_sample_counts(Disease.G, function(x) x / sum(x)) 
+Disease.G.f <- prune_taxa(f_0.0001, Disease.G)  
+Disease.G.tr.f <- prune_taxa(f_0.0001, Disease.G.tr)                                                                                 
+                                        
+otuD.G <- as.data.frame(t(otu_table(Disease.G.f)))
+diversity.G <- estimate_richness(Disease.G.f)
+diversity.G <- cbind(sample_data(Disease.G.f),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
 diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(Disease.G.tr, method="bray")
+brayd <- phyloseq::distance(Disease.G.tr.f, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
-capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_Disease.txt")
-  
-otuD.G <- as.data.frame(t(otu_table(LPZ.G)))
-diversity.G <- estimate_richness(LPZ.G)
-diversity.G <- cbind(sample_data(LPZ.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+#capture.output(bdiv_bray, file="relabund_filtered_bdiv_genus_adonis_Disease.txt")
+                                        
+LPZ.G <- prune_samples((KonzoData.G@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.G@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.G)
+LPZ.G.tr <- transform_sample_counts(LPZ.G, function(x) x / sum(x)) 
+LPZ.G.f <- prune_taxa(f_0.0001, LPZ.G)  
+LPZ.G.tr.f <- prune_taxa(f_0.0001, LPZ.G.tr)                                                                                                                       
+
+otuD.G <- as.data.frame(t(otu_table(LPZ.G.f)))
+diversity.G <- estimate_richness(LPZ.G.f)
+diversity.G <- cbind(sample_data(LPZ.G.f),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
 diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(LPZ.G.tr, method="bray")
+brayd <- phyloseq::distance(LPZ.G.tr.f, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
-capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_LPZ.txt")
+#capture.output(bdiv_bray, file="relabund_filtered_bdiv_genus_adonis_LPZ.txt")
+                                    
 
-otuD.G <- as.data.frame(t(otu_table(HPZ.G)))
-diversity.G <- estimate_richness(HPZ.G)
-diversity.G <- cbind(sample_data(HPZ.G),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
+HPZ.G <- prune_samples((KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone") | (KonzoData.G@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.G)
+HPZ.G.tr <- transform_sample_counts(HPZ.G, function(x) x / sum(x)) 
+HPZ.G.f <- prune_taxa(f_0.0001, HPZ.G)                                      
+HPZ.G.tr.f <- prune_taxa(f_0.0001, HPZ.G.tr)                                     
+                                    
+otuD.G <- as.data.frame(t(otu_table(HPZ.G.f)))
+diversity.G <- estimate_richness(HPZ.G.f)
+diversity.G <- cbind(sample_data(HPZ.G.f),diversity.G) #Might change since cbind can be tricky and not reliable, so always confirm if correctly done
 diversity.G$Status <- as.factor(diversity.G$Status)
 diversity.G$Status <- factor(diversity.G$Status, levels = c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(HPZ.G.tr, method="bray")
+brayd <- phyloseq::distance(HPZ.G.tr.f, method="bray")
 bdiv_bray <- adonis(brayd ~ diversity.G$Status, perm=99999); bdiv_bray
-capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_HPZ.txt")
-  
+#capture.output(bdiv_bray, file="relabund_filtered_bdiv_genus_adonis_HPZ.txt")
 
-#Figure 3: Geography Genus PCoA
+
+#Figure 3: Geography Genus Filtered PCoA
 
 #Genus and Corr PCoA Figure
 #Extract eigen values (values of the variance reported) after running ordinate function with bray distance (used by phyloseq in generating PCoA plots)
-b <- ordinate(Geography.G.tr, method="PCoA", dist="bray")
+b <- ordinate(Geography.G.tr.f, method="PCoA", dist="bray")
 b.DF <- as.data.frame(b$vectors)
 e.DF <- as.data.frame(b$values$Relative_eig)
 e.DF["Percent"] <- (b$values$Relative_eig*100)
@@ -5532,55 +5596,56 @@ for (i in 1:nrow(e.DF))
   }
 }
 
-G <- Geography.G.tr
+G <- Geography.G.tr.f
 G.tr.DF <- as.data.frame(t(G@otu_table))
 
 n = ncol(G.tr.DF)
 
 G.tr.DF["Status"] <- NA
+G.tr.DF["Axis.1"] <- NA
+G.tr.DF["Axis.2"] <- NA
 
-#Add the needed Axis Values
+G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
-for(i in 1:sum100)
-{
-  G.tr.DF[colnames(b.DF[i])] <- NA
-          for (j in 1:nrow(G.tr.DF))
-          {
-            G.tr.DF[j,colnames(b.DF[i])] <- b.DF[rownames(G.tr.DF[j,]),i]
-          }
-}
-
-G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Kinshasa", "Masimanimba","Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
-
-#G.tr.DF now has the rel abund data, with eigen values for each axis as additional columns so correlation can be done between genus relative abundance and PCoA Axis values to see which genus correlated the best with each Axis values
-                                             
 for (i in 1:nrow(G.tr.DF))
-  {G.tr.DF[i,]$Status <- Geography.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Status
+  {G.tr.DF[i,]$Status <- Geography.G.tr.f@sam_data[rownames(G.tr.DF[i,]),]$Status
   }
 
-a = n+2 #moves starting position to Axis.1 column
-#for loop to correlate each species with each Axis.1 using the spearman method                                                                                          
-for (i in a:ncol(G.tr.DF))
+for (i in 1:nrow(G.tr.DF))
+  {G.tr.DF[i,]$Axis.1 <- b.DF[rownames(G.tr.DF[i,]),1]
+  }
+
+for (i in 1:nrow(G.tr.DF))
+  {G.tr.DF[i,]$Axis.2 <- b.DF[rownames(G.tr.DF[i,]),2]
+  }
+
+Cor1 <- matrix(nrow = n,  ncol = 3)
+
+colnames(Cor1) <- c("Genus vs. Axis.1", "spearman cor", "p-value")
+for (i in 1:n)
 {
-  Cor <- matrix(nrow = n,  ncol = 3)
-  colnames(Cor) <- c(paste(colnames(G.tr.DF[i])), "spearman cor", "p-value")
-  for (j in 1:n)
-  {
-    cor <- cor.test(G.tr.DF[,j], G.tr.DF[,i], method=c("spearman"))
-    Cor[j,1] = colnames(G.tr.DF[j])
-    Cor[j,2] = as.numeric(cor$estimate)
-    Cor[j,3] = as.numeric(cor$p.value)
-  }
-  #write.csv(Cor, file = paste("Geography_Genus_",colnames(G.tr.DF[i]),"_Correlation.csv", sep = ""))
-  Cor <- data.frame(Cor, row.names = TRUE)
-  Cor.f <- subset(Cor, rownames(Cor) %in% f_0.0001)                                       
-  #write.csv(Cor.f, file = paste("Geography_Genus_f_0.0001_",colnames(G.tr.DF[i]),"_Correlation.csv", sep = ""))
+  cor <- cor.test(G.tr.DF[,i], G.tr.DF$Axis.1, method=c("spearman"))
+  Cor1[i,1] = colnames(G.tr.DF[i])
+  Cor1[i,2] = as.numeric(cor$estimate)
+  Cor1[i,3] = as.numeric(cor$p.value)
 }
+write.csv(Cor1, file = "Geography_Genus_f_0.0001_Axis.1_Correlation.csv")
+Cor2 <- matrix(nrow = n,  ncol = 3)
 
+colnames(Cor2) <- c("Genus vs. Axis.2", "spearman cor", "p-value")
+for (i in 1:n)
+{
+  cor <- cor.test(G.tr.DF[,i], G.tr.DF$Axis.2, method=c("spearman"))
+  Cor2[i,1] = colnames(G.tr.DF[i])
+  Cor2[i,2] = as.numeric(cor$estimate)
+  Cor2[i,3] = as.numeric(cor$p.value)
+}
+write.csv(Cor2, file = "Geography_Genus_f_0.0001_Axis.2_Correlation.csv")                                        
+                                        
 #Plot most correlated with Axis 1 and Axis 2                                             
 #Correlation Plot
 #Axis 1 Prevotella
-#Axis 2 Lachnoclostridium
+#Axis 2 Faecalibacterium
 
 a1 <- ggplot(G.tr.DF, aes(x = Axis.1, y = Prevotella)) +
     geom_point(aes(color = factor(Status)), size = 1, stroke = 0, shape = 16) + theme_classic() + ylab("Prev.") + theme(axis.title.x = element_blank(), axis.text.x = element_text(size = 7))
@@ -5588,13 +5653,13 @@ a1 <- a1 + scale_color_manual(labels = SL, values = geography_color) + theme(leg
 a1 <- a1 + geom_smooth(method=lm, color = "black", size = 0.5) + theme(plot.margin=unit(c(0.15,0.15,0.25,0.15), "lines")) + scale_y_continuous(breaks = seq(-0.1, 0.4, by = 0.2))
 #a1 <- a1 + stat_cor(method = "spearman", size = 5) 
 
-a2 <- ggplot(G.tr.DF, aes(x = Lachnoclostridium, y = Axis.2)) +
-    geom_point(aes(color = factor(Status)), size = 1, stroke = 0, shape = 16) + theme_classic() + xlab("Lach.") + theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 7))
+a2 <- ggplot(G.tr.DF, aes(x = Faecalibacterium, y = Axis.2)) +
+    geom_point(aes(color = factor(Status)), size = 1, stroke = 0, shape = 16) + theme_classic() + xlab("Faec.") + theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 7))
 a2 <- a2 + scale_color_manual(labels = SL, values = geography_color) + theme(legend.position="none", panel.border = element_rect(colour = "black", fill=NA, size=0.5)) + theme (axis.title.x = element_text(size = 7, face = "italic"), axis.text.x = element_text(size = 7))  
-a2 <- a2 + scale_y_continuous(position = "right") + scale_x_continuous(position = "top", breaks = seq(0.01, 0.02, by = 0.01))
+a2 <- a2 + scale_y_continuous(position = "right") + scale_x_continuous(position = "top", breaks = seq(0.1, 0.3, by = 0.2))
 a2 <- a2 + geom_smooth(method=lm, color = "black", size = 0.5) + theme(plot.margin=unit(c(0.15,0.125,0.15,0.15), "lines"))
 
-p1 = plot_ordination(Geography.G.tr, ordinate(Geography.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(Geography.G.tr.f, ordinate(Geography.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 2, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 #p1 <- as_ggplot(p1)
@@ -5621,12 +5686,12 @@ G <- arrangeGrob(PGBt, a1,                               # bar plot spaning two 
              ncol = 2, nrow = 2,
              layout_matrix = rbind(c(1,1,1,3), c(1,1,1,3), c(1,1,1,3), c(2, 2, 2, 4)))
 
-tiff(filename = "Overall_Geography_Genus_PCoA_Corr.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
+tiff(filename = "Overall_Geography_Genus_Filtered_PCoA_Corr.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
 ggarrange(as_ggplot(G))
 dev.off()
 
 #KinMas
-p1 = plot_ordination(KinMas.G.tr, ordinate(KinMas.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(KinMas.G.tr.f, ordinate(KinMas.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 #p1 <- as_ggplot(p1)
@@ -5642,7 +5707,7 @@ PKMBt <- PKMBt + annotate("text", x = 0.4, y = -0.43, label = expression(paste("
 PKMBt <- ggarrange(PKMBt,labels = c("B"),font.label = list(size = 7))
                                     
 #KinULPZ
-p1 = plot_ordination(KinULPZ.G.tr, ordinate(KinULPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(KinULPZ.G.tr.f, ordinate(KinULPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 #p1 <- as_ggplot(p1)
@@ -5654,11 +5719,11 @@ PKUB <- p1 +
 
 PKUBt <- PKUB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 PKUBt <- PKUBt + theme(legend.position="none")
-PKUBt <- PKUBt + annotate("text", x = 0.37, y = -0.43, label = expression(paste("p = 0.00166")), size = 2)#0.00166
+PKUBt <- PKUBt + annotate("text", x = 0.37, y = -0.43, label = expression(paste("p = 0.00139")), size = 2)#0.00139
 PKUBt <- ggarrange(PKUBt,labels = c("C"),font.label = list(size = 7))
                                     
 #MasULPZ
-p1 = plot_ordination(MasULPZ.G.tr, ordinate(MasULPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(MasULPZ.G.tr.f, ordinate(MasULPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 #p1 <- as_ggplot(p1)
@@ -5674,7 +5739,7 @@ PMUBt <- PMUBt + annotate("text", x = 0.38, y = -0.27, label = expression(paste(
 PMUBt <- ggarrange(PMUBt,labels = c("E"),font.label = list(size = 7))
 
 #KinUHPZ
-p1 = plot_ordination(KinUHPZ.G.tr, ordinate(KinUHPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(KinUHPZ.G.tr.f, ordinate(KinUHPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 #p1 <- as_ggplot(p1)
@@ -5690,7 +5755,7 @@ PKUHBt <- PKUHBt + annotate("text", x = 0.38, y = -0.43, label = expression(past
 PKUHBt <- ggarrange(PKUHBt,labels = c("D"),font.label = list(size = 7))
 
 #MasUHPZ
-p1 = plot_ordination(MasUHPZ.G.tr, ordinate(MasUHPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(MasUHPZ.G.tr.f, ordinate(MasUHPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 #p1 <- as_ggplot(p1)
@@ -5702,7 +5767,7 @@ PMUHB <- p1 +
 
 PMUHBt <- PMUHB + stat_ellipse(type = "t") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.6,0.15,0.15,0.15), "lines"))
 PMUHBt <- PMUHBt + theme(legend.position="none")
-PMUHBt <- PMUHBt + annotate("text", x = 0.28, y = -0.33, label = expression(paste("p = 0.00272")), size = 2) #0.00272
+PMUHBt <- PMUHBt + annotate("text", x = 0.28, y = -0.33, label = expression(paste("p = 0.00321")), size = 2) #0.00321
 PMUHBt <- ggarrange(PMUHBt,labels = c("F"),font.label = list(size = 7))
 
 #EF <- ggarrange(PMUBt, PMUHBt, ncol = 1, nrow = 2, labels = c("E", "F"))
@@ -5714,9 +5779,10 @@ Geo <- arrangeGrob(PGBt, a1,
              ncol = 6, nrow = 6,
              layout_matrix = rbind(c(1,1,1,3,5,5), c(1,1,1,3,5,5), c(1,1,1,3,6,6), c(2,2,2,4,6,6), c(7,7,8,8,9,9), c(7,7,8,8,9,9)))
 
-tiff(filename = "Geography_Genus_PCoA_Corr.tiff", width = 5.5, height = 5.5, units = "in", res = 600)
+tiff(filename = "Geography_Genus_Filtered_PCoA_Corr.tiff", width = 5.5, height = 5.5, units = "in", res = 600)
 ggarrange(as_ggplot(Geo))
 dev.off()
+                                        
 
                                              
 ###Figure 5: Kahemba Prevalence Zones Genus PCoA------------------------
