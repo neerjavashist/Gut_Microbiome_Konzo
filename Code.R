@@ -5721,12 +5721,10 @@ dev.off()
                                              
 ###Figure 5: Kahemba Prevalence Zones Genus PCoA------------------------
 
-#Control
-
-b <- ordinate(Control.G.tr, method="PCoA", dist="bray")
+b <- ordinate(Control.G.tr.f, method="PCoA", dist="bray")
 b.DF <- as.data.frame(b$vectors)
 
-G <- Control.G.tr
+G <- Control.G.tr.f
 G.tr.DF <- as.data.frame(t(G@otu_table))
 
 n = ncol(G.tr.DF)
@@ -5749,28 +5747,29 @@ for (i in 1:nrow(G.tr.DF))
   {G.tr.DF[i,]$Axis.2 <- b.DF[rownames(G.tr.DF[i,]),2]
   }
 
-Cor <- matrix(nrow = n,  ncol = 3)
+Cor1 <- matrix(nrow = n,  ncol = 3)
 
-colnames(Cor) <- c("Genus vs. Axis.1", "spearman cor", "p-value")
+colnames(Cor1) <- c("Genus vs. Axis.1", "spearman cor", "p-value")
 for (i in 1:n)
 {
   cor <- cor.test(G.tr.DF[,i], G.tr.DF$Axis.1, method=c("spearman"))
-  Cor[i,1] = colnames(G.tr.DF[i])
-  Cor[i,2] = as.numeric(cor$estimate)
-  Cor[i,3] = as.numeric(cor$p.value)
+  Cor1[i,1] = colnames(G.tr.DF[i])
+  Cor1[i,2] = as.numeric(cor$estimate)
+  Cor1[i,3] = as.numeric(cor$p.value)
 }
+write.csv(Cor1, file = "Control_Genus_f_0.0001_Axis.1_Correlation.csv")
+Cor2 <- matrix(nrow = n,  ncol = 3)
 
-Cor <- matrix(nrow = n,  ncol = 3)
-
-colnames(Cor) <- c("Genus vs. Axis.2", "spearman cor", "p-value")
+colnames(Cor2) <- c("Genus vs. Axis.2", "spearman cor", "p-value")
 for (i in 1:n)
 {
   cor <- cor.test(G.tr.DF[,i], G.tr.DF$Axis.2, method=c("spearman"))
-  Cor[i,1] = colnames(G.tr.DF[i])
-  Cor[i,2] = as.numeric(cor$estimate)
-  Cor[i,3] = as.numeric(cor$p.value)
+  Cor2[i,1] = colnames(G.tr.DF[i])
+  Cor2[i,2] = as.numeric(cor$estimate)
+  Cor2[i,3] = as.numeric(cor$p.value)
 }
-
+write.csv(Cor2, file = "Control_Genus_f_0.0001_Axis.2_Correlation.csv")
+                                    
 #Correlation Plots
 #Faecalibacterium Axis 1
 #Prevotella Axis 2
@@ -5788,7 +5787,7 @@ a2 <- a2 + scale_y_continuous(position = "right") + scale_x_continuous(position 
 a2 <- a2 + geom_smooth(method=lm, color = "black", size = 0.35) + theme(plot.margin=unit(c(0.05,0.05,0.05,0.05), "lines"))
 
                                     
-p1 = plot_ordination(Control.G.tr, ordinate(Control.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(Control.G.tr.f, ordinate(Control.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 0.85, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 
@@ -5809,7 +5808,7 @@ PCBt <- PCB + stat_ellipse(type = "t") + scale_x_continuous(position = "top", br
 
 
 PCBt <- PCBt + theme(legend.position="none")
-PCBt <- PCBt + annotate("text", x = 0.35, y = -0.22, label = expression(paste("p = 0.00053")), size = 2) #0.00053
+PCBt <- PCBt + annotate("text", x = 0.35, y = -0.22, label = expression(paste("p = 0.00057")), size = 2) #0.00057
 
 C <- arrangeGrob(PCBt, a1,                               # bar plot spaning two columns
              a2, l,                               # box plot and scatter plot
@@ -5817,9 +5816,9 @@ C <- arrangeGrob(PCBt, a1,                               # bar plot spaning two 
              layout_matrix = rbind(c(1,1,1,3), c(1,1,1,3), c(1,1,1,3), c(2, 2, 2, 4)))
 as_ggplot(C)
 
-#Prevotella and Faecalibacterium for ULPZ vs. UHPZ
+#Prevotella and Faecalibacterium for ULPZ vs. UHPZ #relative abundance
 
-G <- Control.G.tr
+G <- Control.G.tr.f
 
 G.tr_META <- as.data.frame(G@sam_data)
 G.tr_OTU <- as.data.frame(t(G@otu_table))
@@ -5830,12 +5829,12 @@ colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Status"] <- "Status"
 colnames(G.tr.DF)[colnames(G.tr.DF)=="G.tr_META$Geography"] <- "Geography"
 
 for (i in nrow(G.tr.DF))
-{G.tr.DF[i,]$Status <- Control.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Status
+{G.tr.DF[i,]$Status <- Control.G.tr.f@sam_data[rownames(G.tr.DF[i,]),]$Status
 }
 G.tr.DF$Status <- factor(G.tr.DF$Status, levels = c("Unaffected_Low_Prevalence_Zone" ,"Unaffected_High_Prevalence_Zone"))
 
 for (i in nrow(G.tr.DF))
-{G.tr.DF[i,]$Geography <- Control.G.tr@sam_data[rownames(G.tr.DF[i,]),]$Geography
+{G.tr.DF[i,]$Geography <- Control.G.tr.f@sam_data[rownames(G.tr.DF[i,]),]$Geography
 }
 G.tr.DF$Geography <- factor(G.tr.DF$Geography, levels = c("Low_Prevalence_Zone", "High_Prevalence_Zone"))
 
@@ -5868,10 +5867,36 @@ f <- f + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black",
 #dev.off()
 
 pf <- ggarrange(p,f, ncol = 2, nrow = 1, align = "hv")
-
+fp <- ggarrange(f, p, ncol = 2, nrow = 1, align = "hv")
+                                    
+                                    
+#Prevotella and Faecalibacterium for ULPZ vs. UHPZ #CLR
+p2 <- ggplot(Control.G.CLR.DF,aes(x = Status,y = Prevotella)) + 
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("median CLR value of ", italic("Prevotella")))) + stat_boxplot(geom ='errorbar')
+p2 <- p2 + geom_jitter(position=position_jitter(0.2), size = 0.35)
+p2 <- p2 + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 4), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
+p2 <- p2 + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+p2 <- p2 + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
+                                    
+f2 <- ggplot(Control.G.CLR.DF,aes(x = Status,y = Faecalibacterium)) + 
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Faecalibacterium")))) + stat_boxplot(geom ='errorbar')
+f2 <- f2 + geom_jitter(position=position_jitter(0.2), size = 0.35)
+f2 <- f2 + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
+   theme(axis.text.x = element_text(size = 4), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
+f2 <- f2 + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
+f2 <- f2 + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
+                                    
+                                    
+pf2 <- ggarrange(p2,f2, ncol = 2, nrow = 1, align = "hv")
+fp2 <- ggarrange(f2, p2, ncol = 2, nrow = 1, align = "hv")
+                                                                                                            
+     
+###TO FIX!!!!!!                                    
+                                    
 #KLPZ vs. KHPZ
 
-p1 = plot_ordination(Disease.G.tr, ordinate(Disease.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(Disease.G.tr.f, ordinate(Disease.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 PKB <- p1 + 
@@ -5884,18 +5909,22 @@ PKB <- PKB + guides(colour = guide_legend(override.aes = list(size=1)))
 
 PKBt <- PKB + stat_ellipse(type = "t", show.legend = FALSE) + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.05,0.05,0.05,0.05), "lines"))
 
-PKBt <- PKBt + annotate("text", x = 0.42, y = -0.35, label = "p = 0.01761", size = 2) #0.01761
+PKBt <- PKBt + annotate("text", x = 0.42, y = -0.35, label = "p = 0.01744", size = 2) #0.01744
 
 PKBt
-                                                                        
-tiff(filename = "Kinshasa_Konzo3_PZ_PCoA_RelBoxPlot.tiff", width = 7, height = 3, units = "in", res = 600)
+
+                                    
+                                    
+                                    
+                                    
+tiff(filename = "Kinshasa_Konzo3_PZ_Filtered_PCoA_RelBoxPlot.tiff", width = 7, height = 3, units = "in", res = 600)
 ggarrange(as_ggplot(C),pf, PKBt, labels = c("A","B", "C"), font.label = list(size = 7), ncol = 3, nrow = 1, widths = c(2.5, 2, 2.5))
 dev.off()
 
 part1 <- ggarrange(as_ggplot(C),pf, PKBt, labels = c("A","B", "C"), font.label = list(size = 7), ncol = 3, nrow = 1, widths = c(2.5, 2, 2.5))                                    
                                     
 #ULPZ vs. KLPZ
-p1 = plot_ordination(LPZ.G.tr, ordinate(LPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(LPZ.G.tr.f, ordinate(LPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 PNIB <- p1 + 
@@ -5905,10 +5934,10 @@ PNIB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 PNIBt <- PNIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-PNIBt <- PNIBt + annotate("text", x = 0.26, y = -0.56, label = expression(paste("p = 0.914")), size = 2) #0.914
+PNIBt <- PNIBt + annotate("text", x = 0.26, y = -0.56, label = expression(paste("p = 0.9105")), size = 2) #0.9105
                                     
 #UHPZ vs. KHPZ
-p1 = plot_ordination(HPZ.G.tr, ordinate(HPZ.G.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(HPZ.G.tr.f, ordinate(HPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 PIB <- p1 + 
@@ -5919,20 +5948,26 @@ PIB <- p1 +
 
 
 PIBt <- PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-PIBt <- PIBt + annotate("text", x = 0.49, y = -0.4, label = expression(paste("p = 0.5721")), size = 2) #0.5721
+PIBt <- PIBt + annotate("text", x = 0.49, y = -0.4, label = expression(paste("p = 0.569")), size = 2) #0.569
 
-tiff(filename = "Kahemba_Genus_LPZ_HPZ_PCoA.tiff", width = 3.5, height = 1.75, units = "in", res = 600)
+tiff(filename = "Kahemba_Genus_Filtered_LPZ_HPZ_PCoA.tiff", width = 3.5, height = 1.75, units = "in", res = 600)
 ggarrange(PNIBt, PIBt, labels = c("A","B"), ncol = 2, nrow = 1, font.label = list(size = 7))
 dev.off()                                  
 
 s <- plot_spacer() + theme_minimal()                                    
 part2 <- ggarrange(PNIBt, PIBt,s , labels = c("D","E", ""), ncol = 3, nrow = 1, font.label = list(size = 7), widths = c(2.25, 2.25, 2.5) )                                  
 
-tiff(filename = "Kahemba_Genus_PCoA_CombFig.tiff", width = 7, height = 4.5, units = "in", res = 600)
+tiff(filename = "Kahemba_Genus_Filtered_PCoA_CombFig.tiff", width = 7, height = 4.5, units = "in", res = 600)
 ggarrange(part1, part2, ncol = 1, nrow = 2, heights = c(2.5,2))
-dev.off()                                     
+dev.off()  
+
+
+####END FIXING
                                     
-                                                                        
+                                    
+                                    
+                                    
+                                    
 ##### Supplemental Figures                                   
                                     
 #Supplementary Figure 1
