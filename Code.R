@@ -5847,7 +5847,7 @@ my_comparisons <- list(c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prev
 
 #remove outlier.shape = NA and add outlier.size if you don't want jitter
 p <- ggplot(G.tr.DF,aes(x = Status,y = Prevotella)) + 
-    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Prevotella")))) + stat_boxplot(geom ='errorbar')
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("rel. abund. of ", italic("Prevotella")))) + stat_boxplot(geom ='errorbar')
 p <- p + geom_jitter(position=position_jitter(0.2), size = 0.35)
 p <- p + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 4), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
@@ -5855,7 +5855,7 @@ p <- p + stat_compare_means(comparisons = my_comparisons, label = "p.signif", me
 p <- p + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
 #remove outlier.shape = NA and add outlier.size if you don't want jitter
 f <- ggplot(G.tr.DF,aes(x = Status,y = Faecalibacterium)) + 
-    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Faecalibacterium")))) + stat_boxplot(geom ='errorbar')
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("rel. abund. of ", italic("Faecalibacterium")))) + stat_boxplot(geom ='errorbar')
 f <- f + geom_jitter(position=position_jitter(0.2), size = 0.35)
 f <- f + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 4), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
@@ -5880,7 +5880,7 @@ p2 <- p2 + stat_compare_means(comparisons = my_comparisons, label = "p.signif", 
 p2 <- p2 + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black", fill="white")
                                     
 f2 <- ggplot(Control.G.CLR.DF,aes(x = Status,y = Faecalibacterium)) + 
-    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Faecalibacterium")))) + stat_boxplot(geom ='errorbar')
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("median CLR value of ", italic("Faecalibacterium")))) + stat_boxplot(geom ='errorbar')
 f2 <- f2 + geom_jitter(position=position_jitter(0.2), size = 0.35)
 f2 <- f2 + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = control_color) + theme(plot.title = element_blank(), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 4), axis.text.y = element_text(size = 5), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
@@ -5891,8 +5891,6 @@ f2 <- f2 + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black
 pf2 <- ggarrange(p2,f2, ncol = 2, nrow = 1, align = "hv")
 fp2 <- ggarrange(f2, p2, ncol = 2, nrow = 1, align = "hv")
                                                                                                             
-     
-###TO FIX!!!!!!                                    
                                     
 #KLPZ vs. KHPZ
 
@@ -5913,15 +5911,11 @@ PKBt <- PKBt + annotate("text", x = 0.42, y = -0.35, label = "p = 0.01744", size
 
 PKBt
 
+part1 <- ggarrange(as_ggplot(C),pf, pf2, labels = c("A","B", "C"), font.label = list(size = 7), ncol = 3, nrow = 1, widths = c(2.5, 1.75, 1.75)) 
+                                    
+part1_v2 <- ggarrange(as_ggplot(C),fp, fp2, labels = c("A","B", "C"), font.label = list(size = 7), ncol = 3, nrow = 1, widths = c(2.5, 1.75,1.75))
                                     
                                     
-                                    
-                                    
-tiff(filename = "Kinshasa_Konzo3_PZ_Filtered_PCoA_RelBoxPlot.tiff", width = 7, height = 3, units = "in", res = 600)
-ggarrange(as_ggplot(C),pf, PKBt, labels = c("A","B", "C"), font.label = list(size = 7), ncol = 3, nrow = 1, widths = c(2.5, 2, 2.5))
-dev.off()
-
-part1 <- ggarrange(as_ggplot(C),pf, PKBt, labels = c("A","B", "C"), font.label = list(size = 7), ncol = 3, nrow = 1, widths = c(2.5, 2, 2.5))                                    
                                     
 #ULPZ vs. KLPZ
 p1 = plot_ordination(LPZ.G.tr.f, ordinate(LPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
@@ -5950,23 +5944,18 @@ PIB <- p1 +
 PIBt <- PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
 PIBt <- PIBt + annotate("text", x = 0.49, y = -0.4, label = expression(paste("p = 0.569")), size = 2) #0.569
 
-tiff(filename = "Kahemba_Genus_Filtered_LPZ_HPZ_PCoA.tiff", width = 3.5, height = 1.75, units = "in", res = 600)
-ggarrange(PNIBt, PIBt, labels = c("A","B"), ncol = 2, nrow = 1, font.label = list(size = 7))
-dev.off()                                  
-
-s <- plot_spacer() + theme_minimal()                                    
-part2 <- ggarrange(PNIBt, PIBt,s , labels = c("D","E", ""), ncol = 3, nrow = 1, font.label = list(size = 7), widths = c(2.25, 2.25, 2.5) )                                  
+                                    
+part2 <- ggarrange(PKBt, PNIBt, PIBt, labels = c("D","E", "F"), ncol = 3, nrow = 1, font.label = list(size = 7), widths = c(2, 2, 2) )                                  
 
 tiff(filename = "Kahemba_Genus_Filtered_PCoA_CombFig.tiff", width = 7, height = 4.5, units = "in", res = 600)
 ggarrange(part1, part2, ncol = 1, nrow = 2, heights = c(2.5,2))
 dev.off()  
 
+tiff(filename = "Kahemba_Genus_Filtered_PCoA_CombFig_V2.tiff", width = 7, height = 4.5, units = "in", res = 600)
+ggarrange(part1_v2, part2, ncol = 1, nrow = 2, heights = c(2.5,2))
+dev.off()  
 
-####END FIXING
-                                    
-                                    
-                                    
-                                    
+                                   
                                     
 ##### Supplemental Figures                                   
                                     
