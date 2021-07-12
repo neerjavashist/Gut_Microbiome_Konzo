@@ -7247,7 +7247,7 @@ means = aggregate(. ~ Status + variable,
                   data = S.tr.DF.status, FUN = mean)
                             
 t6 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
-    geom_boxplot(aes(fill = variable), outlier.size = 0.2, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.")
+    geom_boxplot(aes(fill = variable), lwd=0.2, outlier.size = 0.15, fatten = 0.6) + theme_classic() + ylab("rel. abund.")
 t6 <- t6 + theme(legend.position="bottom", legend.margin=margin(0,0,0,0)) + scale_x_discrete(labels= SSSL) + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 6, face = "italic"), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t6 <- t6 + scale_fill_discrete(labels = temp)
@@ -7255,7 +7255,7 @@ t6 <- t6 + coord_cartesian(ylim = c(0, 0.0026)) + scale_y_continuous(breaks= seq
 
                                     
 t7 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
-    geom_boxplot(aes(fill = variable), outlier.size = 0.2, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.") #  scale_x_discrete(labels= SSSL, position = "top")
+    geom_boxplot(aes(fill = variable), lwd=0.2,outlier.size = 0.15, fatten = 0.6) + theme_classic() + ylab("") #  scale_x_discrete(labels= SSSL, position = "top")
 t7 <- t7 + theme(legend.position="bottom", legend.margin=margin(0,0,0,0)) + scale_x_discrete(labels= SSSL, position = "top") + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 6, face = "italic"), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
 t7 <- t7 + scale_fill_discrete(labels = temp) 
