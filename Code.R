@@ -7304,7 +7304,7 @@ my_comparisons <- list(c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Ma
 #****: p <= 0.0001
 
 t <- ggplot(K.tr.DF,aes(x = Status,y = K05350)) + 
-    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab("Rel. Abund. of K05350: beta-glucosidase [EC:3.2.1.21]") + stat_boxplot(geom ='errorbar')
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab("rel. abund. of K05350: beta-glucosidase [EC:3.2.1.21]") + stat_boxplot(geom ='errorbar')
 t <- t + geom_jitter(position=position_jitter(0.2), size = 0.2)
 t <- t + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 6), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 4.5), axis.title.x = element_blank())
@@ -7323,7 +7323,7 @@ dev.off()
                                     
 #E. coli
 ec <- ggplot(S.tr.DF,aes(x = Status, y = S.tr.DF$Escherichia.coli)) + 
-    geom_boxplot(aes(fill = Status), outlier.size = 0.2, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of ", italic("Escherichia coli"))))
+    geom_boxplot(aes(fill = Status), outlier.size = 0.2, fatten = 0.5) + theme_classic() + ylab(expression(paste("rel. abund. of ", italic("Escherichia coli"))))
 ec <- ec + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 6), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 6), axis.title.x = element_blank())
 ec <- ec + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
@@ -7371,7 +7371,7 @@ my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Masimanimba", "Unaffect
 #****: p <= 0.0001
 
 r <- ggplot(K.tr.DF,aes(x = Status,y = K01011)) + 
-    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("Rel. Abund. of K01011: \nthiosulfate/3-mercaptopyruvate sulfurtransferase \n[EC:2.8.1.1, 2.8.1.2]"))) + stat_boxplot(geom ='errorbar')
+    geom_boxplot(aes(fill = Status),outlier.shape = NA, fatten = 0.5) + theme_classic() + ylab(expression(paste("rel. abund. of K01011: \nthiosulfate/3-mercaptopyruvate sulfurtransferase \n[EC:2.8.1.1, 2.8.1.2]"))) + stat_boxplot(geom ='errorbar')
 r <- r + geom_jitter(position=position_jitter(0.2), size = 0.3)
 r <- r + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + scale_fill_manual(values = konzo_color) + theme(plot.title = element_blank(), legend.key.size = unit(.4, "cm"), legend.text = element_text(size = 6), legend.title = element_blank()) + 
    theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 4), axis.title.x = element_blank())
