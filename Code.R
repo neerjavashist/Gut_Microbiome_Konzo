@@ -7228,8 +7228,8 @@ S.tr.DF$Geography <- factor(S.tr.DF$Geography, levels = c("Kinshasa", "Masimanim
 
 colnames(S.tr.DF)<- gsub( " ", ".", colnames(S.tr.DF)) 
 
-S.tr.DF.status <- melt(S.tr.DF[,c('Status', 'Leuconostoc.mesenteroides', 'Lactobacillus.plantarum', 'Lactococcus.lactis')],id.vars = 1)
-S.tr.DF.geography <- melt(S.tr.DF[,c('Geography','Leuconostoc.mesenteroides', 'Lactobacillus.plantarum', 'Lactococcus.lactis')],id.vars = 1)
+S.tr.DF.status <- melt(S.tr.DF[,c('Status', 'Leuconostoc.mesenteroides', 'Lactococcus.lactis', 'Lactobacillus.plantarum')],id.vars = 1)
+S.tr.DF.geography <- melt(S.tr.DF[,c('Geography','Leuconostoc.mesenteroides', 'Lactococcus.lactis', 'Lactobacillus.plantarum')],id.vars = 1)
 
 # for box plot: facet_zoom(ylim = c(0, 0.0015))
 
@@ -7245,7 +7245,7 @@ errors2 = aggregate(. ~ Status + variable,
                    FUN = se)
 means = aggregate(. ~ Status + variable, 
                   data = S.tr.DF.status, FUN = mean)
-
+                            
 t6 <- ggplot(S.tr.DF.status,aes(x = Status,y = value)) + 
     geom_boxplot(aes(fill = variable), outlier.size = 0.2, fatten = 0.5) + theme_classic() + ylab("Rel. Abund.")
 t6 <- t6 + theme(legend.position="bottom", legend.margin=margin(0,0,0,0)) + scale_x_discrete(labels= SSSL) + theme(plot.title = element_blank(), legend.key.size = unit(.3, "cm"), legend.text = element_text(size = 6, face = "italic"), legend.title = element_blank()) + 
