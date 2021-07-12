@@ -6216,7 +6216,7 @@ for (i in 1:nrow(BP))
 {BP[i,]$Ratio <- BP[i,1]/BP[i,2]
 }
 
-bp1 <- ggboxplot(BP, x = "Status", y = "Ratio" , fill = "Status", xlab = "Samples", ylab = "Rel. Abund of Prevotella/Bacteroides", title = "", outlier.size = 1)
+bp1 <- ggboxplot(BP, x = "Status", y = "Ratio" , fill = "Status", xlab = "Samples", ylab = "rel. abund. of Prevotella/Bacteroides", title = "", outlier.size = 1)
 bp2 <- bp1 + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "t.test", size = 2)
 bp3 <- bp2 + theme(legend.position="none") + theme(axis.title.y = element_text(size = 7), axis.title.x = element_blank(), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7)) + stat_boxplot(geom ="errorbar") + scale_fill_manual(values = konzo_color) + scale_x_discrete(labels = SSSL)
 bp3
