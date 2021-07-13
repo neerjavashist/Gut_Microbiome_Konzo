@@ -6928,7 +6928,7 @@ ko_PGB <- p1 +
 
 ko_PGBt <- ko_PGB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 ko_PGBt <- ko_PGBt + theme(legend.position="bottom")
-ko_PGBt <- ko_PGBt + annotate("text", x = -0.24, y = -0.35, label = expression(paste("p = 1x",10^-5)), size = 2.5)
+ko_PGBt <- ko_PGBt + annotate("text", x = -0.24, y = -0.37, label = expression(paste("p = 1x",10^-5)), size = 2.5)
 ko_PGBt <- ggarrange(ko_PGBt,labels = c("A"),font.label = list(size = 7))
                                                  
 
@@ -6957,7 +6957,7 @@ ko_PKMB <- p1 +
 
 ko_PKMBt <- ko_PKMB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 ko_PKMBt <- ko_PKMBt + theme(legend.position="none")
-ko_PKMBt <- ko_PKMBt + annotate("text", x = -0.34, y = -0.3, label = expression(paste("p = 0.00093")), size = 2)
+ko_PKMBt <- ko_PKMBt + annotate("text", x = -0.31, y = -0.3, label = expression(paste("p = 0.00093")), size = 2)
 ko_PKMBt <- ggarrange(ko_PKMBt,labels = c("B"),font.label = list(size = 7))                                                  
                                                   
 
@@ -7015,7 +7015,7 @@ ko_PKUHB <- p1 +
 
 ko_PKUHBt <- ko_PKUHB + stat_ellipse(type = "t") +  scale_y_continuous(position = "right")+ theme(plot.margin=unit(c(0.15,0.15,0.15,0.6), "lines"))
 ko_PKUHBt <- ko_PKUHBt + theme(legend.position="none")                                                                                                   
-ko_PKUHBt <- ko_PKUHBt + annotate("text", x = -0.17, y = -0.23, label = expression(paste("p = 2x",10^-5)), size = 2)
+ko_PKUHBt <- ko_PKUHBt + annotate("text", x = -0.17, y = -0.22, label = expression(paste("p = 2x",10^-5)), size = 2)
 ko_PKUHBt <- ggarrange(ko_PKUHBt,labels = c("D"),font.label = list(size = 7))
                                                  
 #MasULPZ
@@ -7042,7 +7042,7 @@ ko_PMUB <- p1 +
 
 ko_PMUBt <- ko_PMUB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.25,0.25), "lines"))
 ko_PMUBt <- ko_PMUBt + theme(legend.position="none")
-ko_PMUBt <- ko_PMUBt + annotate("text", x = -0.23, y = -0.26, label = expression(paste("p = 5x",10^-5)), size = 2)
+ko_PMUBt <- ko_PMUBt + annotate("text", x = -0.21, y = -0.27, label = expression(paste("p = 5x",10^-5)), size = 2)
 ko_PMUBt <- ggarrange(ko_PMUBt,labels = c("E"),font.label = list(size = 7))
                                                   
 #MasUHPZ  
@@ -7070,7 +7070,7 @@ ko_PMUHB <- p1 +
 
 ko_PMUHBt <- ko_PMUHB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.85,0.25), "lines"))
 ko_PMUHBt <- ko_PMUHBt + theme(legend.position="none")
-ko_PMUHBt <- ko_PMUHBt + annotate("text", x = -0.24, y = -0.29, label = expression(paste("p = 1x", 10^-4)), size = 2)
+ko_PMUHBt <- ko_PMUHBt + annotate("text", x = -0.22, y = -0.34, label = expression(paste("p = 1x", 10^-4)), size = 2)
 ko_PMUHBt <- ggarrange(ko_PMUHBt,labels = c("F"),font.label = list(size = 7))
                                                   
 Geo <- arrangeGrob(ko_PGBt, ko_PMUBt, ko_PMUHBt, ko_PKMBt, ko_PKUBt, ko_PKUHBt,                             
