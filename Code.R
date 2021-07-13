@@ -7085,49 +7085,63 @@ dev.off()
                             
 #KinKLPZ
 KinKLPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Kinshasa" | KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
-KinKLPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(KinKLPZ.KO.tr)))
-KinKLPZ.KO.tr.sam$Status <- as.factor(KinKLPZ.KO.tr.sam$Status)
-KinKLPZ.KO.tr.sam$Status <- factor(KinKLPZ.KO.tr.sam$Status, levels = c("Kinshasa", "Konzo_Low_Prevalence_Zone"))
+KinKLPZ.KO.tr.f <- prune_taxa(f_0.0001, KinKLPZ.KO.tr)
+                            
+KinKLPZ.KO.tr.f.sam <- as.data.frame(as.matrix(sample_data(KinKLPZ.KO.tr.f)))
+KinKLPZ.KO.tr.f.sam$Status <- as.factor(KinKLPZ.KO.tr.f.sam$Status)
+KinKLPZ.KO.tr.f.sam$Status <- factor(KinKLPZ.KO.tr.f.sam$Status, levels = c("Kinshasa", "Konzo_Low_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(KinKLPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ KinKLPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_adonis_KinKLPZ_KO.tr.txt") #0.00287                                                 
+brayd <- phyloseq::distance(KinKLPZ.KO.tr.f, method="bray")
+bdiv_bray <- adonis(brayd ~ KinKLPZ.KO.tr.f.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_KinKLPZ_KO.tr.filtered.txt") #0.00287                                                 
 
 #KinKHPZ
-KinKHPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Kinshasa" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
+KinKHPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Kinshasa" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone"), KonzoData_KO_tr)  
+MasUHPZ.KO.tr.f <- prune_taxa(f_0.0001, MasUHPZ.KO.tr)                            
+                            
+                            
 KinKHPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(KinKHPZ.KO.tr)))
 KinKHPZ.KO.tr.sam$Status <- as.factor(KinKHPZ.KO.tr.sam$Status)
 KinKHPZ.KO.tr.sam$Status <- factor(KinKHPZ.KO.tr.sam$Status, levels = c("Kinshasa", "Konzo_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(KinKHPZ.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ KinKHPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_KinKHPZ_KO.tr.txt")    #1e-05                                              
+#capture.output(bdiv_bray, file="relabund_bdiv_genus_adonis_KinKHPZ_KO.tr.filtered.txt")    #1e-05                                              
                                                   
 #MasKLPZ
-MasKLPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Masimanimba" | KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
+MasKLPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Masimanimba" | KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone"), KonzoData_KO_tr)  
+MasUHPZ.KO.tr.f <- prune_taxa(f_0.0001, MasUHPZ.KO.tr)                            
+                            
+                            
 MasKLPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(MasKLPZ.KO.tr)))
 MasKLPZ.KO.tr.sam$Status <- as.factor(MasKLPZ.KO.tr.sam$Status)
 MasKLPZ.KO.tr.sam$Status <- factor(MasKLPZ.KO.tr.sam$Status, levels = c("Masimanimba", "Konzo_Low_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(MasKLPZ.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ MasKLPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_adonis_MasKLPZ_KO.tr.txt")    #7e-04                                              
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_MasKLPZ_KO.tr.filtered.txt")    #7e-04                                              
 
 #MasKHPZ
-MasKHPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Masimanimba" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
+MasKHPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Masimanimba" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone"), KonzoData_KO_tr) 
+MasUHPZ.KO.tr.f <- prune_taxa(f_0.0001, MasUHPZ.KO.tr)                            
+                            
+                            
 MasKHPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(MasKHPZ.KO.tr)))
 MasKHPZ.KO.tr.sam$Status <- as.factor(MasKHPZ.KO.tr.sam$Status)
 MasKHPZ.KO.tr.sam$Status <- factor(MasKHPZ.KO.tr.sam$Status, levels = c("Masimanimba", "Konzo_High_Prevalence_Zone"))
 
 brayd <- phyloseq::distance(MasKHPZ.KO.tr, method="bray")
 bdiv_bray <- adonis(brayd ~ MasKHPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_adonis_MasKHPZ_KO.tr.txt")   #3e-05                                               
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_MasKHPZ_KO.tr.filtered.txt")   #3e-05                                               
      
                             
 #Supplementary Figure 8
                             
 #Control                                                  
 Control.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData_KO_tr)
+MasUHPZ.KO.tr.f <- prune_taxa(f_0.0001, MasUHPZ.KO.tr)                            
+                            
+                            
 Control.KO.tr.sam <- as.data.frame(as.matrix(sample_data(Control.KO.tr)))
 Control.KO.tr.sam$Status <- as.factor(Control.KO.tr.sam$Status)
 Control.KO.tr.sam$Status <- factor(Control.KO.tr.sam$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
@@ -7152,6 +7166,8 @@ ko_PCBt <- ko_PCBt + annotate("text", x = 0.1, y = -0.3, label = expression(past
                                             
 #Disease                                                  
 Disease.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData_KO_tr)
+MasUHPZ.KO.tr.f <- prune_taxa(f_0.0001, MasUHPZ.KO.tr)                            
+                                                        
 Disease.KO.tr.sam <- as.data.frame(as.matrix(sample_data(Disease.KO.tr)))
 Disease.KO.tr.sam$Status <- as.factor(Disease.KO.tr.sam$Status)
 Disease.KO.tr.sam$Status <- factor(Disease.KO.tr.sam$Status, levels = c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
@@ -7175,6 +7191,9 @@ ko_PKBt <- ko_PKBt + annotate("text", x = 0.26, y = -0.3, label = expression(pas
                             
 #LPZ                                                  
 LPZ.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone", KonzoData_KO_tr)
+MasUHPZ.KO.tr.f <- prune_taxa(f_0.0001, MasUHPZ.KO.tr)                            
+                                                        
+                            
 LPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(LPZ.KO.tr)))
 LPZ.KO.tr.sam$Status <- as.factor(LPZ.KO.tr.sam$Status)
 LPZ.KO.tr.sam$Status <- factor(LPZ.KO.tr.sam$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"))
@@ -7197,6 +7216,9 @@ ko_PNIBt <- ko_PNIBt + annotate("text", x = 0.13, y = -0.3, label = expression(p
                                                   
 #HPZ                                                 
 HPZ.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData_KO_tr)
+MasUHPZ.KO.tr.f <- prune_taxa(f_0.0001, MasUHPZ.KO.tr)                            
+                            
+                            
 HPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(HPZ.KO.tr)))
 HPZ.KO.tr.sam$Status <- as.factor(HPZ.KO.tr.sam$Status)
 HPZ.KO.tr.sam$Status <- factor(HPZ.KO.tr.sam$Status, levels = c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
