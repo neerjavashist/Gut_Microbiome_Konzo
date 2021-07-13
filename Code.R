@@ -7139,18 +7139,18 @@ bdiv_bray <- adonis(brayd ~ MasKHPZ.KO.tr.f.sam$Status, perm=99999); bdiv_bray
                             
 #Control                                                  
 Control.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData_KO_tr)
-MasUHPZ.KO.tr.f <- prune_taxa(f_0.0001, MasUHPZ.KO.tr)                            
+Control.KO.tr.f <- prune_taxa(f_0.0001, Control.KO.tr)                            
+                                                       
                             
-                            
-Control.KO.tr.sam <- as.data.frame(as.matrix(sample_data(Control.KO.tr)))
-Control.KO.tr.sam$Status <- as.factor(Control.KO.tr.sam$Status)
-Control.KO.tr.sam$Status <- factor(Control.KO.tr.sam$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
+Control.KO.tr.f.sam <- as.data.frame(as.matrix(sample_data(Control.KO.tr.f)))
+Control.KO.tr.f.sam$Status <- as.factor(Control.KO.tr.f.sam$Status)
+Control.KO.tr.f.sam$Status <- factor(Control.KO.tr.f.sam$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(Control.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ Control.KO.tr.sam$Status, perm=99999); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_adonis_Control_KO.tr.txt")  #0.08225         
+brayd <- phyloseq::distance(Control.KO.tr.f, method="bray")
+bdiv_bray <- adonis(brayd ~ Control.KO.tr.f.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_Control_KO.tr.filtered.txt")  #0.05741       
 
-p1 = plot_ordination(Control.KO.tr, ordinate(Control.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(Control.KO.tr.f, ordinate(Control.KO.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 ko_PCB <- p1 + 
@@ -7160,23 +7160,23 @@ ko_PCB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 ko_PCBt <- ko_PCB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-ko_PCBt <- ko_PCBt + annotate("text", x = 0.1, y = -0.3, label = expression(paste("p = 0.08225")), size = 2)
+ko_PCBt <- ko_PCBt + annotate("text", x = 0.1, y = -0.3, label = expression(paste("p = 0.05741")), size = 2)
                             
                             
                                             
 #Disease                                                  
 Disease.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData_KO_tr)
-MasUHPZ.KO.tr.f <- prune_taxa(f_0.0001, MasUHPZ.KO.tr)                            
+Disease.KO.tr.f <- prune_taxa(f_0.0001, Disease.KO.tr)                            
                                                         
-Disease.KO.tr.sam <- as.data.frame(as.matrix(sample_data(Disease.KO.tr)))
-Disease.KO.tr.sam$Status <- as.factor(Disease.KO.tr.sam$Status)
-Disease.KO.tr.sam$Status <- factor(Disease.KO.tr.sam$Status, levels = c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
+Disease.KO.tr.f.sam <- as.data.frame(as.matrix(sample_data(Disease.KO.tr.f)))
+Disease.KO.tr.f.sam$Status <- as.factor(Disease.KO.tr.f.sam$Status)
+Disease.KO.tr.f.sam$Status <- factor(Disease.KO.tr.f.sam$Status, levels = c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(Disease.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ Disease.KO.tr.sam$Status, perm=99999); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_adonis_Disease_KO.tr.txt")     #0.05258                                             
+brayd <- phyloseq::distance(Disease.KO.tr.f, method="bray")
+bdiv_bray <- adonis(brayd ~ Disease.KO.tr.f.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_Disease_KO.tr.filtered.txt")     #0.0514                                          
 
-p1 = plot_ordination(Disease.KO.tr, ordinate(Disease.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(Disease.KO.tr.f, ordinate(Disease.KO.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 ko_PKB <- p1 + 
@@ -7186,23 +7186,23 @@ ko_PKB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 ko_PKBt <- ko_PKB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-ko_PKBt <- ko_PKBt + annotate("text", x = 0.26, y = -0.3, label = expression(paste("p = 0.05258")), size = 2)
+ko_PKBt <- ko_PKBt + annotate("text", x = 0.26, y = -0.3, label = expression(paste("p = 0.0514")), size = 2)
      
                             
 #LPZ                                                  
 LPZ.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone", KonzoData_KO_tr)
-MasUHPZ.KO.tr.f <- prune_taxa(f_0.0001, MasUHPZ.KO.tr)                            
+LPZ.KO.tr.f <- prune_taxa(f_0.0001, LPZ.KO.tr)                            
                                                         
                             
-LPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(LPZ.KO.tr)))
-LPZ.KO.tr.sam$Status <- as.factor(LPZ.KO.tr.sam$Status)
-LPZ.KO.tr.sam$Status <- factor(LPZ.KO.tr.sam$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"))
+LPZ.KO.tr.f.sam <- as.data.frame(as.matrix(sample_data(LPZ.KO.tr.f)))
+LPZ.KO.tr.f.sam$Status <- as.factor(LPZ.KO.tr.f.sam$Status)
+LPZ.KO.tr.f.sam$Status <- factor(LPZ.KO.tr.f.sam$Status, levels = c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(LPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ LPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_adonis_LPZ_KO.tr.txt")    #0.8878                                              
+brayd <- phyloseq::distance(LPZ.KO.tr.f, method="bray")
+bdiv_bray <- adonis(brayd ~ LPZ.KO.tr.f.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_LPZ_KO.tr.filtered.txt")    #0.8929                                          
 
-p1 = plot_ordination(LPZ.KO.tr, ordinate(LPZ.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(LPZ.KO.tr.f, ordinate(LPZ.KO.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 ko_PNIB <- p1 + 
@@ -7212,22 +7212,22 @@ ko_PNIB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 ko_PNIBt <- ko_PNIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-ko_PNIBt <- ko_PNIBt + annotate("text", x = 0.13, y = -0.3, label = expression(paste("p = 0.8878")), size = 2)
+ko_PNIBt <- ko_PNIBt + annotate("text", x = 0.13, y = -0.3, label = expression(paste("p = 0.8929")), size = 2)
                                                   
 #HPZ                                                 
 HPZ.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Konzo_High_Prevalence_Zone", KonzoData_KO_tr)
-MasUHPZ.KO.tr.f <- prune_taxa(f_0.0001, MasUHPZ.KO.tr)                            
+HPZ.KO.tr.f <- prune_taxa(f_0.0001, HPZ.KO.tr)                            
                             
                             
-HPZ.KO.tr.sam <- as.data.frame(as.matrix(sample_data(HPZ.KO.tr)))
-HPZ.KO.tr.sam$Status <- as.factor(HPZ.KO.tr.sam$Status)
-HPZ.KO.tr.sam$Status <- factor(HPZ.KO.tr.sam$Status, levels = c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
+HPZ.KO.tr.f.sam <- as.data.frame(as.matrix(sample_data(HPZ.KO.tr.f)))
+HPZ.KO.tr.f.sam$Status <- as.factor(HPZ.KO.tr.f.sam$Status)
+HPZ.KO.tr.f.sam$Status <- factor(HPZ.KO.tr.f.sam$Status, levels = c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
-brayd <- phyloseq::distance(HPZ.KO.tr, method="bray")
-bdiv_bray <- adonis(brayd ~ HPZ.KO.tr.sam$Status, perm=99999); bdiv_bray
-#capture.output(bdiv_bray, file="relabund_bdiv_adonis_HPZ_KO.tr.txt")  #0.7856                                                
+brayd <- phyloseq::distance(HPZ.KO.tr.f, method="bray")
+bdiv_bray <- adonis(brayd ~ HPZ.KO.tr.f.sam$Status, perm=99999); bdiv_bray
+#capture.output(bdiv_bray, file="relabund_bdiv_adonis_HPZ_KO.tr.filtered.txt")  #0.8634                                            
 
-p1 = plot_ordination(HPZ.KO.tr, ordinate(HPZ.KO.tr, method="PCoA", dist="bray"), type="samples", color="Status") +
+p1 = plot_ordination(HPZ.KO.tr.f, ordinate(HPZ.KO.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
   geom_point(size = 1, stroke = 0, shape = 16)
 p1$layers <- p1$layers[-1]
 ko_PIB <- p1 + 
@@ -7237,9 +7237,9 @@ ko_PIB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 ko_PIBt <- ko_PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-ko_PIBt <- ko_PIBt + annotate("text", x = 0.22, y = -0.3, label = expression(paste("p = 0.7856")), size = 2)
+ko_PIBt <- ko_PIBt + annotate("text", x = 0.22, y = -0.3, label = expression(paste("p = 0.8634")), size = 2)
                             
-tiff(filename = "Kahemba_KO_Control_Disease_LPZ_HPZ_PCoA.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
+tiff(filename = "Kahemba_KO_Filtered_Control_Disease_LPZ_HPZ_PCoA.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
 ggarrange(ko_PCBt, ko_PKBt, ko_PNIBt, ko_PIBt, labels = c("A","B", "C", "D"), ncol = 2, nrow = 2, font.label = list(size = 7))
 dev.off()                                                  
                                                   
