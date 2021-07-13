@@ -5998,7 +5998,7 @@ PIBt <- PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
 PIBt <- PIBt + annotate("text", x = 0.5, y = -0.4, label = expression(paste("p = 0.569")), size = 2) #0.569
 
                                     
-part2 <- ggarrange(PKBt, PNIBt, PIBt, labels = c("D","E", "F"), ncol = 3, nrow = 1, font.label = list(size = 7), widths = c(2, 2, 2) )                                  
+part2 <- ggarrange(PKBt, PNIBt, PIBt, labels = c("C","D", "E"), ncol = 3, nrow = 1, font.label = list(size = 7), widths = c(2, 2, 2) )                                  
 
 tiff(filename = "Kahemba_Genus_Filtered_PCoA_CombFig.tiff", width = 7, height = 4.5, units = "in", res = 600)
 ggarrange(part1, part2, ncol = 1, nrow = 2, heights = c(2.5,2))
