@@ -6928,7 +6928,7 @@ ko_PGB <- p1 +
 
 ko_PGBt <- ko_PGB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 ko_PGBt <- ko_PGBt + theme(legend.position="bottom")
-ko_PGBt <- ko_PGBt + annotate("text", x = -0.24, y = -0.37, label = expression(paste("p = 1x",10^-5)), size = 2.5)
+ko_PGBt <- ko_PGBt + annotate("text", x = -0.24, y = -0.39, label = expression(paste("p = 1x",10^-5)), size = 2.5)
 ko_PGBt <- ggarrange(ko_PGBt,labels = c("A"),font.label = list(size = 7))
                                                  
 
