@@ -45,9 +45,12 @@ library(gplots)
 
 ### The general format for each taxanomic rank is the same, so the code is repetitive. Comments are provided in the Bacteria Phylum section to show what is happening, and the explainations are applicable to the other taxa ranks as well.
 
-### Naming Scheme Shorthand
+### For figures, since the standard R ggplot cannot generate corrected p-values, the p-values post BH correction must be manually added to the plots.
 
-#Old Nameing: Kinshasa = Kinshasa; Masimanimba = Masimanimba; Kahemba_Control_NonIntervention = Unaffected_Low_Prevalence_Zone;  Kahemba_Konzo_NonIntervention = Konzo_Low_Prevalence_Zone;  Kahemba_Control_Intervention = Unaffected_High_Prevalence_Zone;  Kahemba_Konzo_Intervention = Konzo_High_Prevalence_Zone;  
+### Due to the way the input data is set up, the ordering of the actual samples within excel sheets may differ, so always check which columns correspond to which samples to be sure the correst samples are being compared (ex: for aldex)
+
+
+### Naming Scheme Shorthand
 
 SL <- c(Kinshasa = "Kinshasa", Masimanimba = "Masi-Manimba", Unaffected_Low_Prevalence_Zone = "Unaffected LPZ", Konzo_Low_Prevalence_Zone = "Konzo LPZ", Unaffected_High_Prevalence_Zone = "Unaffected HPZ", Konzo_High_Prevalence_Zone = "Konzo HPZ")
 
@@ -1153,9 +1156,1829 @@ heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow
 dev.off()                                        
                                                       
 #------------------------------------------------
+     
+### ALDEx2 : aldex is used to convert raw read counts (aftering filtering out low abundance taxa) to CLR to infer abuandance and perform statistical testing. 
+#Aldex does both he Welch's t-test and Wilcoxon test on the pairewise comparisions and doing BH correction on the expected values, but only Wilcoxon test results are reported in figures etc.                                   
+
+#Supplemental File 3 where wi.ep and wi.eBH are reported at each taxa (the final AD13 dataframe is in each sheet for the specific taxa rank)
+                                     
+#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
+                        #c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone"), 
+                       #c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"), c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"), 
+                        #c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"), c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
+
+#PHYLUM
+x <- read.csv("Kinshasa_Konzo3_Phylum_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+
+KonzoData.P.f <- prune_taxa(f_0.0001, KonzoData.P) #filtered readcount phyloseq object
+                                               
+#Urban vs Rural
+P.aldex.DF <- as.data.frame(KonzoData.P.f@otu_table)
+conds <- c(rep("Urban", 30), rep("Rural", 150))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Urban_vs_Rural", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_KonzoData_Urban_vs_Rural_Aldex.csv")  
+
+KonzoData.P.Aldex.DF <- x
+KonzoData.P.CLR.DF <- t(x)
+KonzoData.P.CLR.DF <- KonzoData.P.CLR.DF[4:183,]
+rownames(KonzoData.P.CLR.DF) <- sub('^Urban_vs_Rural_rab.sample.', '', rownames(KonzoData.P.CLR.DF))
+KonzoData.P.CLR.DF <- cbind(KonzoData.P.CLR.DF, as.data.frame(KonzoData.P.f@sam_data$Status))
+colnames(KonzoData.P.CLR.DF)[colnames(KonzoData.P.CLR.DF)=="KonzoData.P.f@sam_data$Status"] <- "Status"
+write.csv(KonzoData.P.CLR.DF, file = "Kinshasa_Konzo3_Bacteria_Phylum_KonzoData_Aldex_MedianCLRValues.csv")  
+
+conds <- c(rep("KinMas", 30), rep("Kahemba", 120), rep("KinMas", 30))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_Kahemba", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_KonzoData_KinMas_vs_Kahemba_Aldex.csv")  
+
+#(Kin Mas) vs. (ULPZ KLPZ)
+KinMasLPZ.P <-  prune_samples((KonzoData.P@sam_data$Status != "Unaffected_High_Prevalence_Zone") & (KonzoData.P@sam_data$Status != "Konzo_High_Prevalence_Zone"),  KonzoData.P)
+KinMasLPZ.P.f <- prune_taxa(f_0.0001, KinMasLPZ.P)   
+
+P.aldex.DF <- as.data.frame(KinMasLPZ.P.f@otu_table)
+conds <- c(rep("KinMas", 30), rep("LPZ", 60), rep("KinMas", 30))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_LPZ", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_KonzoData_KinMas_vs_LPZ_Aldex.csv")  
+
+
+#(Kin Mas) vs. (UHPZ KHPZ)
+KinMasHPZ.P <-  prune_samples((KonzoData.P@sam_data$Status != "Unaffected_Low_Prevalence_Zone") & (KonzoData.P@sam_data$Status != "Konzo_Low_Prevalence_Zone"),  KonzoData.P)
+KinMasHPZ.P.f <- prune_taxa(f_0.0001, KinMasHPZ.P)   
+
+P.aldex.DF <- as.data.frame(KinMasHPZ.P.f@otu_table)
+conds <- c(rep("KinMas", 30), rep("HPZ", 60), rep("KinMas", 30))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_HPZ", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_KonzoData_KinMas_vs_HPZ_Aldex.csv")  
+
+
+#Kin vs Mas
+KinMas.P <-  prune_samples((KonzoData.P@sam_data$Status == "Kinshasa") | (KonzoData.P@sam_data$Status == "Masimanimba"),  KonzoData.P)
+KinMas.P.f <- prune_taxa(f_0.0001, KinMas.P)   
+
+P.aldex.DF <- as.data.frame(KinMas.P.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("Masimanimba", 30))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_Mas", colnames(x), sep = "_")
+
+AD <- x[,70:71]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_Kin_vs_Mas_Aldex.csv")  
+
+
+
+#Kin vs ULPZ
+KinULPZ.P <-  prune_samples((KonzoData.P@sam_data$Status == "Kinshasa") | (KonzoData.P@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.P)
+KinULPZ.P.f <- prune_taxa(f_0.0001, KinULPZ.P)   
+
+P.aldex.DF <- as.data.frame(KinULPZ.P.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("ULPZ", 30))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_ULPZ", colnames(x), sep = "_")
+
+AD <- merge(AD,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD2 <- AD[,-1]
+rownames(AD2) <- AD[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_Kin_vs_ULPZ_Aldex.csv")  
+
+#Mas vs ULPZ
+MasULPZ.P <-  prune_samples((KonzoData.P@sam_data$Status == "Masimanimba") | (KonzoData.P@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.P)
+MasULPZ.P.f <- prune_taxa(f_0.0001, MasULPZ.P)   
+
+P.aldex.DF <- as.data.frame(MasULPZ.P.f@otu_table)
+conds <- c(rep("ULPZ", 30), rep("Masimanimba", 30))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_ULPZ", colnames(x), sep = "_")
+
+AD2 <- merge(AD2,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD3 <- AD2[,-1]
+rownames(AD3) <- AD2[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_Mas_vs_ULPZ_Aldex.csv")  
+
+#Kin vs UHPZ
+KinUHPZ.P <-  prune_samples((KonzoData.P@sam_data$Status == "Kinshasa") | (KonzoData.P@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.P)
+KinUHPZ.P.f <- prune_taxa(f_0.0001, KinUHPZ.P)   
+
+P.aldex.DF <- as.data.frame(KinUHPZ.P.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("UHPZ", 30))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_UHPZ", colnames(x), sep = "_")
+
+AD3 <- merge(AD3,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD4 <- AD3[,-1]
+rownames(AD4) <- AD3[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_Kin_vs_UHPZ_Aldex.csv")  
+
+#Mas vs UHPZ
+MasUHPZ.P <-  prune_samples((KonzoData.P@sam_data$Status == "Masimanimba") | (KonzoData.P@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.P)
+MasUHPZ.P.f <- prune_taxa(f_0.0001, MasUHPZ.P)   
+
+P.aldex.DF <- as.data.frame(MasUHPZ.P.f@otu_table)
+conds <- c(rep("UHPZ", 30), rep("Masimanimba", 30))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_UHPZ", colnames(x), sep = "_")
+
+AD4 <- merge(AD4,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD5 <- AD4[,-1]
+rownames(AD5) <- AD4[,1]
+
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_Mas_vs_UHPZ_Aldex.csv")  
+
+#Kin vs KLPZ
+KinKLPZ.P <-  prune_samples((KonzoData.P@sam_data$Status == "Kinshasa") | (KonzoData.P@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.P)
+KinKLPZ.P.f <- prune_taxa(f_0.0001, KinKLPZ.P)   
+
+P.aldex.DF <- as.data.frame(KinKLPZ.P.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("KLPZ", 30))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_KLPZ", colnames(x), sep = "_")
+
+AD5 <- merge(AD5,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD6 <- AD5[,-1]
+rownames(AD6) <- AD5[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_Kin_vs_KLPZ_Aldex.csv")  
+
+#Mas vs KLPZ
+MasKLPZ.P <-  prune_samples((KonzoData.P@sam_data$Status == "Masimanimba") | (KonzoData.P@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.P)
+MasKLPZ.P.f <- prune_taxa(f_0.0001, MasKLPZ.P)   
+
+P.aldex.DF <- as.data.frame(MasKLPZ.P.f@otu_table)
+conds <- c(rep("KLPZ", 30), rep("Masimanimba", 30))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_KLPZ", colnames(x), sep = "_")
+
+AD6 <- merge(AD6,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD7 <- AD6[,-1]
+rownames(AD7) <- AD6[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_Mas_vs_KLPZ_Aldex.csv")  
+
+#Kin vs KHPZ
+KinKHPZ.P <-  prune_samples((KonzoData.P@sam_data$Status == "Kinshasa") | (KonzoData.P@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.P)
+KinKHPZ.P.f <- prune_taxa(f_0.0001, KinKHPZ.P)   
+
+P.aldex.DF <- as.data.frame(KinKHPZ.P.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("KHPZ", 30))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_KHPZ", colnames(x), sep = "_")
+
+AD7 <- merge(AD7,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD8 <- AD7[,-1]
+rownames(AD8) <- AD7[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_Kin_vs_KHPZ_Aldex.csv")  
+
+#Mas vs KHPZ
+MasKHPZ.P <-  prune_samples((KonzoData.P@sam_data$Status == "Masimanimba") | (KonzoData.P@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.P)
+MasKHPZ.P.f <- prune_taxa(f_0.0001, MasKHPZ.P)   
+
+P.aldex.DF <- as.data.frame(MasKHPZ.P.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("Masimanimba", 30))
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t",effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_KHPZ", colnames(x), sep = "_")
+
+AD8 <- merge(AD8,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD9 <- AD8[,-1]
+rownames(AD9) <- AD8[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_Mas_vs_KHPZ_Aldex.csv")  
+
+#ULPZ vs UHPZ
+
+Control.P <-  prune_samples((KonzoData.P@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.P@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.P)
+Control.P.f <- prune_taxa(f_0.0001, Control.P)   
+
+P.aldex.DF <- as.data.frame(Control.P.f@otu_table)
+conds <- c(rep("UHPZ", 30), rep("ULPZ", 30)) #Always Check this
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("ULPZ_vs_UHPZ", colnames(x), sep = "_")
+
+AD9 <- merge(AD9,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD10 <- AD9[,-1]
+rownames(AD10) <- AD9[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_ULPZ_vs_UHPZ_Aldex.csv")  
+
+
+#KLPZ vs. KHPZ
+Disease.P <-  prune_samples((KonzoData.P@sam_data$Status == "Konzo_Low_Prevalence_Zone") | (KonzoData.P@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.P)
+Disease.P.f <- prune_taxa(f_0.0001, Disease.P)   
+
+P.aldex.DF <- as.data.frame(Disease.P.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("KLPZ", 30)) #Always Check this
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t",  effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KLPZ_vs_KHPZ", colnames(x), sep = "_")
+
+AD10 <- merge(AD10,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD11 <- AD10[,-1]
+rownames(AD11) <- AD10[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_KLPZ_vs_KHPZ_Aldex.csv")  
+
+#ULPZ vs. KLPZ
+
+LPZ.P <-  prune_samples((KonzoData.P@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.P@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.P)
+LPZ.P.f <- prune_taxa(f_0.0001, LPZ.P)   
+
+P.aldex.DF <- as.data.frame(LPZ.P.f@otu_table)
+conds <- c(rep("KLPZ", 30), rep("ULPZ", 30)) #Always Check this
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("ULPZ_vs_KLPZ", colnames(x), sep = "_")
+
+AD11 <- merge(AD11,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD12 <- AD11[,-1]
+rownames(AD12) <- AD11[,1]
+
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_ULPZ_vs_KLPZ_Aldex.csv")  
+
+#UHPZ vs. KHPZ
+
+HPZ.P <-  prune_samples((KonzoData.P@sam_data$Status == "Unaffected_High_Prevalence_Zone") | (KonzoData.P@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.P)
+HPZ.P.f <- prune_taxa(f_0.0001, HPZ.P)   
+
+P.aldex.DF <- as.data.frame(HPZ.P.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("UHPZ", 30)) #Always Check this
+x <- aldex(P.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("UHPZ_vs_KHPZ", colnames(x), sep = "_")
+
+AD12 <- merge(AD12,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD13 <- AD12[,-1]
+rownames(AD13) <- AD12[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Phylum_UHPZ_vs_KHPZ_Aldex.csv")  
+write.csv(AD13, file = "Kinshasa_Konzo3_Bacteria_Phylum_Filtered_Aldex.csv")  
+
+                                     
+##CLASS
+x <- read.csv("Kinshasa_Konzo3_Class_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+
+#KonzoData
+C.aldex.DF <- as.data.frame(KonzoData.C.f@otu_table)
+conds <- c(rep("Urban", 30), rep("Rural", 150))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Urban_vs_Rural", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_KonzoData_Urban_vs_Rural_Aldex.csv")  
+
+KonzoData.C.Aldex.DF <- x
+KonzoData.C.CLR.DF <- t(x)
+KonzoData.C.CLR.DF <- KonzoData.C.CLR.DF[4:183,]
+rownames(KonzoData.C.CLR.DF) <- sub('^Urban_vs_Rural_rab.sample.', '', rownames(KonzoData.C.CLR.DF))
+KonzoData.C.CLR.DF <- cbind(KonzoData.C.CLR.DF, as.data.frame(KonzoData.C.f@sam_data$Status))
+colnames(KonzoData.C.CLR.DF)[colnames(KonzoData.C.CLR.DF)=="KonzoData.C.f@sam_data$Status"] <- "Status"
+write.csv(KonzoData.C.CLR.DF, file = "Kinshasa_Konzo3_Bacteria_Class_KonzoData_Aldex_MedianCLRValues.csv")  
+
+conds <- c(rep("KinMas", 30), rep("Kahemba", 120), rep("KinMas", 30))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_Kahemba", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_KonzoData_KinMas_vs_Kahemba_Aldex.csv")  
+
+
+#(Kin Mas) vs. (ULPZ KLPZ)
+KinMasLPZ.C <-  prune_samples((KonzoData.C@sam_data$Status != "Unaffected_High_Prevalence_Zone") & (KonzoData.C@sam_data$Status != "Konzo_High_Prevalence_Zone"),  KonzoData.C)
+KinMasLPZ.C.f <- prune_taxa(f_0.0001, KinMasLPZ.C)   
+
+C.aldex.DF <- as.data.frame(KinMasLPZ.C.f@otu_table)
+conds <- c(rep("KinMas", 30), rep("LPZ", 60), rep("KinMas", 30))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_LPZ", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_KonzoData_KinMas_vs_LPZ_Aldex.csv")  
+
+
+#(Kin Mas) vs. (UHPZ KHPZ)
+KinMasHPZ.C <-  prune_samples((KonzoData.C@sam_data$Status != "Unaffected_Low_Prevalence_Zone") & (KonzoData.C@sam_data$Status != "Konzo_Low_Prevalence_Zone"),  KonzoData.C)
+KinMasHPZ.C.f <- prune_taxa(f_0.0001, KinMasHPZ.C)   
+
+C.aldex.DF <- as.data.frame(KinMasHPZ.C.f@otu_table)
+conds <- c(rep("KinMas", 30), rep("HPZ", 60), rep("KinMas", 30))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_HPZ", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_KonzoData_KinMas_vs_HPZ_Aldex.csv")  
+
+
+#Kin vs Mas
+KinMas.C <-  prune_samples((KonzoData.C@sam_data$Status == "Kinshasa") | (KonzoData.C@sam_data$Status == "Masimanimba"),  KonzoData.C)
+KinMas.C.f <- prune_taxa(f_0.0001, KinMas.C)   
+
+C.aldex.DF <- as.data.frame(KinMas.C.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("Masimanimba", 30))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_Mas", colnames(x), sep = "_")
+
+AD <- x[,70:71]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_Kin_vs_Mas_Aldex.csv")  
+
+#Kin vs ULPZ
+KinULPZ.C <-  prune_samples((KonzoData.C@sam_data$Status == "Kinshasa") | (KonzoData.C@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.C)
+KinULPZ.C.f <- prune_taxa(f_0.0001, KinULPZ.C)   
+
+C.aldex.DF <- as.data.frame(KinULPZ.C.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("ULPZ", 30))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_ULPZ", colnames(x), sep = "_")
+
+AD <- merge(AD,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD2 <- AD[,-1]
+rownames(AD2) <- AD[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_Kin_vs_ULPZ_Aldex.csv")  
+
+#Mas vs ULPZ
+MasULPZ.C <-  prune_samples((KonzoData.C@sam_data$Status == "Masimanimba") | (KonzoData.C@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.C)
+MasULPZ.C.f <- prune_taxa(f_0.0001, MasULPZ.C)   
+
+C.aldex.DF <- as.data.frame(MasULPZ.C.f@otu_table)
+conds <- c(rep("ULPZ", 30), rep("Masimanimba", 30))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_ULPZ", colnames(x), sep = "_")
+
+AD2 <- merge(AD2,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD3 <- AD2[,-1]
+rownames(AD3) <- AD2[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_Mas_vs_ULPZ_Aldex.csv")  
+
+#Kin vs UHPZ
+KinUHPZ.C <-  prune_samples((KonzoData.C@sam_data$Status == "Kinshasa") | (KonzoData.C@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.C)
+KinUHPZ.C.f <- prune_taxa(f_0.0001, KinUHPZ.C)   
+
+C.aldex.DF <- as.data.frame(KinUHPZ.C.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("UHPZ", 30))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_UHPZ", colnames(x), sep = "_")
+
+AD3 <- merge(AD3,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD4 <- AD3[,-1]
+rownames(AD4) <- AD3[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_Kin_vs_UHPZ_Aldex.csv")  
+
+#Mas vs UHPZ
+MasUHPZ.C <-  prune_samples((KonzoData.C@sam_data$Status == "Masimanimba") | (KonzoData.C@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.C)
+MasUHPZ.C.f <- prune_taxa(f_0.0001, MasUHPZ.C)   
+
+C.aldex.DF <- as.data.frame(MasUHPZ.C.f@otu_table)
+conds <- c(rep("UHPZ", 30), rep("Masimanimba", 30))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_UHPZ", colnames(x), sep = "_")
+
+AD4 <- merge(AD4,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD5 <- AD4[,-1]
+rownames(AD5) <- AD4[,1]
+
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_Mas_vs_UHPZ_Aldex.csv")  
+
+#Kin vs KLPZ
+KinKLPZ.C <-  prune_samples((KonzoData.C@sam_data$Status == "Kinshasa") | (KonzoData.C@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.C)
+KinKLPZ.C.f <- prune_taxa(f_0.0001, KinKLPZ.C)   
+
+C.aldex.DF <- as.data.frame(KinKLPZ.C.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("KLPZ", 30))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_KLPZ", colnames(x), sep = "_")
+
+AD5 <- merge(AD5,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD6 <- AD5[,-1]
+rownames(AD6) <- AD5[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_Kin_vs_KLPZ_Aldex.csv")  
+
+#Mas vs KLPZ
+MasKLPZ.C <-  prune_samples((KonzoData.C@sam_data$Status == "Masimanimba") | (KonzoData.C@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.C)
+MasKLPZ.C.f <- prune_taxa(f_0.0001, MasKLPZ.C)   
+
+C.aldex.DF <- as.data.frame(MasKLPZ.C.f@otu_table)
+conds <- c(rep("KLPZ", 30), rep("Masimanimba", 30))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_KLPZ", colnames(x), sep = "_")
+
+AD6 <- merge(AD6,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD7 <- AD6[,-1]
+rownames(AD7) <- AD6[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_Mas_vs_KLPZ_Aldex.csv")  
+
+#Kin vs KHPZ
+KinKHPZ.C <-  prune_samples((KonzoData.C@sam_data$Status == "Kinshasa") | (KonzoData.C@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.C)
+KinKHPZ.C.f <- prune_taxa(f_0.0001, KinKHPZ.C)   
+
+C.aldex.DF <- as.data.frame(KinKHPZ.C.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("KHPZ", 30))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_KHPZ", colnames(x), sep = "_")
+
+AD7 <- merge(AD7,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD8 <- AD7[,-1]
+rownames(AD8) <- AD7[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_Kin_vs_KHPZ_Aldex.csv")  
+
+#Mas vs KHPZ
+MasKHPZ.C <-  prune_samples((KonzoData.C@sam_data$Status == "Masimanimba") | (KonzoData.C@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.C)
+MasKHPZ.C.f <- prune_taxa(f_0.0001, MasKHPZ.C)   
+
+C.aldex.DF <- as.data.frame(MasKHPZ.C.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("Masimanimba", 30))
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t",effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_KHPZ", colnames(x), sep = "_")
+
+AD8 <- merge(AD8,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD9 <- AD8[,-1]
+rownames(AD9) <- AD8[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_Mas_vs_KHPZ_Aldex.csv")  
+
+#ULPZ vs UHPZ
+
+Control.C <-  prune_samples((KonzoData.C@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.C@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.C)
+Control.C.f <- prune_taxa(f_0.0001, Control.C)   
+
+C.aldex.DF <- as.data.frame(Control.C.f@otu_table)
+conds <- c(rep("UHPZ", 30), rep("ULPZ", 30)) #Always Check this
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("ULPZ_vs_UHPZ", colnames(x), sep = "_")
+
+AD9 <- merge(AD9,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD10 <- AD9[,-1]
+rownames(AD10) <- AD9[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_ULPZ_vs_UHPZ_Aldex.csv")  
+
+#KLPZ vs. KHPZ
+Disease.C <-  prune_samples((KonzoData.C@sam_data$Status == "Konzo_Low_Prevalence_Zone") | (KonzoData.C@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.C)
+Disease.C.f <- prune_taxa(f_0.0001, Disease.C)   
+
+C.aldex.DF <- as.data.frame(Disease.C.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("KLPZ", 30)) #Always Check this
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t",  effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KLPZ_vs_KHPZ", colnames(x), sep = "_")
+
+AD10 <- merge(AD10,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD11 <- AD10[,-1]
+rownames(AD11) <- AD10[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_KLPZ_vs_KHPZ_Aldex.csv")  
+
+#ULPZ vs. KLPZ
+
+LPZ.C <-  prune_samples((KonzoData.C@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.C@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.C)
+LPZ.C.f <- prune_taxa(f_0.0001, LPZ.C)   
+
+C.aldex.DF <- as.data.frame(LPZ.C.f@otu_table)
+conds <- c(rep("KLPZ", 30), rep("ULPZ", 30)) #Always Check this
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("ULPZ_vs_KLPZ", colnames(x), sep = "_")
+
+AD11 <- merge(AD11,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD12 <- AD11[,-1]
+rownames(AD12) <- AD11[,1]
+
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_ULPZ_vs_KLPZ_Aldex.csv")  
+
+#UHPZ vs. KHPZ
+
+HPZ.C <-  prune_samples((KonzoData.C@sam_data$Status == "Unaffected_High_Prevalence_Zone") | (KonzoData.C@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.C)
+HPZ.C.f <- prune_taxa(f_0.0001, HPZ.C)   
+
+C.aldex.DF <- as.data.frame(HPZ.C.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("UHPZ", 30)) #Always Check this
+x <- aldex(C.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("UHPZ_vs_KHPZ", colnames(x), sep = "_")
+
+AD12 <- merge(AD12,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD13 <- AD12[,-1]
+rownames(AD13) <- AD12[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Class_UHPZ_vs_KHPZ_Aldex.csv")  
+write.csv(AD13, file = "Kinshasa_Konzo3_Bacteria_Class_Filtered_Aldex.csv")  
+
+##ORDER
+x <- read.csv("Kinshasa_Konzo3_Order_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+
+#KonzoData
+O.aldex.DF <- as.data.frame(KonzoData.O.f@otu_table)
+conds <- c(rep("Urban", 30), rep("Rural", 150))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Urban_vs_Rural", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_KonzoData_Urban_vs_Rural_Aldex.csv")  
+
+KonzoData.O.Aldex.DF <- x
+KonzoData.O.CLR.DF <- t(x)
+KonzoData.O.CLR.DF <- KonzoData.O.CLR.DF[4:183,]
+rownames(KonzoData.O.CLR.DF) <- sub('^Urban_vs_Rural_rab.sample.', '', rownames(KonzoData.O.CLR.DF))
+KonzoData.O.CLR.DF <- cbind(KonzoData.O.CLR.DF, as.data.frame(KonzoData.O.f@sam_data$Status))
+colnames(KonzoData.O.CLR.DF)[colnames(KonzoData.O.CLR.DF)=="KonzoData.O.f@sam_data$Status"] <- "Status"
+write.csv(KonzoData.O.CLR.DF, file = "Kinshasa_Konzo3_Bacteria_Order_KonzoData_Aldex_MedianCLRValues.csv")  
+
+conds <- c(rep("KinMas", 30), rep("Kahemba", 120), rep("KinMas", 30))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_Kahemba", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_KonzoData_KinMas_vs_Kahemba_Aldex.csv")  
+
+
+#(Kin Mas) vs. (ULPZ KLPZ)
+KinMasLPZ.O <-  prune_samples((KonzoData.O@sam_data$Status != "Unaffected_High_Prevalence_Zone") & (KonzoData.O@sam_data$Status != "Konzo_High_Prevalence_Zone"),  KonzoData.O)
+KinMasLPZ.O.f <- prune_taxa(f_0.0001, KinMasLPZ.O)   
+
+O.aldex.DF <- as.data.frame(KinMasLPZ.O.f@otu_table)
+conds <- c(rep("KinMas", 30), rep("LPZ", 60), rep("KinMas", 30))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_LPZ", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_KonzoData_KinMas_vs_LPZ_Aldex.csv")  
+
+
+#(Kin Mas) vs. (UHPZ KHPZ)
+KinMasHPZ.O <-  prune_samples((KonzoData.O@sam_data$Status != "Unaffected_Low_Prevalence_Zone") & (KonzoData.O@sam_data$Status != "Konzo_Low_Prevalence_Zone"),  KonzoData.O)
+KinMasHPZ.O.f <- prune_taxa(f_0.0001, KinMasHPZ.O)   
+
+O.aldex.DF <- as.data.frame(KinMasHPZ.O.f@otu_table)
+conds <- c(rep("KinMas", 30), rep("HPZ", 60), rep("KinMas", 30))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_HPZ", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_KonzoData_KinMas_vs_HPZ_Aldex.csv")  
+
+
+#Kin vs Mas
+KinMas.O <-  prune_samples((KonzoData.O@sam_data$Status == "Kinshasa") | (KonzoData.O@sam_data$Status == "Masimanimba"),  KonzoData.O)
+KinMas.O.f <- prune_taxa(f_0.0001, KinMas.O)   
+
+O.aldex.DF <- as.data.frame(KinMas.O.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("Masimanimba", 30))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_Mas", colnames(x), sep = "_")
+
+AD <- x[,70:71]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_Kin_vs_Mas_Aldex.csv")  
+
+#Kin vs ULPZ
+KinULPZ.O <-  prune_samples((KonzoData.O@sam_data$Status == "Kinshasa") | (KonzoData.O@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.O)
+KinULPZ.O.f <- prune_taxa(f_0.0001, KinULPZ.O)   
+
+O.aldex.DF <- as.data.frame(KinULPZ.O.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("ULPZ", 30))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_ULPZ", colnames(x), sep = "_")
+
+AD <- merge(AD,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD2 <- AD[,-1]
+rownames(AD2) <- AD[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_Kin_vs_ULPZ_Aldex.csv")  
+
+#Mas vs ULPZ
+MasULPZ.O <-  prune_samples((KonzoData.O@sam_data$Status == "Masimanimba") | (KonzoData.O@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.O)
+MasULPZ.O.f <- prune_taxa(f_0.0001, MasULPZ.O)   
+
+O.aldex.DF <- as.data.frame(MasULPZ.O.f@otu_table)
+conds <- c(rep("ULPZ", 30), rep("Masimanimba", 30))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_ULPZ", colnames(x), sep = "_")
+
+AD2 <- merge(AD2,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD3 <- AD2[,-1]
+rownames(AD3) <- AD2[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_Mas_vs_ULPZ_Aldex.csv")  
+
+#Kin vs UHPZ
+KinUHPZ.O <-  prune_samples((KonzoData.O@sam_data$Status == "Kinshasa") | (KonzoData.O@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.O)
+KinUHPZ.O.f <- prune_taxa(f_0.0001, KinUHPZ.O)   
+
+O.aldex.DF <- as.data.frame(KinUHPZ.O.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("UHPZ", 30))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_UHPZ", colnames(x), sep = "_")
+
+AD3 <- merge(AD3,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD4 <- AD3[,-1]
+rownames(AD4) <- AD3[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_Kin_vs_UHPZ_Aldex.csv")  
+
+#Mas vs UHPZ
+MasUHPZ.O <-  prune_samples((KonzoData.O@sam_data$Status == "Masimanimba") | (KonzoData.O@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.O)
+MasUHPZ.O.f <- prune_taxa(f_0.0001, MasUHPZ.O)   
+
+O.aldex.DF <- as.data.frame(MasUHPZ.O.f@otu_table)
+conds <- c(rep("UHPZ", 30), rep("Masimanimba", 30))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_UHPZ", colnames(x), sep = "_")
+
+AD4 <- merge(AD4,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD5 <- AD4[,-1]
+rownames(AD5) <- AD4[,1]
+
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_Mas_vs_UHPZ_Aldex.csv")  
+
+#Kin vs KLPZ
+KinKLPZ.O <-  prune_samples((KonzoData.O@sam_data$Status == "Kinshasa") | (KonzoData.O@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.O)
+KinKLPZ.O.f <- prune_taxa(f_0.0001, KinKLPZ.O)   
+
+O.aldex.DF <- as.data.frame(KinKLPZ.O.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("KLPZ", 30))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_KLPZ", colnames(x), sep = "_")
+
+AD5 <- merge(AD5,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD6 <- AD5[,-1]
+rownames(AD6) <- AD5[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_Kin_vs_KLPZ_Aldex.csv")  
+
+#Mas vs KLPZ
+MasKLPZ.O <-  prune_samples((KonzoData.O@sam_data$Status == "Masimanimba") | (KonzoData.O@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.O)
+MasKLPZ.O.f <- prune_taxa(f_0.0001, MasKLPZ.O)   
+
+O.aldex.DF <- as.data.frame(MasKLPZ.O.f@otu_table)
+conds <- c(rep("KLPZ", 30), rep("Masimanimba", 30))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_KLPZ", colnames(x), sep = "_")
+
+AD6 <- merge(AD6,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD7 <- AD6[,-1]
+rownames(AD7) <- AD6[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_Mas_vs_KLPZ_Aldex.csv")  
+
+#Kin vs KHPZ
+KinKHPZ.O <-  prune_samples((KonzoData.O@sam_data$Status == "Kinshasa") | (KonzoData.O@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.O)
+KinKHPZ.O.f <- prune_taxa(f_0.0001, KinKHPZ.O)   
+
+O.aldex.DF <- as.data.frame(KinKHPZ.O.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("KHPZ", 30))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_KHPZ", colnames(x), sep = "_")
+
+AD7 <- merge(AD7,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD8 <- AD7[,-1]
+rownames(AD8) <- AD7[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_Kin_vs_KHPZ_Aldex.csv")  
+
+#Mas vs KHPZ
+MasKHPZ.O <-  prune_samples((KonzoData.O@sam_data$Status == "Masimanimba") | (KonzoData.O@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.O)
+MasKHPZ.O.f <- prune_taxa(f_0.0001, MasKHPZ.O)   
+
+O.aldex.DF <- as.data.frame(MasKHPZ.O.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("Masimanimba", 30))
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t",effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_KHPZ", colnames(x), sep = "_")
+
+AD8 <- merge(AD8,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD9 <- AD8[,-1]
+rownames(AD9) <- AD8[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_Mas_vs_KHPZ_Aldex.csv")  
+
+#ULPZ vs UHPZ
+
+Control.O <-  prune_samples((KonzoData.O@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.O@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.O)
+Control.O.f <- prune_taxa(f_0.0001, Control.O)   
+
+O.aldex.DF <- as.data.frame(Control.O.f@otu_table)
+conds <- c(rep("UHPZ", 30), rep("ULPZ", 30)) #Always Check this
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("ULPZ_vs_UHPZ", colnames(x), sep = "_")
+
+AD9 <- merge(AD9,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD10 <- AD9[,-1]
+rownames(AD10) <- AD9[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_ULPZ_vs_UHPZ_Aldex.csv")  
+
+#KLPZ vs. KHPZ
+Disease.O <-  prune_samples((KonzoData.O@sam_data$Status == "Konzo_Low_Prevalence_Zone") | (KonzoData.O@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.O)
+Disease.O.f <- prune_taxa(f_0.0001, Disease.O)   
+
+O.aldex.DF <- as.data.frame(Disease.O.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("KLPZ", 30)) #Always Check this
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t",  effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KLPZ_vs_KHPZ", colnames(x), sep = "_")
+
+AD10 <- merge(AD10,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD11 <- AD10[,-1]
+rownames(AD11) <- AD10[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_KLPZ_vs_KHPZ_Aldex.csv")  
+
+#ULPZ vs. KLPZ
+
+LPZ.O <-  prune_samples((KonzoData.O@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.O@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.O)
+LPZ.O.f <- prune_taxa(f_0.0001, LPZ.O)   
+
+O.aldex.DF <- as.data.frame(LPZ.O.f@otu_table)
+conds <- c(rep("KLPZ", 30), rep("ULPZ", 30)) #Always Check this
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("ULPZ_vs_KLPZ", colnames(x), sep = "_")
+
+AD11 <- merge(AD11,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD12 <- AD11[,-1]
+rownames(AD12) <- AD11[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_ULPZ_vs_KLPZ_Aldex.csv")  
+
+#UHPZ vs. KHPZ
+
+HPZ.O <-  prune_samples((KonzoData.O@sam_data$Status == "Unaffected_High_Prevalence_Zone") | (KonzoData.O@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.O)
+HPZ.O.f <- prune_taxa(f_0.0001, HPZ.O)   
+
+O.aldex.DF <- as.data.frame(HPZ.O.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("UHPZ", 30)) #Always Check this
+x <- aldex(O.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("UHPZ_vs_KHPZ", colnames(x), sep = "_")
+
+AD12 <- merge(AD12,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD13 <- AD12[,-1]
+rownames(AD13) <- AD12[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Order_UHPZ_vs_KHPZ_Aldex.csv")  
+write.csv(AD13, file = "Kinshasa_Konzo3_Bacteria_Order_Filtered_Aldex.csv")  
+                                     
+##FAMILY
+x <- read.csv("Kinshasa_Konzo3_Family_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+
+#KonzoData
+F.aldex.DF <- as.data.frame(KonzoData.F.f@otu_table)
+conds <- c(rep("Urban", 30), rep("Rural", 150))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Urban_vs_Rural", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_KonzoData_Urban_vs_Rural_Aldex.csv")  
+
+KonzoData.F.Aldex.DF <- x
+KonzoData.F.CLR.DF <- t(x)
+KonzoData.F.CLR.DF <- KonzoData.F.CLR.DF[4:183,]
+rownames(KonzoData.F.CLR.DF) <- sub('^Urban_vs_Rural_rab.sample.', '', rownames(KonzoData.F.CLR.DF))
+KonzoData.F.CLR.DF <- cbind(KonzoData.F.CLR.DF, as.data.frame(KonzoData.F.f@sam_data$Status))
+colnames(KonzoData.F.CLR.DF)[colnames(KonzoData.F.CLR.DF)=="KonzoData.F.f@sam_data$Status"] <- "Status"
+write.csv(KonzoData.F.CLR.DF, file = "Kinshasa_Konzo3_Bacteria_Family_KonzoData_Aldex_MedianCLRValues.csv")  
+
+conds <- c(rep("KinMas", 30), rep("Kahemba", 120), rep("KinMas", 30))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_Kahemba", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_KonzoData_KinMas_vs_Kahemba_Aldex.csv")  
+
+
+#(Kin Mas) vs. (ULPZ KLPZ)
+KinMasLPZ.F <-  prune_samples((KonzoData.F@sam_data$Status != "Unaffected_High_Prevalence_Zone") & (KonzoData.F@sam_data$Status != "Konzo_High_Prevalence_Zone"),  KonzoData.F)
+KinMasLPZ.F.f <- prune_taxa(f_0.0001, KinMasLPZ.F)   
+
+F.aldex.DF <- as.data.frame(KinMasLPZ.F.f@otu_table)
+conds <- c(rep("KinMas", 30), rep("LPZ", 60), rep("KinMas", 30))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_LPZ", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_KonzoData_KinMas_vs_LPZ_Aldex.csv")  
+
+
+#(Kin Mas) vs. (UHPZ KHPZ)
+KinMasHPZ.F <-  prune_samples((KonzoData.F@sam_data$Status != "Unaffected_Low_Prevalence_Zone") & (KonzoData.F@sam_data$Status != "Konzo_Low_Prevalence_Zone"),  KonzoData.F)
+KinMasHPZ.F.f <- prune_taxa(f_0.0001, KinMasHPZ.F)   
+
+F.aldex.DF <- as.data.frame(KinMasHPZ.F.f@otu_table)
+conds <- c(rep("KinMas", 30), rep("HPZ", 60), rep("KinMas", 30))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_HPZ", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_KonzoData_KinMas_vs_HPZ_Aldex.csv")  
+
+
+#Kin vs Mas
+KinMas.F <-  prune_samples((KonzoData.F@sam_data$Status == "Kinshasa") | (KonzoData.F@sam_data$Status == "Masimanimba"),  KonzoData.F)
+KinMas.F.f <- prune_taxa(f_0.0001, KinMas.F)   
+
+F.aldex.DF <- as.data.frame(KinMas.F.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("Masimanimba", 30))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_Mas", colnames(x), sep = "_")
+
+AD <- x[,70:71]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_Kin_vs_Mas_Aldex.csv")  
+
+#Kin vs ULPZ
+KinULPZ.F <-  prune_samples((KonzoData.F@sam_data$Status == "Kinshasa") | (KonzoData.F@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.F)
+KinULPZ.F.f <- prune_taxa(f_0.0001, KinULPZ.F)   
+
+F.aldex.DF <- as.data.frame(KinULPZ.F.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("ULPZ", 30))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_ULPZ", colnames(x), sep = "_")
+
+AD <- merge(AD,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD2 <- AD[,-1]
+rownames(AD2) <- AD[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_Kin_vs_ULPZ_Aldex.csv")  
+
+#Mas vs ULPZ
+MasULPZ.F <-  prune_samples((KonzoData.F@sam_data$Status == "Masimanimba") | (KonzoData.F@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.F)
+MasULPZ.F.f <- prune_taxa(f_0.0001, MasULPZ.F)   
+
+F.aldex.DF <- as.data.frame(MasULPZ.F.f@otu_table)
+conds <- c(rep("ULPZ", 30), rep("Masimanimba", 30))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_ULPZ", colnames(x), sep = "_")
+
+AD2 <- merge(AD2,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD3 <- AD2[,-1]
+rownames(AD3) <- AD2[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_Mas_vs_ULPZ_Aldex.csv")  
+
+#Kin vs UHPZ
+KinUHPZ.F <-  prune_samples((KonzoData.F@sam_data$Status == "Kinshasa") | (KonzoData.F@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.F)
+KinUHPZ.F.f <- prune_taxa(f_0.0001, KinUHPZ.F)   
+
+F.aldex.DF <- as.data.frame(KinUHPZ.F.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("UHPZ", 30))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_UHPZ", colnames(x), sep = "_")
+
+AD3 <- merge(AD3,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD4 <- AD3[,-1]
+rownames(AD4) <- AD3[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_Kin_vs_UHPZ_Aldex.csv")  
+
+#Mas vs UHPZ
+MasUHPZ.F <-  prune_samples((KonzoData.F@sam_data$Status == "Masimanimba") | (KonzoData.F@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.F)
+MasUHPZ.F.f <- prune_taxa(f_0.0001, MasUHPZ.F)   
+
+F.aldex.DF <- as.data.frame(MasUHPZ.F.f@otu_table)
+conds <- c(rep("UHPZ", 30), rep("Masimanimba", 30))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_UHPZ", colnames(x), sep = "_")
+
+AD4 <- merge(AD4,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD5 <- AD4[,-1]
+rownames(AD5) <- AD4[,1]
+
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_Mas_vs_UHPZ_Aldex.csv")  
+
+#Kin vs KLPZ
+KinKLPZ.F <-  prune_samples((KonzoData.F@sam_data$Status == "Kinshasa") | (KonzoData.F@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.F)
+KinKLPZ.F.f <- prune_taxa(f_0.0001, KinKLPZ.F)   
+
+F.aldex.DF <- as.data.frame(KinKLPZ.F.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("KLPZ", 30))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_KLPZ", colnames(x), sep = "_")
+
+AD5 <- merge(AD5,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD6 <- AD5[,-1]
+rownames(AD6) <- AD5[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_Kin_vs_KLPZ_Aldex.csv")  
+
+#Mas vs KLPZ
+MasKLPZ.F <-  prune_samples((KonzoData.F@sam_data$Status == "Masimanimba") | (KonzoData.F@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.F)
+MasKLPZ.F.f <- prune_taxa(f_0.0001, MasKLPZ.F)   
+
+F.aldex.DF <- as.data.frame(MasKLPZ.F.f@otu_table)
+conds <- c(rep("KLPZ", 30), rep("Masimanimba", 30))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_KLPZ", colnames(x), sep = "_")
+
+AD6 <- merge(AD6,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD7 <- AD6[,-1]
+rownames(AD7) <- AD6[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_Mas_vs_KLPZ_Aldex.csv")  
+
+#Kin vs KHPZ
+KinKHPZ.F <-  prune_samples((KonzoData.F@sam_data$Status == "Kinshasa") | (KonzoData.F@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.F)
+KinKHPZ.F.f <- prune_taxa(f_0.0001, KinKHPZ.F)   
+
+F.aldex.DF <- as.data.frame(KinKHPZ.F.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("KHPZ", 30))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_KHPZ", colnames(x), sep = "_")
+
+AD7 <- merge(AD7,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD8 <- AD7[,-1]
+rownames(AD8) <- AD7[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_Kin_vs_KHPZ_Aldex.csv")  
+
+#Mas vs KHPZ
+MasKHPZ.F <-  prune_samples((KonzoData.F@sam_data$Status == "Masimanimba") | (KonzoData.F@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.F)
+MasKHPZ.F.f <- prune_taxa(f_0.0001, MasKHPZ.F)   
+
+F.aldex.DF <- as.data.frame(MasKHPZ.F.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("Masimanimba", 30))
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t",effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_KHPZ", colnames(x), sep = "_")
+
+AD8 <- merge(AD8,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD9 <- AD8[,-1]
+rownames(AD9) <- AD8[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_Mas_vs_KHPZ_Aldex.csv")  
+
+#ULPZ vs UHPZ
+
+Control.F <-  prune_samples((KonzoData.F@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.F@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.F)
+Control.F.f <- prune_taxa(f_0.0001, Control.F)   
+
+F.aldex.DF <- as.data.frame(Control.F.f@otu_table)
+conds <- c(rep("UHPZ", 30), rep("ULPZ", 30)) #Always Check this
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("ULPZ_vs_UHPZ", colnames(x), sep = "_")
+
+AD9 <- merge(AD9,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD10 <- AD9[,-1]
+rownames(AD10) <- AD9[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_ULPZ_vs_UHPZ_Aldex.csv")  
+
+#KLPZ vs. KHPZ
+Disease.F <-  prune_samples((KonzoData.F@sam_data$Status == "Konzo_Low_Prevalence_Zone") | (KonzoData.F@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.F)
+Disease.F.f <- prune_taxa(f_0.0001, Disease.F)   
+
+F.aldex.DF <- as.data.frame(Disease.F.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("KLPZ", 30)) #Always Check this
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t",  effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KLPZ_vs_KHPZ", colnames(x), sep = "_")
+
+AD10 <- merge(AD10,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD11 <- AD10[,-1]
+rownames(AD11) <- AD10[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_KLPZ_vs_KHPZ_Aldex.csv")  
+
+#ULPZ vs. KLPZ
+
+LPZ.F <-  prune_samples((KonzoData.F@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.F@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.F)
+LPZ.F.f <- prune_taxa(f_0.0001, LPZ.F)   
+
+F.aldex.DF <- as.data.frame(LPZ.F.f@otu_table)
+conds <- c(rep("KLPZ", 30), rep("ULPZ", 30)) #Always Check this
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("ULPZ_vs_KLPZ", colnames(x), sep = "_")
+
+AD11 <- merge(AD11,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD12 <- AD11[,-1]
+rownames(AD12) <- AD11[,1]
+
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_ULPZ_vs_KLPZ_Aldex.csv")  
+
+#UHPZ vs. KHPZ
+
+HPZ.F <-  prune_samples((KonzoData.F@sam_data$Status == "Unaffected_High_Prevalence_Zone") | (KonzoData.F@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.F)
+HPZ.F.f <- prune_taxa(f_0.0001, HPZ.F)   
+
+F.aldex.DF <- as.data.frame(HPZ.F.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("UHPZ", 30)) #Always Check this
+x <- aldex(F.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("UHPZ_vs_KHPZ", colnames(x), sep = "_")
+
+AD12 <- merge(AD12,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD13 <- AD12[,-1]
+rownames(AD13) <- AD12[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Family_UHPZ_vs_KHPZ_Aldex.csv")  
+write.csv(AD13, file = "Kinshasa_Konzo3_Bacteria_Family_Filtered_Aldex.csv")  
+
+
+### GENUS
+x <- read.csv("Kinshasa_Konzo3_Genus_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+
+#KonzoData
+G.aldex.DF <- as.data.frame(KonzoData.G.f@otu_table)
+conds <- c(rep("Urban", 30), rep("Rural", 150))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Urban_vs_Rural", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_KonzoData_Urban_vs_Rural_Aldex.csv")  
+
+KonzoData.G.Aldex.DF <- x
+KonzoData.G.CLR.DF <- t(x)
+KonzoData.G.CLR.DF <- KonzoData.G.CLR.DF[4:183,]
+rownames(KonzoData.G.CLR.DF) <- sub('^Urban_vs_Rural_rab.sample.', '', rownames(KonzoData.G.CLR.DF))
+KonzoData.G.CLR.DF <- cbind(KonzoData.G.CLR.DF, as.data.frame(KonzoData.G.f@sam_data$Status))
+colnames(KonzoData.G.CLR.DF)[colnames(KonzoData.G.CLR.DF)=="KonzoData.G.f@sam_data$Status"] <- "Status"
+write.csv(KonzoData.G.CLR.DF, file = "Kinshasa_Konzo3_Bacteria_Genus_KonzoData_Aldex_MedianCLRValues.csv")  
+
+conds <- c(rep("KinMas", 30), rep("Kahemba", 120), rep("KinMas", 30))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_Kahemba", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_KonzoData_KinMas_vs_Kahemba_Aldex.csv")  
+
+
+#(Kin Mas) vs. (ULPZ KLPZ)
+KinMasLPZ.G <-  prune_samples((KonzoData.G@sam_data$Status != "Unaffected_High_Prevalence_Zone") & (KonzoData.G@sam_data$Status != "Konzo_High_Prevalence_Zone"),  KonzoData.G)
+KinMasLPZ.G.f <- prune_taxa(f_0.0001, KinMasLPZ.G)   
+
+G.aldex.DF <- as.data.frame(KinMasLPZ.G.f@otu_table)
+conds <- c(rep("KinMas", 30), rep("LPZ", 60), rep("KinMas", 30))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_LPZ", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_KonzoData_KinMas_vs_LPZ_Aldex.csv")  
+
+
+#(Kin Mas) vs. (UHPZ KHPZ)
+KinMasHPZ.G <-  prune_samples((KonzoData.G@sam_data$Status != "Unaffected_Low_Prevalence_Zone") & (KonzoData.G@sam_data$Status != "Konzo_Low_Prevalence_Zone"),  KonzoData.G)
+KinMasHPZ.G.f <- prune_taxa(f_0.0001, KinMasHPZ.G)   
+
+G.aldex.DF <- as.data.frame(KinMasHPZ.G.f@otu_table)
+conds <- c(rep("KinMas", 30), rep("HPZ", 60), rep("KinMas", 30))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_Mas", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_KonzoData_KinMas_vs_HPZ_Aldex.csv")  
+
+
+#Kin vs Mas
+KinMas.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Masimanimba"),  KonzoData.G)
+KinMas.G.f <- prune_taxa(f_0.0001, KinMas.G)   
+
+G.aldex.DF <- as.data.frame(KinMas.G.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("Masimanimba", 30))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_Mas", colnames(x), sep = "_")
+
+AD <- x[,70:71]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_Kin_vs_Mas_Aldex.csv")  
+
+
+
+a <- aldex.clr(G.aldex.DF, conds, mc.samples=128, denom="all", verbose=F)
+a.tt <- aldex.ttest(a, paired.test=FALSE, verbose=FALSE)
+a.effect <- aldex.effect(a, CI=T, verbose=FALSE)
+a.all <- data.frame(a.tt,a.effect)
+par(mfrow=c(1,2))
+aldex.plot(a.all, type="MA", test="wilcoxon")
+aldex.plot(x.all, type="MW", test="welch")
+
+
+#Kin vs ULPZ
+KinULPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.G)
+KinULPZ.G.f <- prune_taxa(f_0.0001, KinULPZ.G)   
+
+G.aldex.DF <- as.data.frame(KinULPZ.G.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("ULPZ", 30))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_ULPZ", colnames(x), sep = "_")
+
+AD <- merge(AD,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD2 <- AD[,-1]
+rownames(AD2) <- AD[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_Kin_vs_ULPZ_Aldex.csv")  
+
+#Mas vs ULPZ
+MasULPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Masimanimba") | (KonzoData.G@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.G)
+MasULPZ.G.f <- prune_taxa(f_0.0001, MasULPZ.G)   
+
+G.aldex.DF <- as.data.frame(MasULPZ.G.f@otu_table)
+conds <- c(rep("ULPZ", 30), rep("Masimanimba", 30))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_ULPZ", colnames(x), sep = "_")
+
+AD2 <- merge(AD2,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD3 <- AD2[,-1]
+rownames(AD3) <- AD2[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_Mas_vs_ULPZ_Aldex.csv")  
+
+#Kin vs UHPZ
+KinUHPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.G)
+KinUHPZ.G.f <- prune_taxa(f_0.0001, KinUHPZ.G)   
+
+G.aldex.DF <- as.data.frame(KinUHPZ.G.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("UHPZ", 30))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_UHPZ", colnames(x), sep = "_")
+
+AD3 <- merge(AD3,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD4 <- AD3[,-1]
+rownames(AD4) <- AD3[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_Kin_vs_UHPZ_Aldex.csv")  
+
+#Mas vs UHPZ
+MasUHPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Masimanimba") | (KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.G)
+MasUHPZ.G.f <- prune_taxa(f_0.0001, MasUHPZ.G)   
+
+G.aldex.DF <- as.data.frame(MasUHPZ.G.f@otu_table)
+conds <- c(rep("UHPZ", 30), rep("Masimanimba", 30))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_UHPZ", colnames(x), sep = "_")
+
+AD4 <- merge(AD4,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD5 <- AD4[,-1]
+rownames(AD5) <- AD4[,1]
+
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_Mas_vs_UHPZ_Aldex.csv")  
+
+#Kin vs KLPZ
+KinKLPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.G)
+KinKLPZ.G.f <- prune_taxa(f_0.0001, KinKLPZ.G)   
+
+G.aldex.DF <- as.data.frame(KinKLPZ.G.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("KLPZ", 30))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_KLPZ", colnames(x), sep = "_")
+
+AD5 <- merge(AD5,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD6 <- AD5[,-1]
+rownames(AD6) <- AD5[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_Kin_vs_KLPZ_Aldex.csv")  
+
+#Mas vs KLPZ
+MasKLPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Masimanimba") | (KonzoData.G@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.G)
+MasKLPZ.G.f <- prune_taxa(f_0.0001, MasKLPZ.G)   
+
+G.aldex.DF <- as.data.frame(MasKLPZ.G.f@otu_table)
+conds <- c(rep("KLPZ", 30), rep("Masimanimba", 30))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_KLPZ", colnames(x), sep = "_")
+
+AD6 <- merge(AD6,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD7 <- AD6[,-1]
+rownames(AD7) <- AD6[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_Mas_vs_KLPZ_Aldex.csv")  
+
+#Kin vs KHPZ
+KinKHPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Kinshasa") | (KonzoData.G@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.G)
+KinKHPZ.G.f <- prune_taxa(f_0.0001, KinKHPZ.G)   
+
+G.aldex.DF <- as.data.frame(KinKHPZ.G.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("KHPZ", 30))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_KHPZ", colnames(x), sep = "_")
+
+AD7 <- merge(AD7,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD8 <- AD7[,-1]
+rownames(AD8) <- AD7[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_Kin_vs_KHPZ_Aldex.csv")  
+
+#Mas vs KHPZ
+MasKHPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Masimanimba") | (KonzoData.G@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.G)
+MasKHPZ.G.f <- prune_taxa(f_0.0001, MasKHPZ.G)   
+
+G.aldex.DF <- as.data.frame(MasKHPZ.G.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("Masimanimba", 30))
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t",effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_KHPZ", colnames(x), sep = "_")
+
+AD8 <- merge(AD8,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD9 <- AD8[,-1]
+rownames(AD9) <- AD8[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_Mas_vs_KHPZ_Aldex.csv")  
+
+#ULPZ vs UHPZ
+
+Control.G <-  prune_samples((KonzoData.G@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.G)
+Control.G.f <- prune_taxa(f_0.0001, Control.G)   
+
+G.aldex.DF <- as.data.frame(Control.G.f@otu_table)
+conds <- c(rep("UHPZ", 30), rep("ULPZ", 30)) #Always Check this
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("ULPZ_vs_UHPZ", colnames(x), sep = "_")
+
+AD9 <- merge(AD9,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD10 <- AD9[,-1]
+rownames(AD10) <- AD9[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_ULPZ_vs_UHPZ_Aldex.csv")  
+
+
+Control.G.Aldex.DF <- x
+Control.G.CLR.DF <- t(x)
+Control.G.CLR.DF <- Control.G.CLR.DF[4:63,]
+rownames(Control.G.CLR.DF) <- sub('^ULPZ_vs_UHPZ_rab.sample.', '', rownames(Control.G.CLR.DF))
+Control.G.CLR.DF <- cbind(Control.G.CLR.DF, as.data.frame(Control.G.f@sam_data$Status))
+colnames(Control.G.CLR.DF)[colnames(Control.G.CLR.DF)=="Control.G.f@sam_data$Status"] <- "Status"
+
+write.csv(Control.G.CLR.DF, file = "Kinshasa_Konzo3_Bacteria_Genus_ULPZ_vs_UHPZ_Aldex_MedianCLRValues.csv") 
+
+
+
+#KLPZ vs. KHPZ
+Disease.G <-  prune_samples((KonzoData.G@sam_data$Status == "Konzo_Low_Prevalence_Zone") | (KonzoData.G@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.G)
+Disease.G.f <- prune_taxa(f_0.0001, Disease.G)   
+
+G.aldex.DF <- as.data.frame(Disease.G.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("KLPZ", 30)) #Always Check this
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t",  effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KLPZ_vs_KHPZ", colnames(x), sep = "_")
+
+AD10 <- merge(AD10,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD11 <- AD10[,-1]
+rownames(AD11) <- AD10[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_KLPZ_vs_KHPZ_Aldex.csv")  
+
+#ULPZ vs. KLPZ
+
+LPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.G@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.G)
+LPZ.G.f <- prune_taxa(f_0.0001, LPZ.G)   
+
+G.aldex.DF <- as.data.frame(LPZ.G.f@otu_table)
+conds <- c(rep("KLPZ", 30), rep("ULPZ", 30)) #Always Check this
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("ULPZ_vs_KLPZ", colnames(x), sep = "_")
+
+AD11 <- merge(AD11,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD12 <- AD11[,-1]
+rownames(AD12) <- AD11[,1]
+
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_ULPZ_vs_KLPZ_Aldex.csv")  
+
+#UHPZ vs. KHPZ
+
+HPZ.G <-  prune_samples((KonzoData.G@sam_data$Status == "Unaffected_High_Prevalence_Zone") | (KonzoData.G@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.G)
+HPZ.G.f <- prune_taxa(f_0.0001, HPZ.G)   
+
+G.aldex.DF <- as.data.frame(HPZ.G.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("UHPZ", 30)) #Always Check this
+x <- aldex(G.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("UHPZ_vs_KHPZ", colnames(x), sep = "_")
+
+AD12 <- merge(AD12,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD13 <- AD12[,-1]
+rownames(AD13) <- AD12[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Genus_UHPZ_vs_KHPZ_Aldex.csv")  
+write.csv(AD13, file = "Kinshasa_Konzo3_Bacteria_Genus_Filtered_Aldex.csv")  
+
+
+
+
+###SPECIES
+
+x <- read.csv("Kinshasa_Konzo3_Species_f_0.0001.csv", row.names = 1, colClasses = "character")
+f_0.0001 <- unlist(x)
+
+#KonzoData
+S.aldex.DF <- as.data.frame(KonzoData.S.f@otu_table)
+conds <- c(rep("Urban", 30), rep("Rural", 150))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Urban_vs_Rural", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_KonzoData_Urban_vs_Rural_Aldex.csv")  
+
+KonzoData.Aldex.DF <- x
+KonzoData.CLR.DF <- t(x)
+KonzoData.CLR.DF <- KonzoData.CLR.DF[4:183,]
+rownames(KonzoData.CLR.DF) <- sub('^Urban_vs_Rural_rab.sample.', '', rownames(KonzoData.CLR.DF))
+KonzoData.CLR.DF <- cbind(KonzoData.CLR.DF, as.data.frame(KonzoData.S.f@sam_data$Status))
+colnames(KonzoData.CLR.DF)[colnames(KonzoData.CLR.DF)=="KonzoData.S.f@sam_data$Status"] <- "Status"
+
+write.csv(KonzoData.CLR.DF, file = "Kinshasa_Konzo3_Bacteria_Species_KonzoData_Aldex_MedianCLRValues.csv") 
+
+#my_comparisons <- list( c("Kinshasa", "Masimanimba"), c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
+                        #c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone"), 
+                       #c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone"), c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone"), 
+                        #c("Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone"), c("Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
+
+
+#sig lactis
+#my_comparisons <- list(c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
+                        #c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone"))
+
+#my_comparisons <- list(c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
+                        #c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone"))
+
+my_comparisons <- list(c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
+                        c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Unaffected_High_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone"),
+                         c("Kinshasa", "Konzo_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"))
+
+
+
+lact <- ggplot(KonzoData.CLR.DF,aes(x = Status,y = `Lactococcus lactis`)) + 
+  geom_boxplot(aes(fill = Status), outlier.size = 0.4, fatten = 0.5) + theme_classic() + ylab("median CLR value") + stat_boxplot(geom ='errorbar') + labs(title = "Lactococcus lactis")
+#lact <- lact + geom_jitter(position=position_jitter(0.2), size = 0.2)
+lact <- lact + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + theme(plot.title = element_text(face = "italic", size = 8)) + scale_fill_manual(values = konzo_color)
+lact <- lact + theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+lact <- lact + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
+
+#sig plant
+#my_comparisons <- list(c("Kinshasa", "Unaffected_Low_Prevalence_Zone"), c("Kinshasa", "Konzo_Low_Prevalence_Zone"), c("Kinshasa", "Unaffected_High_Prevalence_Zone"), c("Kinshasa", "Konzo_High_Prevalence_Zone"), 
+                        #c("Masimanimba", "Unaffected_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_Low_Prevalence_Zone"), c("Masimanimba", "Konzo_High_Prevalence_Zone"))
+                       
+plant <- ggplot(KonzoData.CLR.DF,aes(x = Status,y = `Lactobacillus plantarum`)) + 
+  geom_boxplot(aes(fill = Status), outlier.size = 0.4, fatten = 0.5) + theme_classic() + ylab("median CLR value") + stat_boxplot(geom ='errorbar') + labs(title = "Lactobacillus plantarum")
+plant <- plant + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + theme(plot.title = element_text(face = "italic", size = 8)) + scale_fill_manual(values = konzo_color)
+plant <- plant + theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+plant <- plant + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
+
+#sig mesen
+#my_comparisons <- list( c("Kinshasa", "Unaffected_High_Prevalence_Zone")) 
+
+mesen <- ggplot(KonzoData.CLR.DF,aes(x = Status,y = `Leuconostoc mesenteroides`)) + 
+  geom_boxplot(aes(fill = Status), outlier.size = 0.4, fatten = 0.5) + theme_classic() + ylab("median CLR value") + stat_boxplot(geom ='errorbar') + labs(title = "Leuconostoc mesenteroides")
+mesen <- mesen + theme(legend.position="NA") + scale_x_discrete(labels= SSSL) + theme(plot.title = element_text(face = "italic", size = 8)) + scale_fill_manual(values = konzo_color)
+mesen <- mesen + theme(axis.text.x = element_text(size = 6), axis.text.y = element_text(size = 6), axis.title.y = element_text(size = 7), axis.title.x = element_blank())
+mesen <- mesen + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
+
+
+lab_clr <- ggarrange(mesen, lact, plant, labels = c("A","B", "C"), ncol = 3, nrow = 1, font.label = list(size = 7), align = "hv")
+
+tiff(filename = "Kinshasa_Konzo3_LAB_Species_Aldex.tiff", width = 7, height = 3.5, units = "in", res = 600)
+lab_clr                                   
+dev.off()
+
+#ns: p > 0.05
+#*: p <= 0.05
+#**: p <= 0.01
+#***: p <= 0.001
+#****: p <= 0.0001
+
+
+
+conds <- c(rep("KinMas", 30), rep("Kahemba", 120), rep("KinMas", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_Kahemba", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_KonzoData_KinMas_vs_Kahemba_Aldex.csv")  
+
+
+#(Kin Mas) vs. (ULPZ KLPZ)
+KinMasLPZ.S <-  prune_samples((KonzoData.S@sam_data$Status != "Unaffected_High_Prevalence_Zone") & (KonzoData.S@sam_data$Status != "Konzo_High_Prevalence_Zone"),  KonzoData.S)
+KinMasLPZ.S.f <- prune_taxa(f_0.0001, KinMasLPZ.S)   
+
+
+S.aldex.DF <- as.data.frame(KinMasLPZ.S.f@otu_table)
+conds <- c(rep("KinMas", 30), rep("LPZ", 60), rep("KinMas", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_LPZ", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_KonzoData_KinMas_vs_LPZ_Aldex.csv")  
+
+
+#(Kin Mas) vs. (UHPZ KHPZ)
+KinMasHPZ.S <-  prune_samples((KonzoData.S@sam_data$Status != "Unaffected_Low_Prevalence_Zone") & (KonzoData.S@sam_data$Status != "Konzo_Low_Prevalence_Zone"),  KonzoData.S)
+KinMasHPZ.S.f <- prune_taxa(f_0.0001, KinMasHPZ.S)   
+
+S.aldex.DF <- as.data.frame(KinMasHPZ.S.f@otu_table)
+conds <- c(rep("KinMas", 30), rep("HPZ", 60), rep("KinMas", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KinMas_vs_HPZ", colnames(x), sep = "_")
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_KonzoData_KinMas_vs_HPZ_Aldex.csv")  
+
+
+#Kin vs Mas
+KinMas.S <-  prune_samples((KonzoData.S@sam_data$Status == "Kinshasa") | (KonzoData.S@sam_data$Status == "Masimanimba"),  KonzoData.S)
+KinMas.S.f <- prune_taxa(f_0.0001, KinMas.S)   
+
+S.aldex.DF <- as.data.frame(KinMas.S.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("Masimanimba", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_Mas", colnames(x), sep = "_")
+AD <- x[,70:71]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_Kin_vs_Mas_Aldex.csv")  
+
+#KinMas.S.tr <-  prune_samples((KonzoData.S.tr@sam_data$Status == "Kinshasa") | (KonzoData.S.tr@sam_data$Status == "Masimanimba"),  KonzoData.S.tr)
+#KinMas.S.tr.f <- prune_taxa(f_0.0001, KinMas.S.tr)   
+
+#S.aldex.DF <- as.data.frame(KinMas.S.f@otu_table)
+#conds <- c(rep("Kinshasa", 30), rep("Masimanimba", 30))
+
+
+#y <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+#           test="t", effect=FALSE)
+
+#colnames(x) <- paste("Kin_vs_Mas", colnames(x), sep = "_")
+#AD <- y
+
+
+#Kin vs ULPZ
+KinULPZ.S <-  prune_samples((KonzoData.S@sam_data$Status == "Kinshasa") | (KonzoData.S@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.S)
+KinULPZ.S.f <- prune_taxa(f_0.0001, KinULPZ.S)   
+
+S.aldex.DF <- as.data.frame(KinULPZ.S.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("ULPZ", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_ULPZ", colnames(x), sep = "_")
+
+AD <- merge(AD,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD2 <- AD[,-1]
+rownames(AD2) <- AD[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_Kin_vs_ULPZ_Aldex.csv")  
+
+#Mas vs. ULPZ
+MasULPZ.S <-  prune_samples((KonzoData.S@sam_data$Status == "Masimanimba") | (KonzoData.S@sam_data$Status == "Unaffected_Low_Prevalence_Zone"),  KonzoData.S)
+MasULPZ.S.f <- prune_taxa(f_0.0001, MasULPZ.S)   
+
+S.aldex.DF <- as.data.frame(MasULPZ.S.f@otu_table)
+conds <- c(rep("ULPZ", 30), rep("Masimanimba", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_ULPZ", colnames(x), sep = "_")
+
+AD2 <- merge(AD2,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD3 <- AD2[,-1]
+rownames(AD3) <- AD2[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_Mas_vs_ULPZ_Aldex.csv")  
+
+#Kin vs. UHPZ
+KinUHPZ.S <-  prune_samples((KonzoData.S@sam_data$Status == "Kinshasa") | (KonzoData.S@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.S)
+KinUHPZ.S.f <- prune_taxa(f_0.0001, KinUHPZ.S)   
+
+S.aldex.DF <- as.data.frame(KinUHPZ.S.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("UHPZ", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_UHPZ", colnames(x), sep = "_")
+
+AD3 <- merge(AD3,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD4 <- AD3[,-1]
+rownames(AD4) <- AD3[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_Kin_vs_UHPZ_Aldex.csv")  
+
+#Mas vs. UHPZ
+MasUHPZ.S <-  prune_samples((KonzoData.S@sam_data$Status == "Masimanimba") | (KonzoData.S@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.S)
+MasUHPZ.S.f <- prune_taxa(f_0.0001, MasUHPZ.S)   
+
+S.aldex.DF <- as.data.frame(MasUHPZ.S.f@otu_table)
+conds <- c(rep("UHPZ", 30), rep("Masimanimba", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_UHPZ", colnames(x), sep = "_")
+
+AD4 <- merge(AD4,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD5 <- AD4[,-1]
+rownames(AD5) <- AD4[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_Mas_vs_UHPZ_Aldex.csv")  
+
+#Kin vs KLPZ
+KinKLPZ.S <-  prune_samples((KonzoData.S@sam_data$Status == "Kinshasa") | (KonzoData.S@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.S)
+KinKLPZ.S.f <- prune_taxa(f_0.0001, KinKLPZ.S)   
+
+S.aldex.DF <- as.data.frame(KinKLPZ.S.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("KLPZ", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t",  effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_KLPZ", colnames(x), sep = "_")
+
+AD5 <- merge(AD5,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD6 <- AD5[,-1]
+rownames(AD6) <- AD5[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_Kin_vs_KLPZ_Aldex.csv")  
+ 
+                                     
+#Mas vs. KLPZ
+MasKLPZ.S <-  prune_samples((KonzoData.S@sam_data$Status == "Masimanimba") | (KonzoData.S@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.S)
+MasKLPZ.S.f <- prune_taxa(f_0.0001, MasKLPZ.S)   
+
+S.aldex.DF <- as.data.frame(MasKLPZ.S.f@otu_table)
+conds <- c(rep("KLPZ", 30), rep("Masimanimba", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_KLPZ", colnames(x), sep = "_")
+
+AD6 <- merge(AD6,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD7 <- AD6[,-1]
+rownames(AD7) <- AD6[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_Mas_vs_KLPZ_Aldex.csv")  
+
+#Kin vs. KHPZ
+KinKHPZ.S <-  prune_samples((KonzoData.S@sam_data$Status == "Kinshasa") | (KonzoData.S@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.S)
+KinKHPZ.S.f <- prune_taxa(f_0.0001, KinKHPZ.S)   
+
+S.aldex.DF <- as.data.frame(KinKHPZ.S.f@otu_table)
+conds <- c(rep("Kinshasa", 30), rep("KHPZ", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Kin_vs_KHPZ", colnames(x), sep = "_")
+
+AD7 <- merge(AD7,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD8 <- AD7[,-1]
+rownames(AD8) <- AD7[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_Kin_vs_KHPZ_Aldex.csv")  
+
+#Mas vs. KHPZ
+MasKHPZ.S <-  prune_samples((KonzoData.S@sam_data$Status == "Masimanimba") | (KonzoData.S@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.S)
+MasKHPZ.S.f <- prune_taxa(f_0.0001, MasKHPZ.S)   
+
+S.aldex.DF <- as.data.frame(MasKHPZ.S.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("Masimanimba", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("Mas_vs_KHPZ", colnames(x), sep = "_")
+
+AD8 <- merge(AD8,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD9 <- AD8[,-1]
+rownames(AD9) <- AD8[,1]
+
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_Mas_vs_KHPZ_Aldex.csv") 
+
+#ULPZ vs. UHPZ
+Control.S <-  prune_samples((KonzoData.S@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.S@sam_data$Status == "Unaffected_High_Prevalence_Zone"),  KonzoData.S)
+Control.S.f <- prune_taxa(f_0.0001, Control.S)   
+
+S.aldex.DF <- as.data.frame(Control.S.f@otu_table)
+conds <- c(rep("UHPZ", 30), rep("ULPZ", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("ULPZ_vs_UHPZ", colnames(x), sep = "_")
+
+AD9 <- merge(AD9,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD10 <- AD9[,-1]
+rownames(AD10) <- AD9[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_ULPZ_vs_UHPZ_Aldex.csv") 
+
+#KLPZ vs. KHPZ
+Disease.S <-  prune_samples((KonzoData.S@sam_data$Status == "Konzo_Low_Prevalence_Zone") | (KonzoData.S@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.S)
+Disease.S.f <- prune_taxa(f_0.0001, Disease.S)   
+
+S.aldex.DF <- as.data.frame(Disease.S.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("KLPZ", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("KLPZ_vs_KHPZ", colnames(x), sep = "_")
+
+AD10 <- merge(AD10,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD11 <- AD10[,-1]
+rownames(AD11) <- AD10[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_KLPZ_vs_KHPZ_Aldex.csv") 
+
+#ULPZ vs. KLPZ
+LPZ.S <-  prune_samples((KonzoData.S@sam_data$Status == "Unaffected_Low_Prevalence_Zone") | (KonzoData.S@sam_data$Status == "Konzo_Low_Prevalence_Zone"),  KonzoData.S)
+LPZ.S.f <- prune_taxa(f_0.0001, LPZ.S)   
+
+S.aldex.DF <- as.data.frame(LPZ.S.f@otu_table)
+conds <- c(rep("KLPZ", 30), rep("ULPZ", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t", effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("ULPZ_vs_KLPZ", colnames(x), sep = "_")
+
+AD11 <- merge(AD11,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD12 <- AD11[,-1]
+rownames(AD12) <- AD11[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_ULPZ_vs_KLPZ_Aldex.csv") 
+
+#UHPZ vs. KHPZ
+HPZ.S <-  prune_samples((KonzoData.S@sam_data$Status == "Unaffected_High_Prevalence_Zone") | (KonzoData.S@sam_data$Status == "Konzo_High_Prevalence_Zone"),  KonzoData.S)
+HPZ.S.f <- prune_taxa(f_0.0001, HPZ.S)   
+
+S.aldex.DF <- as.data.frame(HPZ.S.f@otu_table)
+conds <- c(rep("KHPZ", 30), rep("UHPZ", 30))
+x <- aldex(S.aldex.DF, conds, mc.samples=128, denom="all",
+           test="t",effect=TRUE, include.sample.summary=TRUE)
+
+colnames(x) <- paste("UHPZ_vs_KHPZ", colnames(x), sep = "_")
+
+AD12 <- merge(AD12,x[,70:71],by='row.names',all=TRUE, sort = FALSE)
+AD13 <- AD12[,-1]
+rownames(AD13) <- AD12[,1]
+
+write.csv(x, file = "Kinshasa_Konzo3_Bacteria_Species_UHPZ_vs_KHPZ_Aldex.csv") 
+write.csv(AD13, file = "Kinshasa_Konzo3_Bacteria_Species_Filtered_Aldex.csv") 
+
+                                     
                                      
 ### MANN WHITNEY_WILCOX TEST (with BH correction)
-#Supplemental File 3 where the saved WT (results from the mann whitney test) are joined into one excel sheet for all the different comparisions, and each tab is each taxa rank                           
+#Supplemental File 4 where the saved WT (results from the mann whitney test) are joined into one excel sheet for all the different comparisions, and each tab is each taxa rank                           
                            
 #Bacteria Phylum
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Phylum")
