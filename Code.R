@@ -8253,7 +8253,7 @@ tiff(filename = "KinshasaKonzo3_Genus_RF_Kin_Geo_Boxplot.tiff", width = 7, heigh
 ggarrange(s, s, g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, ncol = 4, nrow = 3, labels = c("", "", "A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), common.legend = TRUE, legend = "bottom")
 dev.off()    
                 
-## Supp 5 Mas vs. (Kin and ULPZ)
+## Supp 4 Mas vs. (Kin and ULPZ)
                                                  
                                                  
 #Masimanimba vs. All
@@ -8323,7 +8323,7 @@ tiff(filename = "KinshasaKonzo3_Genus_RF_Mas_Geo_Boxplot.tiff", width = 7, heigh
 ggarrange(s,s,g11, g12, g13, g14, g15, g16, g17, g18, g19, g20, ncol = 4, nrow = 3, labels = c("", "", "A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), common.legend = TRUE, legend = "bottom")
 dev.off()                                                                                                 
                                                                
-## Supp 6: ULPZ vs. (Kin and Mas)
+## Supp 4: ULPZ vs. (Kin and Mas)
                                                  
 #ULPZ vs. All   
                                      
@@ -8398,7 +8398,7 @@ Control.G.tr.log10 <- transform_sample_counts(Control.G.tr, function(x) log10(x)
 Disease.G.tr.log10 <- transform_sample_counts(Disease.G.tr, function(x) log10(x))     
                                                  
                                                  
-#Supp 7: ULPZ vs. UHPZ
+#Supp 5: ULPZ vs. UHPZ
 #ULPZ vs. UHPZ (Control)
                                                  
 #Gordonibacter                                                 
@@ -8481,7 +8481,7 @@ tiff(filename = "KinshasaKonzo3_Genus_RF_ULPZ_UHPZ_Boxplots.tiff", width = 7, he
 ggarrange(s,s,c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, ncol = 4, nrow = 3, labels = c("","","A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), common.legend = TRUE, legend = "bottom")
 dev.off()    
                                                  
-##Supp 9: KLPZ vs. KHPZ
+##Supp 5: KLPZ vs. KHPZ
 #KLPZ vs. KHPZ (Disease)
                                      
 #Adlercreutzia
