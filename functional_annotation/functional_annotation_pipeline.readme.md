@@ -1,11 +1,24 @@
 # Functional annotation for konzo metagenomic analysis
-# tools required
-# FASTP https://github.com/OpenGene/fastp
-# KRAKEN2 https://github.com/DerrickWood/kraken2
-# BOWTIE2 http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
+## Tools required
+- FASTP
+***https://github.com/OpenGene/fastp***
+
+- KRAKEN2
+***https://github.com/DerrickWood/kraken2***
+
+- BOWTIE2
+
+***http://bowtie-bio.sourceforge.net/bowtie2/index.shtml***
+
+```
 cd Gut_Microbiome_Konzo/functional_annotation
-# download genomes for database creation
-# https://github.com/kblin/ncbi-genome-download
+```
+
+# Download genomes for database creation
+
+***https://github.com/kblin/ncbi-genome-download***
+
+```
 cd db
 ncbi-genome-download --format fasta,assembly-report --assembly-level chromosome  --parallel 4  bacteria
 ncbi-genome-download --format fasta,assembly-report --assembly-level chromosome  --parallel 2 viral
@@ -20,27 +33,39 @@ ncbi-genome-download --format fasta,assembly-report --assembly-level scaffold  -
 ncbi-genome-download --format fasta,assembly-report --assembly-level scaffold  --parallel 2 archaea
 ncbi-genome-download --format fasta,assembly-report --assembly-level scaffold  --parallel 2 viral
 ncbi-genome-download --format fasta,assembly-report --assembly-level scaffold  --parallel 2 fungi
+```
 
-# taxonomic annotation with Database creation kraken2 kraken2/2.0.8-beta
+# Taxonomic annotation with Database creation kraken2 kraken2/2.0.8-beta
+```
 for f in */refseq/*/*/*.fna.gz; do zcat "$f" >> library/gall_genomes.DB.fna
-# the entire fasta file has a size of approximately 330 Go
-# to process the data you need to have 330 minimum RAM
+```
+the entire fasta file has a size of approximately 330 Go to process the data you need to have 330 minimum RAM
+
+```
 cd ..
 kraken2-build --standard --db db/
+```
+
 
 # bowtie2 db creation of kegg microbial gene database
-# https://www.genome.jp/kegg/ . You have to buy the kegg db in order to obtain the following data:
-# ko_genes.list
-# ko_module.list
-# ko_pathway.list
-# kegg microbial gene sequences file
-# once you have the required fasta genes of all microbial genes:
+***https://www.genome.jp/kegg/***
+You have to buy the kegg db in order to obtain the following data:
 
+- ko_genes.list
+- ko_module.list
+- ko_pathway.list
+- kegg microbial gene sequences file
+
+once you have the required fasta genes of all microbial genes:
+```
 cd db/
 bowtie2-build --large-index --threads 40 {fasta_genes} bowtie2_keggDB
 cd ..
+```
 
 # Quality trimming with fastp/0.20.0
+
+```
 fastp -i rawdata/L0050-34-22-38-Vilain-180822_S34_R1_001.fastq -I rawdata/L0050-34-22-38-Vilain-180822_S34_R2_001.fastq -o preprocessing/good/L0050-34-22-38-Vilain-180822_S34_R1_001.good.fq -O preprocessing/good/L0050-34-22-38-Vilain-180822_S34_R2_001.good.fq -w 2
 fastp -i rawdata/L0070-54-10-079-Vilain-180822_S54_R1_001.fastq -I rawdata/L0070-54-10-079-Vilain-180822_S54_R2_001.fastq -o preprocessing/good/L0070-54-10-079-Vilain-180822_S54_R1_001.good.fq -O preprocessing/good/L0070-54-10-079-Vilain-180822_S54_R2_001.good.fq -w 2
 fastp -i rawdata/L0081-65-10-079-Vilain-180822_S65_R1_001.fastq -I rawdata/L0081-65-10-079-Vilain-180822_S65_R2_001.fastq -o preprocessing/good/L0081-65-10-079-Vilain-180822_S65_R1_001.good.fq -O preprocessing/good/L0081-65-10-079-Vilain-180822_S65_R2_001.good.fq -w 2
@@ -88,7 +113,11 @@ fastp -i rawdata/L342-A13-Vilain-181127_S37_R1_001.fastq -I rawdata/L342-A13-Vil
 fastp -i rawdata/L343-A32-Vilain-181127_S38_R1_001.fastq -I rawdata/L343-A32-Vilain-181127_S38_R2_001.fastq -o preprocessing/good/L343-A32-Vilain-181127_S38_R1_001.good.fq -O preprocessing/good/L343-A32-Vilain-181127_S38_R2_001.good.fq -w 2
 fastp -i rawdata/L344-A3-Vilain-181127_S39_R1_001.fastq -I rawdata/L344-A3-Vilain-181127_S39_R2_001.fastq -o preprocessing/good/L344-A3-Vilain-181127_S39_R1_001.good.fq -O preprocessing/good/L344-A3-Vilain-181127_S39_R2_001.good.fq -w 2
 fastp -i rawdata/L345-A6-Vilain-181127_S40_R1_001.fastq -I rawdata/L345-A6-Vilain-181127_S40_R2_001.fastq -o preprocessing/good/L345-A6-Vilain-181127_S40_R1_001.good.fq -O preprocessing/good/L345-A6-Vilain-181127_S40_R2_001.good.fq -w 2
+```
+
 # taxonomic annotation with  kraken2/2.0.8-beta
+
+```
 kraken2 -t 40 -db db/ --output output/kraken2_output/L0050-34-22-38-Vilain-180822_S34.bigDBkraken2.txt --report output/kraken2_output/L0050-34-22-38-Vilain-180822_S34.bigDBkraken2_report.tsv --paired preprocessing/good/L0050-34-22-38-Vilain-180822_S34_R1_001.good.fq preprocessing/good/L0050-34-22-38-Vilain-180822_S34_R2_001.good.fq
 kraken2 -t 40 -db db/ --output output/kraken2_output/L0070-54-10-079-Vilain-180822_S54.bigDBkraken2.txt --report output/kraken2_output/L0070-54-10-079-Vilain-180822_S54.bigDBkraken2_report.tsv --paired preprocessing/good/L0070-54-10-079-Vilain-180822_S54_R1_001.good.fq preprocessing/good/L0070-54-10-079-Vilain-180822_S54_R2_001.good.fq
 kraken2 -t 40 -db db/ --output output/kraken2_output/L0081-65-10-079-Vilain-180822_S65.bigDBkraken2.txt --report output/kraken2_output/L0081-65-10-079-Vilain-180822_S65.bigDBkraken2_report.tsv --paired preprocessing/good/L0081-65-10-079-Vilain-180822_S65_R1_001.good.fq preprocessing/good/L0081-65-10-079-Vilain-180822_S65_R2_001.good.fq
@@ -136,7 +165,11 @@ kraken2 -t 40 -db db/ --output output/kraken2_output/L342-A13-Vilain-181127_S37.
 kraken2 -t 40 -db db/ --output output/kraken2_output/L343-A32-Vilain-181127_S38.bigDBkraken2.txt --report output/kraken2_output/L343-A32-Vilain-181127_S38.bigDBkraken2_report.tsv --paired preprocessing/good/L343-A32-Vilain-181127_S38_R1_001.good.fq preprocessing/good/L343-A32-Vilain-181127_S38_R2_001.good.fq
 kraken2 -t 40 -db db/ --output output/kraken2_output/L344-A3-Vilain-181127_S39.bigDBkraken2.txt --report output/kraken2_output/L344-A3-Vilain-181127_S39.bigDBkraken2_report.tsv --paired preprocessing/good/L344-A3-Vilain-181127_S39_R1_001.good.fq preprocessing/good/L344-A3-Vilain-181127_S39_R2_001.good.fq
 kraken2 -t 40 -db db/ --output output/kraken2_output/L345-A6-Vilain-181127_S40.bigDBkraken2.txt --report output/kraken2_output/L345-A6-Vilain-181127_S40.bigDBkraken2_report.tsv --paired preprocessing/good/L345-A6-Vilain-181127_S40_R1_001.good.fq preprocessing/good/L345-A6-Vilain-181127_S40_R2_001.good.fq
+```
+
 # Sort read ID affiliated to Homo sapiens
+
+```
  grep '^C' output/kraken2_output/L0050-34-22-38-Vilain-180822_S34.bigDBkraken2.txt |grep -v '	9606 |cut -f 2 > output/kraken2_output/L0050-34-22-38-Vilain-180822_S34.non_human_reads.txt
  grep '^C' output/kraken2_output/L0070-54-10-079-Vilain-180822_S54.bigDBkraken2.txt |grep -v '	9606 |cut -f 2 > output/kraken2_output/L0070-54-10-079-Vilain-180822_S54.non_human_reads.txt
  grep '^C' output/kraken2_output/L0081-65-10-079-Vilain-180822_S65.bigDBkraken2.txt |grep -v '	9606 |cut -f 2 > output/kraken2_output/L0081-65-10-079-Vilain-180822_S65.non_human_reads.txt
@@ -184,7 +217,11 @@ kraken2 -t 40 -db db/ --output output/kraken2_output/L345-A6-Vilain-181127_S40.b
  grep '^C' output/kraken2_output/L343-A32-Vilain-181127_S38.bigDBkraken2.txt |grep -v '	9606 |cut -f 2 > output/kraken2_output/L343-A32-Vilain-181127_S38.non_human_reads.txt
  grep '^C' output/kraken2_output/L344-A3-Vilain-181127_S39.bigDBkraken2.txt |grep -v '	9606 |cut -f 2 > output/kraken2_output/L344-A3-Vilain-181127_S39.non_human_reads.txt
  grep '^C' output/kraken2_output/L345-A6-Vilain-181127_S40.bigDBkraken2.txt |grep -v '	9606 |cut -f 2 > output/kraken2_output/L345-A6-Vilain-181127_S40.non_human_reads.txt
+```
+
 # filter fastq to recrute non human reads
+
+```
 perl scripts/filter_fastq.pl -R=preprocessing/good/L0050-34-22-38-Vilain-180822_S34_R1_001.good.fq -out=output/function/L0050-34-22-38-Vilain-180822_S34_R1.human_trimmed.fq -human=output/kraken2_output/L0050-34-22-38-Vilain-180822_S34.non_human_reads.txt;
 perl scripts/filter_fastq.pl -R=preprocessing/good/L0070-54-10-079-Vilain-180822_S54_R1_001.good.fq -out=output/function/L0070-54-10-079-Vilain-180822_S54_R1.human_trimmed.fq -human=output/kraken2_output/L0070-54-10-079-Vilain-180822_S54.non_human_reads.txt;
 perl scripts/filter_fastq.pl -R=preprocessing/good/L0081-65-10-079-Vilain-180822_S65_R1_001.good.fq -out=output/function/L0081-65-10-079-Vilain-180822_S65_R1.human_trimmed.fq -human=output/kraken2_output/L0081-65-10-079-Vilain-180822_S65.non_human_reads.txt;
@@ -279,7 +316,11 @@ perl scripts/filter_fastq.pl -R=preprocessing/good/L342-A13-Vilain-181127_S37_R2
 perl scripts/filter_fastq.pl -R=preprocessing/good/L343-A32-Vilain-181127_S38_R2_001.good.fq -out=output/function/L343-A32-Vilain-181127_S38_R2.human_trimmed.fq -human=output/kraken2_output/L343-A32-Vilain-181127_S38.non_human_reads.txt;
 perl scripts/filter_fastq.pl -R=preprocessing/good/L344-A3-Vilain-181127_S39_R2_001.good.fq -out=output/function/L344-A3-Vilain-181127_S39_R2.human_trimmed.fq -human=output/kraken2_output/L344-A3-Vilain-181127_S39.non_human_reads.txt;
 perl scripts/filter_fastq.pl -R=preprocessing/good/L345-A6-Vilain-181127_S40_R2_001.good.fq -out=output/function/L345-A6-Vilain-181127_S40_R2.human_trimmed.fq -human=output/kraken2_output/L345-A6-Vilain-181127_S40.non_human_reads.txt;
+```
+
 # Alignement agaisnt KEGG microbial genes with bowtie2/2.3.5.1
+
+```
 bowtie2 --no-unal --no-sq --omit-sec-seq --threads 32 -x db/bowtie2_keggDB -1 output/function/L0050-34-22-38-Vilain-180822_S34_R1.human_trimmed.fq  -2 output/function/L0050-34-22-38-Vilain-180822_S34_R2.human_trimmed.fq -S output/function/mapping/L0050-34-22-38-Vilain-180822_S34.kegg_mapping.sam
 bowtie2 --no-unal --no-sq --omit-sec-seq --threads 32 -x db/bowtie2_keggDB -1 output/function/L0070-54-10-079-Vilain-180822_S54_R1.human_trimmed.fq  -2 output/function/L0070-54-10-079-Vilain-180822_S54_R2.human_trimmed.fq -S output/function/mapping/L0070-54-10-079-Vilain-180822_S54.kegg_mapping.sam
 bowtie2 --no-unal --no-sq --omit-sec-seq --threads 32 -x db/bowtie2_keggDB -1 output/function/L0081-65-10-079-Vilain-180822_S65_R1.human_trimmed.fq  -2 output/function/L0081-65-10-079-Vilain-180822_S65_R2.human_trimmed.fq -S output/function/mapping/L0081-65-10-079-Vilain-180822_S65.kegg_mapping.sam
@@ -327,7 +368,11 @@ bowtie2 --no-unal --no-sq --omit-sec-seq --threads 32 -x db/bowtie2_keggDB -1 ou
 bowtie2 --no-unal --no-sq --omit-sec-seq --threads 32 -x db/bowtie2_keggDB -1 output/function/L343-A32-Vilain-181127_S38_R1.human_trimmed.fq  -2 output/function/L343-A32-Vilain-181127_S38_R2.human_trimmed.fq -S output/function/mapping/L343-A32-Vilain-181127_S38.kegg_mapping.sam
 bowtie2 --no-unal --no-sq --omit-sec-seq --threads 32 -x db/bowtie2_keggDB -1 output/function/L344-A3-Vilain-181127_S39_R1.human_trimmed.fq  -2 output/function/L344-A3-Vilain-181127_S39_R2.human_trimmed.fq -S output/function/mapping/L344-A3-Vilain-181127_S39.kegg_mapping.sam
 bowtie2 --no-unal --no-sq --omit-sec-seq --threads 32 -x db/bowtie2_keggDB -1 output/function/L345-A6-Vilain-181127_S40_R1.human_trimmed.fq  -2 output/function/L345-A6-Vilain-181127_S40_R2.human_trimmed.fq -S output/function/mapping/L345-A6-Vilain-181127_S40.kegg_mapping.sam
+```
+
 # Parse SAM alignement results
+
+```
 perl scripts/parse_sam.pl -query=output/function/mapping/L0050-34-22-38-Vilain-180822_S34.kegg_mapping.sam -out=output/function/mapping/L0050-34-22-38-Vilain-180822_S34.kegg_mapping.filtered.sam;
 perl scripts/parse_sam.pl -query=output/function/mapping/L0070-54-10-079-Vilain-180822_S54.kegg_mapping.sam -out=output/function/mapping/L0070-54-10-079-Vilain-180822_S54.kegg_mapping.filtered.sam;
 perl scripts/parse_sam.pl -query=output/function/mapping/L0081-65-10-079-Vilain-180822_S65.kegg_mapping.sam -out=output/function/mapping/L0081-65-10-079-Vilain-180822_S65.kegg_mapping.filtered.sam;
@@ -375,5 +420,10 @@ perl scripts/parse_sam.pl -query=output/function/mapping/L342-A13-Vilain-181127_
 perl scripts/parse_sam.pl -query=output/function/mapping/L343-A32-Vilain-181127_S38.kegg_mapping.sam -out=output/function/mapping/L343-A32-Vilain-181127_S38.kegg_mapping.filtered.sam;
 perl scripts/parse_sam.pl -query=output/function/mapping/L344-A3-Vilain-181127_S39.kegg_mapping.sam -out=output/function/mapping/L344-A3-Vilain-181127_S39.kegg_mapping.filtered.sam;
 perl scripts/parse_sam.pl -query=output/function/mapping/L345-A6-Vilain-181127_S40.kegg_mapping.sam -out=output/function/mapping/L345-A6-Vilain-181127_S40.kegg_mapping.filtered.sam;
+```
+
 # concatenation of alignment into KEGG ko, module , pathway matrices
+
+```
 perl scripts/functional_annotation_metagenomic.pl -query=output/function/list.txt -ko=scripts/ko_genes.list -module=scripts/ko_module.list -pathway=scripts/ko_pathway.list -out_ko=output/function/konzo.dna_kegg_metaG.ko.count.txt -out_mod=output/function/konzo.dna_kegg_metaG.module.count.txt -out_path=output/function/konzo.dna_kegg_metaG.pathway.count.txt
+```
