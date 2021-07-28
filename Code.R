@@ -821,6 +821,13 @@ diversity.S.0 <- cbind(sample_data(KonzoData.S.0),diversity.S.0) #Check if corre
 diversity.S.0$Status <- as.factor(diversity.S.0$Status)
 diversity.S.0$Status <- factor(diversity.S.0$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
+                           
+write("Observed Summary", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Summary.txt" ,append=TRUE)
+capture.output(tapply(diversity.S.0$Observed, diversity.S.0$Status, summary), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Summary.txt") 
+
+write("Shannon Summary", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Summary.txt" ,append=TRUE)
+capture.output(tapply(diversity.S.0$Shannon, diversity.S.0$Status, summary), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Summary.txt") 
+                           
 #Shapiro-Wilk Normality Test
 shapiro.test(diversity.S.0$Observed) #p-value = 0.09588
 #shapiro.test(diversity.S.0$Chao1)                           
