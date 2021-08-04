@@ -7626,6 +7626,9 @@ tiff(filename = "Geography_Genus_Filtered_PCoA_Corr.tiff", width = 5.5, height =
 ggarrange(as_ggplot(Geo))
 dev.off()
                                         
+pdf(file = "Geography_Genus_Filtered_PCoA_Corr.pdf", width = 5.5, height = 5.5)
+ggarrange(as_ggplot(Geo))
+dev.off()  
 
                                              
 ###Figure 5: Kahemba Prevalence Zones Genus PCoA------------------------
@@ -7790,9 +7793,9 @@ f2 <- f2 + stat_summary(fun.y=mean, geom="point", shape=23, size=1, color="black
 pf <- ggarrange(p,f, p2, f2, ncol = 4, nrow = 1, align = "hv")                                  
 fp <- ggarrange (f, p, f2, p2, ncol = 4, nrow = 1, align = "hv")
                                    
-part1 <- ggarrange(as_ggplot(C), pf, labels = c("A","B"), font.label = list(size = 7), ncol = 2, nrow = 1, widths = c(2.5, 3.5)) 
+part1 <- ggarrange(as_ggplot(C), pf, labels = c("a","b"), font.label = list(size = 7), ncol = 2, nrow = 1, widths = c(2.5, 3.5)) 
                                     
-part1_v2 <- ggarrange(as_ggplot(C),fp, labels = c("A","B"), font.label = list(size = 7), ncol = 2, nrow = 1, widths = c(2.5, 3.5))
+part1_v2 <- ggarrange(as_ggplot(C),fp, labels = c("a","b"), font.label = list(size = 7), ncol = 2, nrow = 1, widths = c(2.5, 3.5))
                                     
 #KLPZ vs. KHPZ
 
@@ -7841,7 +7844,7 @@ PIBt <- PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
 PIBt <- PIBt + annotate("text", x = 0.5, y = -0.4, label = expression(paste("p = 0.569")), size = 2) #0.569
 
                                     
-part2 <- ggarrange(PKBt, PNIBt, PIBt, labels = c("C","D", "E"), ncol = 3, nrow = 1, font.label = list(size = 7), widths = c(2, 2, 2) )                                  
+part2 <- ggarrange(PKBt, PNIBt, PIBt, labels = c("c","d", "e"), ncol = 3, nrow = 1, font.label = list(size = 7), widths = c(2, 2, 2) )                                  
 
 tiff(filename = "Kahemba_Genus_Filtered_PCoA_CombFig.tiff", width = 7, height = 4.5, units = "in", res = 600)
 ggarrange(part1, part2, ncol = 1, nrow = 2, heights = c(2.5,2))
@@ -7851,7 +7854,10 @@ tiff(filename = "Kahemba_Genus_Filtered_PCoA_CombFig_V2.tiff", width = 7, height
 ggarrange(part1_v2, part2, ncol = 1, nrow = 2, heights = c(2.5,2))
 dev.off()  
 
-                                   
+setEPS()
+postscript(file = "Kahemba_Genus_Filtered_PCoA_CombFig.tiff", width = 7, height = 4.5)
+ggarrange(part1, part2, ncol = 1, nrow = 2, heights = c(2.5,2))                            
+dev.off()                                   
                                     
 ##### Supplemental Figures                                   
                                     
