@@ -49,6 +49,9 @@ library("ALDEx2")
 
 ### Due to the way the input data is set up, the ordering of the actual samples within excel sheets may differ, so always check which columns correspond to which samples to be sure the correst samples are being compared (ex: for aldex)
 
+### For publicaiton, figures were generated as eps, and if final figures needed to be assembled, this was done in ppt and figure exported as pdf. 
+
+###Gimp was used for tiff files, that is a bitmapped file type, so may not be acceptable for certain journals. 
 
 ### Naming Scheme Shorthand
 
