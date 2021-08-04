@@ -18,6 +18,6 @@ Note: The code is commented up front for clarification, but most of the code is 
 6. Use pavain to consolidate the report files for all samples into one large file (will need to converted to csv from tsv). Additionally, using the pavian filter feature, get different taxon (phylum, class, order, family, genus, species) for each of the different domains (here only Bacteria are analyzed). The lineage column is removed and the names of samples are changed to they match those in the Konzo_meta file prior to analysis in R. Additionaly information on pavian can be found here: https://ccb.jhu.edu/software/pavian/index.shtml
 7. Install any additional necessary packages as listed in Code.R (R version 3.6.3), and follow the script for further analysis.
 8. Related figure making is also included in the code for reference. Gimp was also used to combine some figures into a final layout. 
-9. Functional Assessment code has been included as a sub directory ().
+9. Functional Assessment code has been included as a sub directory (functional_annotation) and described within the folder. 
 
 
