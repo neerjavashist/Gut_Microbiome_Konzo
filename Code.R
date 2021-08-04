@@ -7519,7 +7519,7 @@ l <- l + theme(plot.margin=unit(c(-1,0,0,-1), "lines"))
 PGBt <- PGB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 PGBt <- PGBt + theme(legend.position="none")
 PGBt <- PGBt + annotate("text", x = -0.46, y = -0.42, label = expression(paste("p = 1x",10^-5)), size = 2.5) #1e-05
-PGBt <- ggarrange(PGBt,labels = c("A"),font.label = list(size = 7))
+PGBt <- ggarrange(PGBt,labels = c("a"),font.label = list(size = 7))
 
 PGB <- PGB + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines")) + theme(legend.position="none")
 
@@ -7547,7 +7547,7 @@ PKMB <- p1 +
 PKMBt <- PKMB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 PKMBt <- PKMBt + theme(legend.position="none")
 PKMBt <- PKMBt + annotate("text", x = 0.4, y = -0.43, label = expression(paste("p = 2x",10^-5)), size = 2) #2e-05
-PKMBt <- ggarrange(PKMBt,labels = c("B"),font.label = list(size = 7))
+PKMBt <- ggarrange(PKMBt,labels = c("b"),font.label = list(size = 7))
                                     
 #KinULPZ
 p1 = plot_ordination(KinULPZ.G.tr.f, ordinate(KinULPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
@@ -7563,7 +7563,7 @@ PKUB <- p1 +
 PKUBt <- PKUB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 PKUBt <- PKUBt + theme(legend.position="none")
 PKUBt <- PKUBt + annotate("text", x = 0.37, y = -0.43, label = expression(paste("p = 0.00139")), size = 2)#0.00139
-PKUBt <- ggarrange(PKUBt,labels = c("C"),font.label = list(size = 7))
+PKUBt <- ggarrange(PKUBt,labels = c("c"),font.label = list(size = 7))
                                     
 #MasULPZ
 p1 = plot_ordination(MasULPZ.G.tr.f, ordinate(MasULPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
@@ -7579,7 +7579,7 @@ PMUB <- p1 +
 PMUBt <- PMUB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 PMUBt <- PMUBt + theme(legend.position="none")
 PMUBt <- PMUBt + annotate("text", x = 0.38, y = -0.27, label = expression(paste("p = 3x",10^-5)), size = 2) #3e-05
-PMUBt <- ggarrange(PMUBt,labels = c("E"),font.label = list(size = 7))
+PMUBt <- ggarrange(PMUBt,labels = c("e"),font.label = list(size = 7))
 
 #KinUHPZ
 p1 = plot_ordination(KinUHPZ.G.tr.f, ordinate(KinUHPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
@@ -7595,7 +7595,7 @@ PKUHB <- p1 +
 PKUHBt <- PKUHB + stat_ellipse(type = "t") +  scale_y_continuous(position = "right")+ theme(plot.margin=unit(c(0.15,0.15,0.15,0.6), "lines"))
 PKUHBt <- PKUHBt + theme(legend.position="none")
 PKUHBt <- PKUHBt + annotate("text", x = 0.38, y = -0.43, label = expression(paste("p = 1x",10^-5)), size = 2) #1e-05
-PKUHBt <- ggarrange(PKUHBt,labels = c("D"),font.label = list(size = 7))
+PKUHBt <- ggarrange(PKUHBt,labels = c("d"),font.label = list(size = 7))
 
 #MasUHPZ
 p1 = plot_ordination(MasUHPZ.G.tr.f, ordinate(MasUHPZ.G.tr.f, method="PCoA", dist="bray"), type="samples", color="Status") +
@@ -7611,7 +7611,7 @@ PMUHB <- p1 +
 PMUHBt <- PMUHB + stat_ellipse(type = "t") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.6,0.15,0.15,0.15), "lines"))
 PMUHBt <- PMUHBt + theme(legend.position="none")
 PMUHBt <- PMUHBt + annotate("text", x = 0.28, y = -0.33, label = expression(paste("p = 0.00321")), size = 2) #0.00321
-PMUHBt <- ggarrange(PMUHBt,labels = c("F"),font.label = list(size = 7))
+PMUHBt <- ggarrange(PMUHBt,labels = c("f"),font.label = list(size = 7))
 
 #EF <- ggarrange(PMUBt, PMUHBt, ncol = 1, nrow = 2, labels = c("E", "F"))
 #BCD <- ggarrange(PKMBt, PKUBt, PKUHBt, ncol = 3, nrow = 1, align = "h")
