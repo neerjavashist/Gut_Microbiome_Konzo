@@ -204,17 +204,17 @@ rownames(KonzoData.P.tr.avg.sd) <- KonzoData.P.tr.avg.sd[,1]
 KonzoData.P.tr.avg.sd <- KonzoData.P.tr.avg.sd[,-1]  
                            
 KonzoData.P.tr.avg.sd <- KonzoData.P.tr.avg.sd[, c(1, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12)]                                                   
-write.csv(KonzoData.P.tr.avg.sd, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup.csv") 
+#write.csv(KonzoData.P.tr.avg.sd, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup.csv") 
                            
 KonzoData.P.tr.avg.sd.f <- subset(KonzoData.P.tr.avg.sd, rownames(KonzoData.P.tr.avg.sd) %in% f_0.0001)                                             
-write.csv(KonzoData.P.tr.avg.sd.f, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup_filtered.csv")                            
+#write.csv(KonzoData.P.tr.avg.sd.f, file = "./KonzoDataPhylum_AvgRelAbund_SD_ByGroup_filtered.csv")                            
 
 #Data for Relative Abundnace for Phylum (Supplemental File 2)                           
 Phylum.tr <- merge(KonzoData.P.tr.avg.sd,as.data.frame(KonzoData.P.tr@otu_table),by='row.names', sort = FALSE)                           
-write.csv(Phylum.tr, file = "./KonzoDataPhylum_RelAbund_Supp.csv")                           
+#write.csv(Phylum.tr, file = "./KonzoDataPhylum_RelAbund_Supp.csv")                           
 #Data for Relative Abundnace for Phylum Filtered (Supplemental File 2) 
 Phylum.tr.f <- merge(KonzoData.P.tr.avg.sd.f,as.data.frame(KonzoData.P.tr.f@otu_table),by='row.names', sort = FALSE)                           
-write.csv(Phylum.tr.f, file = "./KonzoDataPhylum_RelAbund_filtered_Supp.csv")                           
+#write.csv(Phylum.tr.f, file = "./KonzoDataPhylum_RelAbund_filtered_Supp.csv")                           
                            
 #Bacteria Class
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
@@ -317,16 +317,16 @@ rownames(KonzoData.C.tr.avg.sd) <- KonzoData.C.tr.avg.sd[,1]
 KonzoData.C.tr.avg.sd <- KonzoData.C.tr.avg.sd[,-1]  
                            
 KonzoData.C.tr.avg.sd <- KonzoData.C.tr.avg.sd[, c(1, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12)]                                                   
-write.csv(KonzoData.C.tr.avg.sd, file = "./KonzoDataClass_AvgRelAbund_SD_ByGroup.csv") 
+#write.csv(KonzoData.C.tr.avg.sd, file = "./KonzoDataClass_AvgRelAbund_SD_ByGroup.csv") 
                            
 KonzoData.C.tr.avg.sd.f <- subset(KonzoData.C.tr.avg.sd, rownames(KonzoData.C.tr.avg.sd) %in% f_0.0001)                                             
-write.csv(KonzoData.C.tr.avg.sd.f, file = "./KonzoDataClass_AvgRelAbund_SD_ByGroup_filtered.csv") 
+#write.csv(KonzoData.C.tr.avg.sd.f, file = "./KonzoDataClass_AvgRelAbund_SD_ByGroup_filtered.csv") 
                                                      
 Class.tr <- merge(KonzoData.C.tr.avg.sd,as.data.frame(KonzoData.C.tr@otu_table),by='row.names', sort = FALSE)                           
-write.csv(Class.tr, file = "./KonzoDataClass_RelAbund_Supp.csv")                           
+#write.csv(Class.tr, file = "./KonzoDataClass_RelAbund_Supp.csv")                           
 
 Class.tr.f <- merge(KonzoData.C.tr.avg.sd.f,as.data.frame(KonzoData.C.tr.f@otu_table),by='row.names', sort = FALSE)                           
-write.csv(Class.tr.f, file = "./KonzoDataClass_RelAbund_filtered_Supp.csv")                           
+#write.csv(Class.tr.f, file = "./KonzoDataClass_RelAbund_filtered_Supp.csv")                           
                            
                            
                            
@@ -429,16 +429,16 @@ rownames(KonzoData.O.tr.avg.sd) <- KonzoData.O.tr.avg.sd[,1]
 KonzoData.O.tr.avg.sd <- KonzoData.O.tr.avg.sd[,-1]  
                            
 KonzoData.O.tr.avg.sd <- KonzoData.O.tr.avg.sd[, c(1, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12)]                                                   
-write.csv(KonzoData.O.tr.avg.sd, file = "./KonzoDataOrder_AvgRelAbund_SD_ByGroup.csv") 
+#write.csv(KonzoData.O.tr.avg.sd, file = "./KonzoDataOrder_AvgRelAbund_SD_ByGroup.csv") 
                            
 KonzoData.O.tr.avg.sd.f <- subset(KonzoData.O.tr.avg.sd, rownames(KonzoData.O.tr.avg.sd) %in% f_0.0001)                                             
-write.csv(KonzoData.O.tr.avg.sd.f, file = "./KonzoDataOrder_AvgRelAbund_SD_ByGroup_filtered.csv") 
+#write.csv(KonzoData.O.tr.avg.sd.f, file = "./KonzoDataOrder_AvgRelAbund_SD_ByGroup_filtered.csv") 
                                                      
 Order.tr <- merge(KonzoData.O.tr.avg.sd,as.data.frame(KonzoData.O.tr@otu_table),by='row.names', sort = FALSE)                           
-write.csv(Order.tr, file = "./KonzoDataOrder_RelAbund_Supp.csv")                           
+#write.csv(Order.tr, file = "./KonzoDataOrder_RelAbund_Supp.csv")                           
 
 Order.tr.f <- merge(KonzoData.O.tr.avg.sd.f,as.data.frame(KonzoData.O.tr.f@otu_table),by='row.names', sort = FALSE)                           
-write.csv(Order.tr.f, file = "./KonzoDataOrder_RelAbund_filtered_Supp.csv")                           
+#write.csv(Order.tr.f, file = "./KonzoDataOrder_RelAbund_filtered_Supp.csv")                           
                            
 
                            
@@ -544,16 +544,16 @@ rownames(KonzoData.F.tr.avg.sd) <- KonzoData.F.tr.avg.sd[,1]
 KonzoData.F.tr.avg.sd <- KonzoData.F.tr.avg.sd[,-1]  
                            
 KonzoData.F.tr.avg.sd <- KonzoData.F.tr.avg.sd[, c(1, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12)]                                                   
-write.csv(KonzoData.F.tr.avg.sd, file = "./KonzoDataFamily_AvgRelAbund_SD_ByGroup.csv") 
+#write.csv(KonzoData.F.tr.avg.sd, file = "./KonzoDataFamily_AvgRelAbund_SD_ByGroup.csv") 
                            
 KonzoData.F.tr.avg.sd.f <- subset(KonzoData.F.tr.avg.sd, rownames(KonzoData.F.tr.avg.sd) %in% f_0.0001)                                             
-write.csv(KonzoData.F.tr.avg.sd.f, file = "./KonzoDataFamily_AvgRelAbund_SD_ByGroup_filtered.csv") 
+#write.csv(KonzoData.F.tr.avg.sd.f, file = "./KonzoDataFamily_AvgRelAbund_SD_ByGroup_filtered.csv") 
                                                      
 Family.tr <- merge(KonzoData.F.tr.avg.sd,as.data.frame(KonzoData.F.tr@otu_table),by='row.names', sort = FALSE)                           
-write.csv(Family.tr, file = "./KonzoDataFamily_RelAbund_Supp.csv")                           
+#write.csv(Family.tr, file = "./KonzoDataFamily_RelAbund_Supp.csv")                           
 
 Family.tr.f <- merge(KonzoData.F.tr.avg.sd.f,as.data.frame(KonzoData.F.tr.f@otu_table),by='row.names', sort = FALSE)                           
-write.csv(Family.tr.f, file = "./KonzoDataFamily_RelAbund_filtered_Supp.csv")                                
+#write.csv(Family.tr.f, file = "./KonzoDataFamily_RelAbund_filtered_Supp.csv")                                
                            
                            
 #Bacteria Genus
@@ -664,16 +664,16 @@ rownames(KonzoData.G.tr.avg.sd) <- KonzoData.G.tr.avg.sd[,1]
 KonzoData.G.tr.avg.sd <- KonzoData.G.tr.avg.sd[,-1]  
                            
 KonzoData.G.tr.avg.sd <- KonzoData.G.tr.avg.sd[, c(1, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12)]                                                   
-write.csv(KonzoData.G.tr.avg.sd, file = "./KonzoDataGenus_AvgRelAbund_SD_ByGroup.csv") 
+#write.csv(KonzoData.G.tr.avg.sd, file = "./KonzoDataGenus_AvgRelAbund_SD_ByGroup.csv") 
                            
 KonzoData.G.tr.avg.sd.f <- subset(KonzoData.G.tr.avg.sd, rownames(KonzoData.G.tr.avg.sd) %in% f_0.0001)                                             
-write.csv(KonzoData.G.tr.avg.sd.f, file = "./KonzoDataGenus_AvgRelAbund_SD_ByGroup_filtered.csv") 
+#write.csv(KonzoData.G.tr.avg.sd.f, file = "./KonzoDataGenus_AvgRelAbund_SD_ByGroup_filtered.csv") 
                                                      
 Genus.tr <- merge(KonzoData.G.tr.avg.sd,as.data.frame(KonzoData.G.tr@otu_table),by='row.names', sort = FALSE)                           
-write.csv(Genus.tr, file = "./KonzoDataGenus_RelAbund_Supp.csv")                           
+#write.csv(Genus.tr, file = "./KonzoDataGenus_RelAbund_Supp.csv")                           
 
 Genus.tr.f <- merge(KonzoData.G.tr.avg.sd.f,as.data.frame(KonzoData.G.tr.f@otu_table),by='row.names', sort = FALSE)                           
-write.csv(Genus.tr.f, file = "./KonzoDataGenus_RelAbund_filtered_Supp.csv")                                
+#write.csv(Genus.tr.f, file = "./KonzoDataGenus_RelAbund_filtered_Supp.csv")                                
                            
                                                    
 #Needed later for Figure 3 (Geography excluding all konzo individuals)                           
@@ -794,16 +794,16 @@ rownames(KonzoData.S.tr.avg.sd) <- KonzoData.S.tr.avg.sd[,1]
 KonzoData.S.tr.avg.sd <- KonzoData.S.tr.avg.sd[,-1]  
                            
 KonzoData.S.tr.avg.sd <- KonzoData.S.tr.avg.sd[, c(1, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12)]                                                   
-write.csv(KonzoData.S.tr.avg.sd, file = "./KonzoDataSpecies_AvgRelAbund_SD_ByGroup.csv") 
+#write.csv(KonzoData.S.tr.avg.sd, file = "./KonzoDataSpecies_AvgRelAbund_SD_ByGroup.csv") 
                            
 KonzoData.S.tr.avg.sd.f <- subset(KonzoData.S.tr.avg.sd, rownames(KonzoData.S.tr.avg.sd) %in% f_0.0001)                                             
-write.csv(KonzoData.S.tr.avg.sd.f, file = "./KonzoDataSpecies_AvgRelAbund_SD_ByGroup_filtered.csv") 
+#write.csv(KonzoData.S.tr.avg.sd.f, file = "./KonzoDataSpecies_AvgRelAbund_SD_ByGroup_filtered.csv") 
                                                      
 Species.tr <- merge(KonzoData.S.tr.avg.sd,as.data.frame(KonzoData.S.tr@otu_table),by='row.names', sort = FALSE)                           
-write.csv(Species.tr, file = "./KonzoDataSpecies_RelAbund_Supp.csv")                           
+#write.csv(Species.tr, file = "./KonzoDataSpecies_RelAbund_Supp.csv")                           
 
 Species.tr.f <- merge(KonzoData.S.tr.avg.sd.f,as.data.frame(KonzoData.S.tr.f@otu_table),by='row.names', sort = FALSE)                           
-write.csv(Species.tr.f, file = "./KonzoDataSpecies_RelAbund_filtered_Supp.csv")
+#write.csv(Species.tr.f, file = "./KonzoDataSpecies_RelAbund_filtered_Supp.csv")
                            
 ### Estimate Richness
                            
@@ -822,11 +822,11 @@ diversity.S.0$Status <- as.factor(diversity.S.0$Status)
 diversity.S.0$Status <- factor(diversity.S.0$Status, levels = c("Kinshasa", "Masimanimba", "Unaffected_Low_Prevalence_Zone", "Konzo_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone", "Konzo_High_Prevalence_Zone"))
 
                            
-write("Observed Summary", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Summary.txt" ,append=TRUE)
-capture.output(tapply(diversity.S.0$Observed, diversity.S.0$Status, summary), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Summary.txt") 
+#write("Observed Summary", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Summary.txt" ,append=TRUE)
+#capture.output(tapply(diversity.S.0$Observed, diversity.S.0$Status, summary), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Summary.txt") 
 
-write("Shannon Summary", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Summary.txt" ,append=TRUE)
-capture.output(tapply(diversity.S.0$Shannon, diversity.S.0$Status, summary), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Summary.txt") 
+#write("Shannon Summary", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Summary.txt" ,append=TRUE)
+#capture.output(tapply(diversity.S.0$Shannon, diversity.S.0$Status, summary), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Summary.txt") 
                            
 #Shapiro-Wilk Normality Test
 shapiro.test(diversity.S.0$Observed) #p-value = 0.09588
@@ -855,42 +855,42 @@ shannon.wilcox <- pairwise.wilcox.test(diversity.S.0$Shannon, diversity.S.0$Stat
 simpson.wilcox <- pairwise.wilcox.test(diversity.S.0$Simpson, diversity.S.0$Status, data = diversity.S.0, p.adjust.method = "BH")                          
 
                                                      
-write("Observed ~ Status ANOVA test", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
-capture.output(summary(observed.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
+#write("Observed ~ Status ANOVA test", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+#capture.output(summary(observed.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
 
-write("TukeyHSA observed.aov", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
-capture.output(observed.tukey, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
+#write("TukeyHSA observed.aov", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+#capture.output(observed.tukey, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
                            
-write("Shannon ~ Status Kruskal test", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
-capture.output(shannon.kru, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
+#write("Shannon ~ Status Kruskal test", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+#capture.output(shannon.kru, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
 
-write("Post-hoc shannon.dunn", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
-capture.output(shannon.dunn, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
+#write("Post-hoc shannon.dunn", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+#capture.output(shannon.dunn, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
 
-write("Pairewise MWW shannon.kru", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
-capture.output(shannon.wilcox, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
+#write("Pairewise MWW shannon.kru", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+#capture.output(shannon.wilcox, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
 
-write("Simpson ~ Status Kruskal test", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
-capture.output(simpson.kru, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
+#write("Simpson ~ Status Kruskal test", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+#capture.output(simpson.kru, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
                            
-write("Post-hoc simpson.dunn", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
-capture.output(simpson.dunn, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
+#write("Post-hoc simpson.dunn", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+#capture.output(simpson.dunn, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
 
-write("Pairewise MWW simpson.kru", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
-capture.output(simpson.wilcox, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt")                            
+#write("Pairewise MWW simpson.kru", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+#capture.output(simpson.wilcox, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt")                            
 
-write("Fisher ~ Status ANOVA test", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
-capture.output(summary(fisher.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
+#write("Fisher ~ Status ANOVA test", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+#capture.output(summary(fisher.aov), append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt") 
 
-write("TukeyHSA fisher.aov", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
-capture.output(fisher.tukey, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt")
+#write("TukeyHSA fisher.aov", file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt" ,append=TRUE)
+#capture.output(fisher.tukey, append = TRUE, file="KinshasaControl_Konzo3_Bacteria_Species_SetZeroData_EstimateRichness_Statistics.txt")
                            
                            
 ###Figure 2 ------------------------------ 
                            
 observed <- ggplot(diversity.S.0, aes(factor(Status), Observed)) + geom_boxplot(aes(fill = factor(Status)),fatten = 1, outlier.shape = NA) + labs(x = element_blank(), y = "Species") + theme(axis.text.x = element_blank()) + theme_classic()
 observed <- observed + geom_jitter(position=position_jitter(0.2), size = 0.3)
-observed2 <- observed + stat_summary(fun=mean, geom="point", shape=23, size=1.5, color = "black", fill="white")
+observed2 <- observed + stat_summary(fun=mean, geom="point", shape=23, size=1.25, color = "black", fill="white")
 observed3 <- observed2 + theme(legend.position="bottom", legend.margin=margin(-10,0,0,0)) + theme(legend.direction = "horizontal") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(axis.ticks.x = element_blank(), axis.title.y = element_text(size = 7), axis.text.y = element_text(size = 7), axis.text.x = element_blank())
 
 observed4 <- observed3 + guides(fill=guide_legend(ncol=6)) 
@@ -898,7 +898,7 @@ observed4 <- observed4 + scale_fill_manual(values = konzo_color, labels = SSSL)
 
 shan <- ggplot(diversity.S.0, aes(factor(Status), Shannon))+ geom_boxplot(aes(fill = factor(Status)),fatten = 1, outlier.shape = NA) + labs(x = element_blank(), y = "Shannon Diversity Index") + theme(axis.text.x = element_blank()) + theme_classic()
 shan <- shan + geom_jitter(position=position_jitter(0.2), size = 0.3)
-shan2 <- shan + stat_summary(fun=mean, geom="point", shape=23, size=1.5, color = "black", fill="white")
+shan2 <- shan + stat_summary(fun=mean, geom="point", shape=23, size=1.25, color = "black", fill="white")
 shan3 <- shan2 + theme(legend.position="bottom", legend.margin=margin(-10,0,0,0)) + theme(legend.direction = "horizontal") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 7), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(axis.ticks.x = element_blank(), axis.title.y = element_text(size = 5), axis.text.y = element_text(size = 7), axis.text.x = element_blank())
 
 shan4 <- shan3 + guides(fill=guide_legend(ncol=6)) 
@@ -938,7 +938,7 @@ top56 <- union(names(top5), names(top6))
 top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
 top_P <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
                                      
-write.csv(top_P, file = "Kinshasa_Konzo3_Phylum_Top4.csv")
+#write.csv(top_P, file = "Kinshasa_Konzo3_Phylum_Top4.csv")
 
 #Class 
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Class")
@@ -970,7 +970,7 @@ top56 <- union(names(top5), names(top6))
 top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
 top_C <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 
-write.csv(top_C, file = "Kinshasa_Konzo3_Class_Top5.csv")                                     
+#write.csv(top_C, file = "Kinshasa_Konzo3_Class_Top5.csv")                                     
                                      
 #ORDER
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Order")
@@ -1001,7 +1001,7 @@ top56 <- union(names(top5), names(top6))
 top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
 top_O <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ    
                                      
-write.csv(top_O, file = "Kinshasa_Konzo3_Order_Top5.csv")
+#write.csv(top_O, file = "Kinshasa_Konzo3_Order_Top5.csv")
                                      
 #FAMILY
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Family")
@@ -1032,7 +1032,7 @@ top56 <- union(names(top5), names(top6))
 top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
 top_F <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 
-write.csv(top_F, file = "Kinshasa_Konzo3_Family_Top5.csv")
+#write.csv(top_F, file = "Kinshasa_Konzo3_Family_Top5.csv")
                                      
 #GENUS
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
@@ -1063,7 +1063,7 @@ top56 <- union(names(top5), names(top6))
 top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
 top_G <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 
-write.csv(top_G, file = "Kinshasa_Konzo3_Genus_Top7.csv")
+#write.csv(top_G, file = "Kinshasa_Konzo3_Genus_Top7.csv")
                                      
 #SPECIES
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Species")
@@ -1094,7 +1094,7 @@ top56 <- union(names(top5), names(top6))
 top1234 <- union(top12, top34) #Kin, Mas, ULPZ, KLPZ
 top_S <- union(top1234, top56) # Kin, Mas, ULPS, KLPZ,UHPZ, KHPZ
 
-write.csv(top_S, file = "Kinshasa_Konzo3_Species_Top20.csv")                           
+#write.csv(top_S, file = "Kinshasa_Konzo3_Species_Top20.csv")                           
                            
 #Stacked Bar plots
 #Genus
@@ -1130,13 +1130,13 @@ top_genus_plot <- top_genus_plot +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"))
 top_genus_plot
 
-ad <- ggarrange(observed4, shan4, labels = c("A", "B"), font.label = list(size = 7), ncol = 2, nrow = 1, common.legend = TRUE, legend = "bottom", align = "hv") 
+ad <- ggarrange(observed4, shan4, labels = c("a", "b"), font.label = list(size = 7), ncol = 2, nrow = 1, common.legend = TRUE, legend = "bottom", align = "hv") 
 
-Gen <-  ggarrange(top_genus_plot, labels = c("C"), font.label = list(size = 7), ncol = 1, nrow = 1) 
+Gen <-  ggarrange(top_genus_plot, labels = c("c"), font.label = list(size = 7), ncol = 1, nrow = 1) 
 
 s <- plot_spacer() + theme_minimal()
 
-placeholder <-  ggarrange(s, labels = c("D"), font.label = list(size = 7), ncol = 1, nrow = 1)    
+placeholder <-  ggarrange(s, labels = c("d"), font.label = list(size = 7), ncol = 1, nrow = 1)    
 
 Gen_ph <- ggarrange(Gen,placeholder, widths = c(1, 1), ncol = 2, nrow = 1)
 
@@ -1158,7 +1158,7 @@ dev.off()
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Species")
 
 o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))                                                 
-tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap_V2.tiff", width = 2.25, height = 3.75, units = "in", res = 600)
+tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap.tiff", width = 2.25, height = 3.75, units = "in", res = 600)
 heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,1.25), lwid = c(0.1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3),c(2,1,1),c(2,1,1),c(0,0,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
 dev.off()                                        
                                                       
