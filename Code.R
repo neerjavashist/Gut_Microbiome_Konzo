@@ -1147,13 +1147,17 @@ tiff(filename = "KinshasaKonzo3_TaxaFigure_WithoutHeatMap.tiff", width = 5, heig
 as_ggplot(F1)
 dev.off() 
                                                                         
-                                     
+setEPS()
+postscript(file = "KinshasaKonzo3_TaxaFigure_WithoutHeatMap.eps", width = 5, height = 5)
+as_ggplot(F1)
+dev.off()                                    
                                      
 #When adding heat map in gimp to full figure, make sure Image > Print Size has correct inches and ppi (set to >=300))
 o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))                                                 
 tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap_V1.tiff", width = 3.5, height = 2.8, units = "in", res = 600)
 heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,2), lwid = c(0.1,1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3,0),c(2,1,1,0),c(2,1,1,0),c(2,1,1,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
 dev.off() 
+                                                               
                                      
 #When adding heat map in gimp to full figure, make sure Image > Print Size has correct inches and ppi (set to >=300))
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Species")
@@ -1162,7 +1166,12 @@ o <- as.data.frame(otu_table(KonzoData.S.tr.status.f))
 tiff(filename = "KinshasaKonzo3_Bacteria_Species_Heatmap.tiff", width = 2.25, height = 3.5, units = "in", res = 600)
 heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,1.25), lwid = c(0.1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3),c(2,1,1),c(2,1,1),c(0,0,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
 dev.off()                                        
-                                                      
+                                                  
+setEPS()
+postscript(file = "KinshasaKonzo3_Bacteria_Species_Heatmap.eps", width = 2.5, height = 3.6)
+heatmap.2(as.matrix(t(o)), scale = "row", trace = "none", keysize = 0.25, labRow = "Species", labCol = SSSL, margins = c(1, 1), Rowv = FALSE, dendrogram = "column", key.title = NA, srtCol = 0, srtRow = 90 , cexCol = 0.75, cexRow = 0.75, offsetRow = 0, offsetCol = 0, lhei = c(0.5,2,2,1.25), lwid = c(0.1,1,1), key.par = list(cex=0.5), lmat = rbind(c(0,3,3),c(2,1,1),c(2,1,1),c(0,0,4)), adjCol = c(0.5,0.5), adjRow = c(4.5,0.25))
+dev.off()                                        
+
 #------------------------------------------------
      
 ### ALDEx2 : aldex is used to convert raw read counts (aftering filtering out low abundance taxa) to CLR to infer abuandance and perform statistical testing. 
