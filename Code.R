@@ -7854,8 +7854,8 @@ tiff(filename = "Kahemba_Genus_Filtered_PCoA_CombFig_V2.tiff", width = 7, height
 ggarrange(part1_v2, part2, ncol = 1, nrow = 2, heights = c(2.5,2))
 dev.off()  
 
-setEPS()
-postscript(file = "Kahemba_Genus_Filtered_PCoA_CombFig.eps", width = 7, height = 4.5)
+
+pdf(file = "Kahemba_Genus_Filtered_PCoA_CombFig.pdf", width = 7, height = 4.5)
 ggarrange(part1, part2, ncol = 1, nrow = 2, heights = c(2.5,2))                            
 dev.off()                                   
                                     
