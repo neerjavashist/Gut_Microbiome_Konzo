@@ -7855,8 +7855,8 @@ ggarrange(part1_v2, part2, ncol = 1, nrow = 2, heights = c(2.5,2))
 dev.off()  
 
 
-pdf(file = "Kahemba_Genus_Filtered_PCoA_CombFig.pdf", width = 7, height = 4.5)
-ggarrange(part1, part2, ncol = 1, nrow = 2, heights = c(2.5,2))                            
+pdf(file = "Kahemba_Genus_Filtered_PCoA_CombFig_Fin.pdf", width = 7, height = 4.5)
+ggarrange(part1_v2, part2, ncol = 1, nrow = 2, heights = c(2.5,2))                         
 dev.off()                                   
                                     
 ##### Supplemental Figures                                   
