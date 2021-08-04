@@ -1145,7 +1145,8 @@ F1 <- arrangeGrob(ad, Gen_ph, ncol = 1, nrow = 2,
 #Figure 2
 tiff(filename = "KinshasaKonzo3_TaxaFigure_WithoutHeatMap.tiff", width = 5, height = 5, units = "in", res = 600)
 as_ggplot(F1)
-dev.off()
+dev.off() 
+                                                                        
                                      
                                      
 #When adding heat map in gimp to full figure, make sure Image > Print Size has correct inches and ppi (set to >=300))
