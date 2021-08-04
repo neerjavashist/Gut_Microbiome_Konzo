@@ -9,6 +9,7 @@ Note: BMTagger, skewer, Kraken2, and Bracken were run on linux based OS, while R
 
 Note: The code is commented up front for clarification, but most of the code is repetitive with changes depending on input. Comments are added whenever explaination may be necessary and refer back when needed. Additionally, phylum input files are available for reference to have a better idea of what the input looks like as the files are separate and have more info than necessary/provided in Supplemental files in the paper submission. The Supplemental file 1 includes all information needed to generate the same data output. 
 
+0. Softwares such as FastQC may be used to do quality assessement and quality control of the reads. 
 1. Run bmtagger.sh (version 1.1.0) to remove human reads from fastq files by aligning to the human genome reference, hg38. The bmtagger.conf file may be necessary even if you have installed all dependencies. To successfully run BMTagger required programs, about 8.5Gb memory and around three times harddisk space to store index data is needed. Follow installation and running guidelines here: https://hmpdacc.org/hmp/doc/HumanSequenceRemoval_SOP.pdf  
 2. Run skewer.sh (version 0.2.2) on the fastq files to remove Illumina sequencing adapters. 
 3. Run kraken2.sh on post skewer using Kraken2 (version 2.0.8-beta) standard genome libraries (kraken2-build.sh; built on March 3rd, 2019), which includes human, viral, bacteria, and archae. Construction of the kraken database can require about 100GB of space, and enough free memory is needed in RAM to build the databass. Thus for ~29GB of standard database, you need a little more RAM than that to accomodate. The detailed manual for the program installation and use can be found here: https://github.com/DerrickWood/kraken2/wiki/Manual
@@ -17,5 +18,6 @@ Note: The code is commented up front for clarification, but most of the code is 
 6. Use pavain to consolidate the report files for all samples into one large file (will need to converted to csv from tsv). Additionally, using the pavian filter feature, get different taxon (phylum, class, order, family, genus, species) for each of the different domains (here only Bacteria are analyzed). The lineage column is removed and the names of samples are changed to they match those in the Konzo_meta file prior to analysis in R. Additionaly information on pavian can be found here: https://ccb.jhu.edu/software/pavian/index.shtml
 7. Install any additional necessary packages as listed in Code.R (R version 3.6.3), and follow the script for further analysis.
 8. Related figure making is also included in the code for reference. Gimp was also used to combine some figures into a final layout. 
+9. Functional Assessment code has been included as a sub directory ().
 
 
