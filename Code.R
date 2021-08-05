@@ -8531,7 +8531,9 @@ c10 <- c10 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
                                      
 my_comparisons <- list( c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone")) 
                                               
-disease_color <- c("tomato2", "gold")
+
+disease_color <- c("tomato", "gold")
+
                                      
 G <- Disease.G.tr.log10
                                                
