@@ -8531,7 +8531,7 @@ c10 <- c10 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
                                      
 my_comparisons <- list( c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone")) 
                                               
-disease_color <- c("firebrick2", "gold")
+disease_color <- c("tomato2", "gold")
                                      
 G <- Disease.G.tr.log10
                                                
@@ -8595,10 +8595,15 @@ d10 <- d10 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, 
 d10 <- d10 + scale_fill_manual(labels = SSL, values = disease_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
 d10 <- d10 + guides(fill=guide_legend(ncol=2,byrow=TRUE))                                   
 
-rf_plot2 <- ggarrange(s,c1, c2, c3, s,d1, d2, d3, labels = c("","a","b","c","","d","e","f"), font.label = list(size = 6), ncol = 4, nrow = 2, common.legend = TRUE, legend = "bottom")
+rf_plot2 <- ggarrange(s,c1, c2, c3, labels = c("","a","b","c"), font.label = list(size = 6), ncol = 4, nrow = 1, common.legend = TRUE, legend = "bottom")
+
+rf_plot3 <- ggarrange(s,d1, d2, d3, labels = c("","d","e","f"), font.label = list(size = 6), ncol = 4, nrow = 1, common.legend = TRUE, legend = "bottom")
+  
+rf_plot4 <- ggarrange(rf_plot2, rf_plot3, nrow = 2)
+                                             
                                               
 pdf(file = "Kahemba_Genus_RF_Top3_Boxplots.pdf", width = 7, height = 4.67)
-rf_plot2
+rf_plot4
 dev.off()   
                                               
                                               
