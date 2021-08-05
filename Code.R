@@ -7927,6 +7927,10 @@ p
 
 tiff(filename = "KinshasaKonzo3_Diet.tiff", width = 5.5, height = 5.5, units = "in", res = 600)
 p
+dev.off()     
+                                    
+pdf(file = "KinshasaKonzo3_Diet.pdf", width = 5.5, height = 5.5)
+p
 dev.off()                                     
                                              
 ## Supplementary Figure 2:
@@ -8066,7 +8070,7 @@ for (i in 1:nrow(BP))
 }
 
 bp1 <- ggboxplot(BP, x = "Status", y = "Ratio" , fill = "Status", xlab = "Samples", ylab = "rel. abund. of Prevotella/Bacteroides", title = "", outlier.size = 1)
-bp2 <- bp1 + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "t.test", size = 2)
+bp2 <- bp1 + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "t.test", size = 2)
 bp3 <- bp2 + theme(legend.position="none") + theme(axis.title.y = element_text(size = 7), axis.title.x = element_blank(), axis.text.y = element_text(size = 7), axis.text.x = element_text(size = 7)) + stat_boxplot(geom ="errorbar") + scale_fill_manual(values = konzo_color) + scale_x_discrete(labels = SSSL)
 bp3
 #tiff(filename = "KinshasaKonzo3_Genus_RelAbund_Prev_over_Bact.tiff", width = 2.5, height = 3, units = "in", res = 600)
@@ -8177,9 +8181,12 @@ b4 <- b3 + scale_fill_manual(values = konzo_color) + scale_x_discrete(labels = S
 
 #Supplemental Fig 2: Class, Order, Prev/Bact and Intra Bray
 tiff(filename = "Konzo1Konzo3_P_C_O_F_PrevOverBact_IntraBrayFiltered.tiff", width = 7, height = 7, units = "in", res = 600)
-ggarrange(top_phylum_plot, top_class_plot, top_order_plot, top_family_plot, bp3, b4, labels = c("A","B","C", "D", "E", "F"), ncol = 2, nrow = 3, font.label = list(size = 7))
+ggarrange(top_phylum_plot, top_class_plot, top_order_plot, top_family_plot, bp3, b4, labels = c("a","b","c", "d", "e", "f"), ncol = 2, nrow = 3, font.label = list(size = 7))
 dev.off()
-                               
+                                    
+pdf(file = "Konzo1Konzo3_P_C_O_F_PrevOverBact_IntraBrayFiltered.pdf", width = 7, height = 7)
+ggarrange(top_phylum_plot, top_class_plot, top_order_plot, top_family_plot, bp3, b4, labels = c("a","b","c", "d", "e", "f"), ncol = 2, nrow = 3, font.label = list(size = 7))
+dev.off()                               
                                                                         
 ##Supplementary Fig 4: Kin vs. Mas vs. ULPZ
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
