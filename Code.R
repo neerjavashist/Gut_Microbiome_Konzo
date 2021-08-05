@@ -9094,7 +9094,7 @@ tiff(filename = "Kahemba_KO_Filtered_Control_Disease_LPZ_HPZ_PCoA.tiff", width =
 ggarrange(ko_PCBt, ko_PKBt, ko_PNIBt, ko_PIBt, labels = c("a","b", "c", "d"), ncol = 2, nrow = 2, font.label = list(size = 7))
 dev.off()                                                  
                                                   
-pdf(filename = "Kahemba_KO_Filtered_Control_Disease_LPZ_HPZ_PCoA.pdf", width = 3.5, height = 3.5)
+pdf(file = "Kahemba_KO_Filtered_Control_Disease_LPZ_HPZ_PCoA.pdf", width = 3.5, height = 3.5)
 ggarrange(ko_PCBt, ko_PKBt, ko_PNIBt, ko_PIBt, labels = c("a","b", "c", "d"), ncol = 2, nrow = 2, font.label = list(size = 7))
 dev.off()  
                             
