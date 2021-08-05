@@ -8778,7 +8778,7 @@ ko_PGB <- p1 +
 ko_PGBt <- ko_PGB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 ko_PGBt <- ko_PGBt + theme(legend.position="bottom")
 ko_PGBt <- ko_PGBt + annotate("text", x = -0.24, y = -0.39, label = expression(paste("p = 1x",10^-5)), size = 2.5)
-ko_PGBt <- ggarrange(ko_PGBt,labels = c("A"),font.label = list(size = 7))
+ko_PGBt <- ggarrange(ko_PGBt,labels = c("a"),font.label = list(size = 7))
                                                  
 
 #KinMas                                                   
@@ -8807,7 +8807,7 @@ ko_PKMB <- p1 +
 ko_PKMBt <- ko_PKMB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 ko_PKMBt <- ko_PKMBt + theme(legend.position="none")
 ko_PKMBt <- ko_PKMBt + annotate("text", x = -0.31, y = -0.3, label = expression(paste("p = 0.00093")), size = 2)
-ko_PKMBt <- ggarrange(ko_PKMBt,labels = c("B"),font.label = list(size = 7))                                                  
+ko_PKMBt <- ggarrange(ko_PKMBt,labels = c("b"),font.label = list(size = 7))                                                  
                                                   
 
 #KinULPZ
@@ -8837,7 +8837,7 @@ ko_PKUB <- p1 +
 ko_PKUBt <- ko_PKUB + stat_ellipse(type = "t") + theme(plot.margin=unit(c(0.15,0.15,0.15,0.15), "lines"))
 ko_PKUBt <- ko_PKUBt + theme(legend.position="none")
 ko_PKUBt <- ko_PKUBt + annotate("text", x = -0.17, y = -0.22, label = expression(paste("p = 0.00058")), size = 2)
-ko_PKUBt <- ggarrange(ko_PKUBt,labels = c("C"),font.label = list(size = 7))                                                  
+ko_PKUBt <- ggarrange(ko_PKUBt,labels = c("c"),font.label = list(size = 7))                                                  
                                                   
                                                   
 #KinUHPZ  
@@ -8865,7 +8865,7 @@ ko_PKUHB <- p1 +
 ko_PKUHBt <- ko_PKUHB + stat_ellipse(type = "t") +  scale_y_continuous(position = "right")+ theme(plot.margin=unit(c(0.15,0.15,0.15,0.6), "lines"))
 ko_PKUHBt <- ko_PKUHBt + theme(legend.position="none")                                                                                                   
 ko_PKUHBt <- ko_PKUHBt + annotate("text", x = -0.17, y = -0.22, label = expression(paste("p = 2x",10^-5)), size = 2)
-ko_PKUHBt <- ggarrange(ko_PKUHBt,labels = c("D"),font.label = list(size = 7))
+ko_PKUHBt <- ggarrange(ko_PKUHBt,labels = c("d"),font.label = list(size = 7))
                                                  
 #MasULPZ
 MasULPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Masimanimba" | KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone"), KonzoData_KO_tr)   
@@ -8892,7 +8892,7 @@ ko_PMUB <- p1 +
 ko_PMUBt <- ko_PMUB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.25,0.25), "lines"))
 ko_PMUBt <- ko_PMUBt + theme(legend.position="none")
 ko_PMUBt <- ko_PMUBt + annotate("text", x = -0.21, y = -0.27, label = expression(paste("p = 5x",10^-5)), size = 2)
-ko_PMUBt <- ggarrange(ko_PMUBt,labels = c("E"),font.label = list(size = 7))
+ko_PMUBt <- ggarrange(ko_PMUBt,labels = c("e"),font.label = list(size = 7))
                                                   
 #MasUHPZ  
 MasUHPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Masimanimba" | KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone"), KonzoData_KO_tr)  
@@ -8920,7 +8920,7 @@ ko_PMUHB <- p1 +
 ko_PMUHBt <- ko_PMUHB + stat_ellipse(type = "t") + scale_x_continuous(position = "top") + scale_y_continuous(position = "right") + theme(plot.margin=unit(c(0.15,0.15,0.85,0.25), "lines"))
 ko_PMUHBt <- ko_PMUHBt + theme(legend.position="none")
 ko_PMUHBt <- ko_PMUHBt + annotate("text", x = -0.22, y = -0.34, label = expression(paste("p = 1x", 10^-4)), size = 2)
-ko_PMUHBt <- ggarrange(ko_PMUHBt,labels = c("F"),font.label = list(size = 7))
+ko_PMUHBt <- ggarrange(ko_PMUHBt,labels = c("f"),font.label = list(size = 7))
                                                   
 Geo <- arrangeGrob(ko_PGBt, ko_PMUBt, ko_PMUHBt, ko_PKMBt, ko_PKUBt, ko_PKUHBt,                             
              ncol = 6, nrow = 6,
@@ -8930,7 +8930,9 @@ tiff(filename = "Geography_AllUnaffected_KO_Filtered_PCoA.tiff", width = 5.5, he
 ggarrange(as_ggplot(Geo))
 dev.off()
 
-                            
+pdf(file = "Geography_AllUnaffected_KO_Filtered_PCoA.pdf", width = 5.5, height = 5.5)
+ggarrange(as_ggplot(Geo))
+dev.off()                              
                             
 #KinKLPZ
 KinKLPZ.KO.tr <- prune_samples((KonzoData_KO_tr@sam_data$Status == "Kinshasa" | KonzoData_KO_tr@sam_data$Status == "Konzo_Low_Prevalence_Zone"), KonzoData_KO_tr)                                                                                                                                                                                                                                                                                                             
@@ -9089,10 +9091,13 @@ ko_PIBt <- ko_PIB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
 ko_PIBt <- ko_PIBt + annotate("text", x = 0.21, y = -0.3, label = expression(paste("p = 0.8634")), size = 2)
                             
 tiff(filename = "Kahemba_KO_Filtered_Control_Disease_LPZ_HPZ_PCoA.tiff", width = 3.5, height = 3.5, units = "in", res = 600)
-ggarrange(ko_PCBt, ko_PKBt, ko_PNIBt, ko_PIBt, labels = c("A","B", "C", "D"), ncol = 2, nrow = 2, font.label = list(size = 7))
+ggarrange(ko_PCBt, ko_PKBt, ko_PNIBt, ko_PIBt, labels = c("a","b", "c", "d"), ncol = 2, nrow = 2, font.label = list(size = 7))
 dev.off()                                                  
                                                   
-           
+pdf(filename = "Kahemba_KO_Filtered_Control_Disease_LPZ_HPZ_PCoA.pdf", width = 3.5, height = 3.5)
+ggarrange(ko_PCBt, ko_PKBt, ko_PNIBt, ko_PIBt, labels = c("a","b", "c", "d"), ncol = 2, nrow = 2, font.label = list(size = 7))
+dev.off()  
+                            
 #Figure 6:LAB, Beta-glucosidase and Rhodanese
 
 S <- KonzoData.S.tr
