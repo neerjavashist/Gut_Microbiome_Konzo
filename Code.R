@@ -8195,7 +8195,7 @@ dev.off()
                                                                         
 ##Supplementary Fig 4: Kin vs. Mas vs. ULPZ
 setwd("~/Dropbox/Konzo_Microbiome/Konzo1Konzo3/Konzo1_Konzo3_PostBracken/KinshasaControl_Konzo3_PostBracken/Bacteria/Bacteria_Genus")
-
+                                    
 #Random Forest Box Plots
 s <- plot_spacer() + theme_minimal()
 #spacer plot is added so the percent breakdown for top ten taxa can be added using gimp
@@ -8287,10 +8287,7 @@ g10 <- g10 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, 
 g10 <- g10 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
 g10 <- g10 + guides(fill=guide_legend(ncol=3,byrow=TRUE))                                                                                                 
 
-tiff(filename = "KinshasaKonzo3_Genus_RF_Kin_Geo_Boxplot.tiff", width = 7, height = 7, units = "in", res = 600)
-ggarrange(s g1, g2, g3, ncol = 4, nrow = 3, labels = c("", "a","b","c"), font.label = list(size = 6), common.legend = TRUE, legend = "bottom")
-dev.off()    
-                
+                                                 
 ## Supp 4 Mas vs. (Kin and ULPZ)
                                                  
                                                  
@@ -8356,10 +8353,7 @@ g20 <- ggboxplot(G.tr.DF, x = "Status", y = "Gordonibacter", fill = "Status", xl
 g20 <- g20 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
 g20 <- g20 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
 g20 <- g20 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
-
-tiff(filename = "KinshasaKonzo3_Genus_RF_Mas_Geo_Boxplot.tiff", width = 7, height = 7, units = "in", res = 600)
-ggarrange(s,s,g11, g12, g13, g14, g15, g16, g17, g18, g19, g20, ncol = 4, nrow = 3, labels = c("", "", "A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), common.legend = TRUE, legend = "bottom")
-dev.off()                                                                                                 
+                                                                                               
                                                                
 ## Supp 4: ULPZ vs. (Kin and Mas)
                                                  
@@ -8427,8 +8421,8 @@ g30 <- g30 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, 
 g30 <- g30 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
 g30 <- g30 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
                                 
-tiff(filename = "KinshasaKonzo3_Genus_RF_ULPZ_Geo_Boxplots.tiff", width = 7, height = 7, units = "in", res = 600)
-ggarrange(s,s,g21, g22, g23, g24, g25, g26, g27, g28, g29, g30, labels = c("","","A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), ncol = 4, nrow = 3, common.legend = TRUE, legend = "bottom")
+pdf(file = "Kin_Mas_ULPZ_Genus_RF_Top3_Boxplots.pdf", width = 7, height = 7)
+ggarrange(s,g1, g2, g3, s, g11, g12, g13, s, g21, g22, g23, labels = c("","a","b","c","","d","e","f","","g","h", "i"), font.label = list(size = 6), ncol = 4, nrow = 3, common.legend = TRUE, legend = "bottom")
 dev.off()  
 
 #log 10 phyloseq                                                 
