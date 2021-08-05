@@ -8420,9 +8420,11 @@ g30 <- ggboxplot(G.tr.DF, x = "Status", y = "Faecalibaculum", fill = "Status", x
 g30 <- g30 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 5.5),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
 g30 <- g30 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
 g30 <- g30 + guides(fill=guide_legend(ncol=3,byrow=TRUE))
-                                
+
+rf_plot1 <- ggarrange(s,g1, g2, g3, s, g11, g12, g13, s, g21, g22, g23, labels = c("","a","b","c","","d","e","f","","g","h", "i"), font.label = list(size = 6), ncol = 4, nrow = 3, common.legend = TRUE, legend = "bottom")
+                                                 
 pdf(file = "Kin_Mas_ULPZ_Genus_RF_Top3_Boxplots.pdf", width = 7, height = 7)
-ggarrange(s,g1, g2, g3, s, g11, g12, g13, s, g21, g22, g23, labels = c("","a","b","c","","d","e","f","","g","h", "i"), font.label = list(size = 6), ncol = 4, nrow = 3, common.legend = TRUE, legend = "bottom")
+rf_plot1
 dev.off()  
 
 #log 10 phyloseq                                                 
@@ -8446,7 +8448,9 @@ Disease.G.tr.log10 <- transform_sample_counts(Disease.G.tr, function(x) log10(x)
                                      
 my_comparisons <- list( c("Unaffected_Low_Prevalence_Zone", "Unaffected_High_Prevalence_Zone")) 
 
-                                     
+control_color <- c( "turquoise3",        "slateblue1")
+
+                                              
 G <- Control.G.tr.log10
                                                
 G.tr_META <- as.data.frame(G@sam_data)
@@ -8508,10 +8512,7 @@ c10 <- ggboxplot(G.tr.DF, x = "Status", y = "Tolumonas", fill = "Status", xlab =
 c10 <- c10 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, "cm"), legend.text = element_text(size = 8), legend.title = element_blank(), legend.border = NULL) + guides(fill=guide_legend(ncol=1,byrow=TRUE)) + theme(title = element_text(size = 6),axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title.y = element_text(size = 9), axis.title.x = element_blank(), axis.text.y = element_text(size = 8)) + stat_boxplot(geom ='errorbar')
 c10 <- c10 + scale_fill_manual(labels = SSL, values = control_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2) #+ stat_compare_means( label.y = 1, size = 1)
 c10 <- c10 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
-                                     
-tiff(filename = "KinshasaKonzo3_Genus_RF_ULPZ_UHPZ_Boxplots.tiff", width = 7, height = 7, units = "in", res = 600)
-ggarrange(s,s,c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, ncol = 4, nrow = 3, labels = c("","","A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), common.legend = TRUE, legend = "bottom")
-dev.off()    
+                                       
                                                  
 ##Supp 5: KLPZ vs. KHPZ
 #KLPZ vs. KHPZ (Disease)
@@ -8529,7 +8530,8 @@ dev.off()
 
                                      
 my_comparisons <- list( c("Konzo_Low_Prevalence_Zone", "Konzo_High_Prevalence_Zone")) 
-
+                                              
+disease_color <- c("firebrick2", "gold")
                                      
 G <- Disease.G.tr.log10
                                                
@@ -8593,8 +8595,10 @@ d10 <- d10 + theme(legend.position="right") + theme(legend.key.size = unit(0.4, 
 d10 <- d10 + scale_fill_manual(labels = SSL, values = disease_color) + stat_compare_means(comparisons = my_comparisons, label = "p.signif", method = "wilcox.test", size = 2)
 d10 <- d10 + guides(fill=guide_legend(ncol=2,byrow=TRUE))                                   
 
-tiff(filename = "KinshasaKonzo3_Genus_RF_KLPZ_KHPZ_Boxplots.tiff", width = 7, height = 7, units = "in", res = 600)
-ggarrange(s,s, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, labels = c("","","A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), ncol = 4, nrow = 3, common.legend = TRUE, legend = "bottom")
+rf_plot2 <- ggarrange(s,c1, c2, c3, s,d1, d2, d3, labels = c("","a","b","c","","d","e","f"), font.label = list(size = 6), ncol = 4, nrow = 2, common.legend = TRUE, legend = "bottom")
+                                              
+pdf(file = "Kahemba_Genus_RF_Top3_Boxplots.pdf", width = 5, height = 5)
+rf_plot2
 dev.off()   
                                               
                                               
