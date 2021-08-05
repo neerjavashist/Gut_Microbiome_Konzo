@@ -8288,7 +8288,7 @@ g10 <- g10 + scale_fill_manual(labels = SL, values = g_color) + stat_compare_mea
 g10 <- g10 + guides(fill=guide_legend(ncol=3,byrow=TRUE))                                                                                                 
 
 tiff(filename = "KinshasaKonzo3_Genus_RF_Kin_Geo_Boxplot.tiff", width = 7, height = 7, units = "in", res = 600)
-ggarrange(s, s, g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, ncol = 4, nrow = 3, labels = c("", "", "A","B","C","D","E","F","G","H","I","J"), font.label = list(size = 6), common.legend = TRUE, legend = "bottom")
+ggarrange(s g1, g2, g3, ncol = 4, nrow = 3, labels = c("", "a","b","c"), font.label = list(size = 6), common.legend = TRUE, legend = "bottom")
 dev.off()    
                 
 ## Supp 4 Mas vs. (Kin and ULPZ)
