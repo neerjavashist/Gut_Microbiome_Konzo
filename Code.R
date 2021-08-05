@@ -2708,12 +2708,17 @@ mesen <- mesen + theme(axis.text.x = element_text(size = 6), axis.text.y = eleme
 mesen <- mesen + stat_compare_means(comparisons = my_comparisons, label = "p.format", method = "wilcox.test", size = 2)
 
 
-lab_clr <- ggarrange(mesen, lact, plant, labels = c("A","B", "C"), ncol = 3, nrow = 1, font.label = list(size = 7), align = "hv")
+lab_clr <- ggarrange(mesen, lact, plant, labels = c("a","b", "c"), ncol = 3, nrow = 1, font.label = list(size = 7), align = "hv")
 
 tiff(filename = "Kinshasa_Konzo3_LAB_Species_Aldex.tiff", width = 7, height = 3.5, units = "in", res = 600)
 lab_clr                                   
 dev.off()
-
+                                     
+pdf(file = "Kinshasa_Konzo3_LAB_Species_Aldex.pdf", width = 7, height = 3.5)
+lab_clr                                   
+dev.off()                                     
+                                     
+                                     
 #ns: p > 0.05
 #*: p <= 0.05
 #**: p <= 0.01
