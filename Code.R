@@ -8597,7 +8597,7 @@ d10 <- d10 + guides(fill=guide_legend(ncol=2,byrow=TRUE))
 
 rf_plot2 <- ggarrange(s,c1, c2, c3, s,d1, d2, d3, labels = c("","a","b","c","","d","e","f"), font.label = list(size = 6), ncol = 4, nrow = 2, common.legend = TRUE, legend = "bottom")
                                               
-pdf(file = "Kahemba_Genus_RF_Top3_Boxplots.pdf", width = 7, height = 5)
+pdf(file = "Kahemba_Genus_RF_Top3_Boxplots.pdf", width = 7, height = 4.67)
 rf_plot2
 dev.off()   
                                               
