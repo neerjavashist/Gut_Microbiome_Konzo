@@ -8762,7 +8762,7 @@ brayd <- phyloseq::distance(KonzoData_KO_tr, method="bray")
 bdiv_bray <- adonis(brayd ~ KonzoData_KO_tr.sam$Geography * KonzoData_KO_tr.sam$Region * KonzoData_KO_tr.sam$Disease * KonzoData_KO_tr.sam$Age * KonzoData_KO_tr.sam$Sex, perm=99999); bdiv_bray
                             
                             
-#Supplementary Figure 3                            
+#Supplementary Figure                             
 #Geography_KO  
                             
 x <- read.csv("Kinshasa_Konzo3_KO_f_0.0001.csv", row.names = 1, colClasses = "character")
@@ -9003,7 +9003,7 @@ bdiv_bray <- adonis(brayd ~ MasKHPZ.KO.tr.f.sam$Status, perm=99999); bdiv_bray
 #capture.output(bdiv_bray, file="relabund_bdiv_adonis_MasKHPZ_KO.tr.filtered.txt")   #3e-05                                               
      
                             
-#Supplementary Figure 8
+#Supplementary Figure 6
                             
 #Control                                                  
 Control.KO.tr <-  prune_samples(KonzoData_KO_tr@sam_data$Status == "Unaffected_Low_Prevalence_Zone" | KonzoData_KO_tr@sam_data$Status == "Unaffected_High_Prevalence_Zone", KonzoData_KO_tr)
@@ -9028,7 +9028,7 @@ ko_PCB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 ko_PCBt <- ko_PCB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-ko_PCBt <- ko_PCBt + annotate("text", x = 0.25, y = -0.3, label = expression(paste("p = 0.05741")), size = 2)
+ko_PCBt <- ko_PCBt + annotate("text", x = 0.26, y = -0.3, label = expression(paste("p = 0.05741")), size = 2)
                             
                             
                                             
