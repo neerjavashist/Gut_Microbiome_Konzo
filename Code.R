@@ -9054,7 +9054,7 @@ ko_PKB <- p1 +
   theme(axis.title.y = element_text(size = 7), axis.title.x = element_text(size = 7), axis.text.y = element_text(size = 6), axis.text.x = element_text(size = 6))
 
 ko_PKBt <- ko_PKB + stat_ellipse(type = "t") + guides(fill=guide_legend(nrow=1))
-ko_PKBt <- ko_PKBt + annotate("text", x = 0.22, y = -0.3, label = expression(paste("p = 0.0514")), size = 2)
+ko_PKBt <- ko_PKBt + annotate("text", x = 0.21, y = -0.3, label = expression(paste("p = 0.0514")), size = 2)
      
                             
 #LPZ                                                  
