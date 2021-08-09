@@ -10,11 +10,6 @@ my $usage = "Erreur!!  Usage: $0 $!\n";
 # CATALOGUE DATA
 my $lenfile;
 
-# NCBI / REFSEQ
-my $refseq;
-my $nodefile;
-my $namefile;
-my $mergedfile;
 # PARAMETERS
 
 my $NA= "NA";
